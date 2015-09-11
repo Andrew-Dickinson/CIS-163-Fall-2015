@@ -12,11 +12,24 @@ import java.util.Scanner;
  */
 public class CountDownTimer {
 
-    //Used to suspend the modify method
+    /**
+     * Used to suspend the modify method
+     */
     private static boolean suspended;
-    //Stores the current time data
+
+    /**
+     * Stores the remaining hours
+     */
     private int hours;
+
+    /**
+     * Stores the remaining minutes
+     */
     private int minutes;
+
+    /**
+     * Stores the remaining seconds
+     */
     private int seconds;
 
     /**
