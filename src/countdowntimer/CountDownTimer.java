@@ -320,26 +320,50 @@ public class CountDownTimer {
         add(1);
     }
 
+    /**
+     * Get the remaining number of hours
+     * @return the number of hours
+     */
     public int getHours() {
         return hours;
     }
 
+    /**
+     * Set the remaining number of hours
+     * @param hours the number of hours
+     */
     public void setHours(int hours) {
         this.hours = hours;
     }
 
+    /**
+     * Set the remaining number of minutes
+     * @return the number of minutes
+     */
     public int getMinutes() {
         return minutes;
     }
 
+    /**
+     * Set the remaining number of minutes
+     * @param minutes the number of minutes
+     */
     public void setMinutes(int minutes) {
         this.minutes = minutes;
     }
 
+    /**
+     * Get the remaining number of seconds
+     * @return the number of seconds
+     */
     public int getSeconds() {
         return seconds;
     }
 
+    /**
+     * Set the remaining number of seconds
+     * @param seconds the number of seconds
+     */
     public void setSeconds(int seconds) {
         this.seconds = seconds;
     }
