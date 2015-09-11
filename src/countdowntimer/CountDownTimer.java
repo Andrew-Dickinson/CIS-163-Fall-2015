@@ -1,12 +1,18 @@
 package countdowntimer;
 
+import java.io.*;
 import java.util.Objects;
+import java.util.Scanner;
 
-/**
+/**********************************************************************
+ * Stores basic information for counting down to a certain point
+ *
  * Created by Andrew on 9/4/15.
- */
+ *********************************************************************/
 public class CountDownTimer {
 
+    //Used to suspend the modify method
+    private static boolean suspended;
     //Stores the current time data
     private int hours;
     private int minutes;
@@ -108,18 +114,71 @@ public class CountDownTimer {
     }
 
     /**
+     * Prevents the add and subtract methods (and their derivatives)
+     * from having any effect when true
+     * @param flag The state to set
+     */
+    public static void suspend(boolean flag){
+        suspended = flag;
+    }
+
+    /**
      * Sets the instance variables with the given parameters
      * @param hours The value of the hours instance variable
      * @param minutes The value of the minutes instance variable
      * @param seconds The value of the seconds instance variable
      */
     private void constructTimer(int hours, int minutes, int seconds){
-        if (hours < 0 || minutes < 0 || minutes > 60 || seconds < 0 || seconds > 60)
+        if (hours < 0 || minutes < 0 || minutes >= 60 || seconds < 0 || seconds >= 60)
             throw new IllegalArgumentException();
 
         this.hours = hours;
         this.minutes = minutes;
         this.seconds = seconds;
+    }
+
+    /**
+     * Saves the class and data to the specified file
+     * @param filename The place to save to
+     */
+    public void save(String filename){
+        PrintWriter out; //Nulll
+        try {
+            out = new PrintWriter(new BufferedWriter(new FileWriter(filename)));
+            out.println(getHours());
+            out.println(getMinutes());
+            out.println(getSeconds());
+            out.close();
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Loads the class from a file
+     * @param filename The file to read from
+     */
+    public void load(String filename){
+        int seconds;
+        int minutes;
+        int hours;
+
+        try {
+            Scanner filereader = new Scanner(new File(filename));
+            hours = filereader.nextInt();
+            minutes = filereader.nextInt();
+            seconds = filereader.nextInt();
+
+            constructTimer(hours, minutes, seconds);
+        }
+
+        catch (FileNotFoundException e){
+            System.out.println("Cannot find the file: " + filename);
+        }
+
+        catch (IOException e){
+            System.out.println("Data error");
+        }
     }
 
     /**
@@ -179,28 +238,33 @@ public class CountDownTimer {
         return hourString + ":" + minuteString + ":" + secondString;
     }
 
-    /**
-     * Adds or subtracts the indicated amount in seconds
-     * @param amount The amount in seconds. Negative to subtract. Positive to add
+    /*
+     * Adds or subtracts the indicated amount in seconds if the class
+     * is not suspended
+     * @param amount The amount in seconds. Negative to subtract.
+     *               Positive to add
      * @throws IllegalArgumentException If subtraction goes to less than zero
      */
     private void modify(int amount){
-        int tempOverallSeconds = getOverallSeconds();
-        tempOverallSeconds += amount;
-        if (tempOverallSeconds < 0){
-            throw new IllegalArgumentException();
+        if (!suspended) {
+            int tempOverallSeconds = getOverallSeconds();
+            tempOverallSeconds += amount;
+            if (tempOverallSeconds < 0) {
+                throw new IllegalArgumentException();
+            }
+
+
+            hours = (tempOverallSeconds / 3600); //Integers are rounded down automatically
+            minutes = (tempOverallSeconds % 3600) / 60;
+            seconds = tempOverallSeconds % 60;
         }
-
-        hours = (tempOverallSeconds / 3600); //Integers are rounded down automatically
-        minutes = tempOverallSeconds % 3600;
-        seconds = tempOverallSeconds % 60;
-
     }
 
     /**
      * Subtracts the specified amount
      * @param amount The amount to subtract
-     * @throws IllegalArgumentException If amount < 0 or amount > getOverallSeconds()
+     * @throws IllegalArgumentException If amount less than 0 or
+     * amount greater than getOverallSeconds()
      */
     public void subtract(int amount){
         if (amount < 0 || amount > getOverallSeconds()){
@@ -214,7 +278,8 @@ public class CountDownTimer {
      * @param other The CountDownTimer to subtract based on
      */
     public void subtract(CountDownTimer other){
-        subtract(other.getOverallSeconds());
+        int tempSeconds = other.getOverallSeconds();
+        subtract(tempSeconds);
     }
 
     /**
