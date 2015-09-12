@@ -322,7 +322,7 @@ public class CountDownTimerTest {
     }
 
     @Test
-    public void testSuspendActive(){
+     public void testSuspendActive(){
         CountDownTimer def1 = new CountDownTimer(100, 5, 7);
 
         //Save as a reference to original
@@ -337,6 +337,7 @@ public class CountDownTimerTest {
         def1.subtract(8);
 
         assertTrue(def1.equals(def2));
+        assertTrue(CountDownTimer.isSuspended());
 
         CountDownTimer.suspend(false); //So other tests run correctly
     }
@@ -361,7 +362,7 @@ public class CountDownTimerTest {
         def1.subtract(8);
 
         assertTrue(def1.getHours() == 100 && def1.getMinutes() == 5 && def1.getSeconds() == 23);
-
+        assertFalse(CountDownTimer.isSuspended());
     }
 
     @Test

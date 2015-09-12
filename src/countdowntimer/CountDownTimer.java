@@ -151,6 +151,14 @@ public class CountDownTimer {
     }
 
     /**
+     * Gets the current suspended state
+     * @return are the countdown timers suspended
+     */
+    public static boolean isSuspended() {
+        return suspended;
+    }
+
+    /**
      * Sets the instance variables with the given parameters
      *
      * @param hours   The value of the hours instance variable
