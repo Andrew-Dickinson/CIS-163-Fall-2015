@@ -46,7 +46,7 @@ public class CDTPanel extends JPanel {
             button.setText("" + i);
             button.addActionListener(listener);
             if (i != 0)
-                //We add 0 at the end
+                //We will add 0 at the end
                 numPadPanel.add(button);
         }
 
@@ -179,6 +179,9 @@ public class CDTPanel extends JPanel {
                     javaTimer.start();
             } else if (e.getSource() == stop_button) {
                 javaTimer.stop();
+
+                //To make sure the timer isn't blank
+                timerDisplay.setText(countDownTimer.toString());
             } else if (e.getSource() == play_button) {
                 if (!CountDownTimer.isSuspended()) {
                     if (entered_string.equals("")
@@ -200,7 +203,7 @@ public class CDTPanel extends JPanel {
     }
 
     private class TimerListener implements ActionListener {
-        boolean alternator = true;
+        private boolean alternator = true;
 
         public void actionPerformed(ActionEvent e) {
             if (countDownTimer.getOverallSeconds() != 0){
