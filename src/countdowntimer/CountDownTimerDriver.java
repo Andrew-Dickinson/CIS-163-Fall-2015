@@ -1,6 +1,5 @@
 package countdowntimer;
 
-import javax.imageio.plugins.jpeg.JPEGHuffmanTable;
 import javax.swing.*;
 
 /**
@@ -8,8 +7,6 @@ import javax.swing.*;
  */
 public class CountDownTimerDriver {
     public static void main(String[] args){
-        //TODO Lame test version that no one uses
-
         JFrame frame = new JFrame("Count Down Timer");
         frame.setDefaultCloseOperation (WindowConstants.EXIT_ON_CLOSE);
 
