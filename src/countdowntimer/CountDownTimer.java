@@ -46,6 +46,9 @@ public class CountDownTimer {
      * Constructs a CountDownTimer with hours and minutes = 0
      *
      * @param seconds The value of the seconds instance variable
+     *
+     * @throws IllegalArgumentException If seconds is below zero
+     * or is above 59
      */
     public CountDownTimer(int seconds) {
         constructTimer(0, 0, seconds);
@@ -56,6 +59,9 @@ public class CountDownTimer {
      *
      * @param minutes The value of the minutes instance variable
      * @param seconds The value of the seconds instance variable
+     *
+     * @throws IllegalArgumentException If seconds or minutes is below
+     * zero or is above 59
      */
     public CountDownTimer(int minutes, int seconds) {
         constructTimer(0, minutes, seconds);
@@ -67,6 +73,9 @@ public class CountDownTimer {
      * @param hours   The value of the hours instance variable
      * @param minutes The value of the minutes instance variable
      * @param seconds The value of the seconds instance variable
+     *
+     * @throws IllegalArgumentException If seconds, minutes,
+     * or hours is below zero or minutes or seconds is above 59
      */
     public CountDownTimer(int hours, int minutes, int seconds) {
         constructTimer(hours, minutes, seconds);
@@ -77,6 +86,9 @@ public class CountDownTimer {
      * on another CountDownTimer object
      *
      * @param other The CountDownTimer to duplicate
+     *
+     * @throws IllegalArgumentException
+     *                      If other is invalid
      */
     public CountDownTimer(CountDownTimer other) {
         constructTimer(other.getHours(),
@@ -92,6 +104,10 @@ public class CountDownTimer {
      *                   mm:ss (Will set hh to zero),
      *                   ss (Will set mm, hh to zero),
      *                   "" (Will set all to zero)
+     * @throws IllegalArgumentException If timeString doesn't
+     * match one of the formats or isn't a valid set of numbers
+     * or if seconds, minutes, or hours is below zero
+     * or minutes or seconds is above 59
      */
     public CountDownTimer(String timeString) {
         String[] timeData = timeString.split(":");
@@ -120,24 +136,28 @@ public class CountDownTimer {
     /**
      * Tests equality of two CountDownTimers
      *
-     * @param c1 The first CountDownTimer
-     * @param c2 The second CountDownTimer
-     * @return True if c1 and c2 have equal hours, minutes, and seconds
+     * @param countDownTimer1 The first CountDownTimer
+     * @param countDownTimer2 The second CountDownTimer
+     * @return True if countDownTimer1 and countDownTimer2
+     *              have equal hours, minutes, and seconds
      */
-    public static boolean equals(CountDownTimer c1, CountDownTimer c2) {
-        return c1.equals(c2);
+    public static boolean equals(CountDownTimer countDownTimer1,
+                                 CountDownTimer countDownTimer2) {
+        return countDownTimer1.equals(countDownTimer2);
     }
 
     /**
-     * Compares c1 to c2
+     * Compares countDownTimer1 to countDownTimer2
      *
-     * @param c1 The first CountDownTimer
-     * @param c2 The second CountDownTimer
-     * @return 1 if c1 is greater than c2, -1 if c1 is less than c2,
-     *          and 0 if they're equal
+     * @param countDownTimer1 The first CountDownTimer
+     * @param countDownTimer2 The second CountDownTimer
+     * @return 1 if countDownTimer1 is greater than countDownTimer2,
+     *         -1 if countDownTimer1 is less than countDownTimer2,
+     *         and 0 if they're equal
      */
-    public static int compareTo(CountDownTimer c1, CountDownTimer c2) {
-        return c1.compareTo(c2);
+    public static int compareTo(CountDownTimer countDownTimer1,
+                                CountDownTimer countDownTimer2) {
+        return countDownTimer1.compareTo(countDownTimer2);
     }
 
     /**
@@ -158,12 +178,15 @@ public class CountDownTimer {
         return suspended;
     }
 
-    /**
+    /*
      * Sets the instance variables with the given parameters
      *
      * @param hours   The value of the hours instance variable
      * @param minutes The value of the minutes instance variable
      * @param seconds The value of the seconds instance variable
+     *
+     * @throws IllegalArgumentException If seconds, minutes,
+     * or hours is below zero or minutes or seconds is above 59
      */
     private void constructTimer(int hours, int minutes, int seconds) {
         if (hours < 0 || minutes < 0 || minutes >= 60
@@ -181,7 +204,7 @@ public class CountDownTimer {
      * @param filename The place to save to
      */
     public void save(String filename) {
-        PrintWriter out; //Nulll
+        PrintWriter out;
         try {
             out = new PrintWriter(
                     new BufferedWriter(new FileWriter(filename))
