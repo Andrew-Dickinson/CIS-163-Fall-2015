@@ -32,29 +32,29 @@ public class CountDownTimer {
      */
     private int seconds;
 
-    /**
+    /*********************************************************************
      * Constructs a CountDownTimer with the hours, minutes, and seconds
      * set to 0
-     */
+     ********************************************************************/
     public CountDownTimer() {
         hours = 0;
         minutes = 0;
         seconds = 0;
     }
 
-    /**
+    /*********************************************************************
      * Constructs a CountDownTimer with hours and minutes = 0
      *
      * @param seconds The value of the seconds instance variable
      *
      * @throws IllegalArgumentException If seconds is below zero
      * or is above 59
-     */
+     ********************************************************************/
     public CountDownTimer(int seconds) {
         constructTimer(0, 0, seconds);
     }
 
-    /**
+    /*********************************************************************
      * Constructs a CountDownTimer with hours = 0
      *
      * @param minutes The value of the minutes instance variable
@@ -62,12 +62,12 @@ public class CountDownTimer {
      *
      * @throws IllegalArgumentException If seconds or minutes is below
      * zero or is above 59
-     */
+     ********************************************************************/
     public CountDownTimer(int minutes, int seconds) {
         constructTimer(0, minutes, seconds);
     }
 
-    /**
+    /*********************************************************************
      * Constructs a CountDownTimer with the given parameters
      *
      * @param hours   The value of the hours instance variable
@@ -76,12 +76,12 @@ public class CountDownTimer {
      *
      * @throws IllegalArgumentException If seconds, minutes,
      * or hours is below zero or minutes or seconds is above 59
-     */
+     ********************************************************************/
     public CountDownTimer(int hours, int minutes, int seconds) {
         constructTimer(hours, minutes, seconds);
     }
 
-    /**
+    /*********************************************************************
      * Constructs a CountDownTimer based
      * on another CountDownTimer object
      *
@@ -89,14 +89,14 @@ public class CountDownTimer {
      *
      * @throws IllegalArgumentException
      *                      If other is invalid
-     */
+     ********************************************************************/
     public CountDownTimer(CountDownTimer other) {
         constructTimer(other.getHours(),
                 other.getMinutes(),
                 other.getSeconds());
     }
 
-    /**
+    /*********************************************************************
      * Constructs a CountDownTimer based on a string
      *
      * @param timeString A string that can be in one of the
@@ -108,7 +108,7 @@ public class CountDownTimer {
      * match one of the formats or isn't a valid set of numbers
      * or if seconds, minutes, or hours is below zero
      * or minutes or seconds is above 59
-     */
+     ********************************************************************/
     public CountDownTimer(String timeString) {
         String[] timeData = timeString.split(":");
         if (timeData.length == 3) {
@@ -133,20 +133,20 @@ public class CountDownTimer {
         }
     }
 
-    /**
+    /*********************************************************************
      * Tests equality of two CountDownTimers
      *
      * @param countDownTimer1 The first CountDownTimer
      * @param countDownTimer2 The second CountDownTimer
      * @return True if countDownTimer1 and countDownTimer2
      *              have equal hours, minutes, and seconds
-     */
+     ********************************************************************/
     public static boolean equals(CountDownTimer countDownTimer1,
                                  CountDownTimer countDownTimer2) {
         return countDownTimer1.equals(countDownTimer2);
     }
 
-    /**
+    /*********************************************************************
      * Compares countDownTimer1 to countDownTimer2
      *
      * @param countDownTimer1 The first CountDownTimer
@@ -154,26 +154,26 @@ public class CountDownTimer {
      * @return 1 if countDownTimer1 is greater than countDownTimer2,
      *         -1 if countDownTimer1 is less than countDownTimer2,
      *         and 0 if they're equal
-     */
+     ********************************************************************/
     public static int compareTo(CountDownTimer countDownTimer1,
                                 CountDownTimer countDownTimer2) {
         return countDownTimer1.compareTo(countDownTimer2);
     }
 
-    /**
+    /*********************************************************************
      * Prevents the add and subtract methods (and their derivatives)
      * from having any effect when true
      *
      * @param flag The state to set
-     */
+     ********************************************************************/
     public static void suspend(boolean flag) {
         suspended = flag;
     }
 
-    /**
+    /*********************************************************************
      * Gets the current suspended state
      * @return are the countdown timers suspended
-     */
+     ********************************************************************/
     public static boolean isSuspended() {
         return suspended;
     }
@@ -198,11 +198,11 @@ public class CountDownTimer {
         this.seconds = seconds;
     }
 
-    /**
+    /*********************************************************************
      * Saves the class and data to the specified file
      *
      * @param filename The place to save to
-     */
+     ********************************************************************/
     public void save(String filename) {
         PrintWriter out;
         try {
@@ -218,11 +218,11 @@ public class CountDownTimer {
         }
     }
 
-    /**
+    /*********************************************************************
      * Loads the class from a file
      *
      * @param filename The file to read from
-     */
+     ********************************************************************/
     public void load(String filename) {
         int seconds;
         int minutes;
@@ -242,13 +242,13 @@ public class CountDownTimer {
         }
     }
 
-    /**
+    /*********************************************************************
      * Tests equality
      *
      * @param other The other object to test
      * @return True if other is CountDownTimer
      *          and hours, minutes, and seconds are equal
-     */
+     ********************************************************************/
     public boolean equals(Object other) {
         if (!(other instanceof CountDownTimer)) {
             return false;
@@ -260,13 +260,13 @@ public class CountDownTimer {
         }
     }
 
-    /**
+    /*********************************************************************
      * Compares this to other
      *
      * @param other The other CountDownObject to compare to
      * @return 1 if this is greater than other,
      * -1 if this is less than other, and 0 if they're equal
-     */
+     ********************************************************************/
     public int compareTo(CountDownTimer other) {
         if (equals(other)) {
             return 0;
@@ -283,11 +283,11 @@ public class CountDownTimer {
         }
     }
 
-    /**
+    /*********************************************************************
      * Returns a string version of the timer data
      *
      * @return A string in the format hh:mm:ss
-     */
+     ********************************************************************/
     public String toString() {
         String hourString = "" + hours;
         String minuteString = "" + minutes;
@@ -328,14 +328,14 @@ public class CountDownTimer {
         }
     }
 
-    /**
+    /*********************************************************************
      * Subtracts the specified amount
      *
      * @param amount The amount to subtract
      * @throws IllegalArgumentException If amount less than 0 or
      *                                  amount greater than
      *                                  getOverallSeconds()
-     */
+     ********************************************************************/
     public void subtract(int amount) {
         if (amount < 0 || amount > getOverallSeconds()) {
             throw new IllegalArgumentException();
@@ -343,21 +343,21 @@ public class CountDownTimer {
         modify(-amount);
     }
 
-    /**
+    /*********************************************************************
      * Subtracts the other CountDownTimer from this one
      *
      * @param other The CountDownTimer to subtract based on
-     */
+     ********************************************************************/
     public void subtract(CountDownTimer other) {
         int tempSeconds = other.getOverallSeconds();
         subtract(tempSeconds);
     }
 
-    /**
+    /*********************************************************************
      * Adds the specified amount to the timer
      *
      * @param amount The amount to add
-     */
+     ********************************************************************/
     public void add(int amount) {
         if (amount < 0) {
             throw new IllegalArgumentException();
@@ -365,19 +365,21 @@ public class CountDownTimer {
         modify(amount);
     }
 
-    /**
+    /*********************************************************************
      * Adds the other CountDownTimer to this one
      *
      * @param other The CountDownTimer to add based on
-     */
+     ********************************************************************/
     public void add(CountDownTimer other) {
         add(other.getOverallSeconds());
     }
 
 
-    /**
+    /*********************************************************************
      * Subtracts 1 from the timer
-     */
+     *
+     * @throws UnsupportedOperationException If all fields are zero
+     ********************************************************************/
     public void dec() {
         if (getOverallSeconds() > 0) {
             subtract(1);
@@ -386,72 +388,72 @@ public class CountDownTimer {
         }
     }
 
-    /**
+    /*********************************************************************
      * Adds 1 to the timer
-     */
+     ********************************************************************/
     public void inc() {
         add(1);
     }
 
-    /**
+    /*********************************************************************
      * Get the remaining number of hours
      *
      * @return the number of hours
-     */
+     ********************************************************************/
     public int getHours() {
         return hours;
     }
 
-    /**
+    /*********************************************************************
      * Set the remaining number of hours
      *
      * @param hours the number of hours
-     */
+     ********************************************************************/
     public void setHours(int hours) {
         this.hours = hours;
     }
 
-    /**
-     * Set the remaining number of minutes
+    /*********************************************************************
+     * Get the remaining number of minutes
      *
      * @return the number of minutes
-     */
+     ********************************************************************/
     public int getMinutes() {
         return minutes;
     }
 
-    /**
+    /*********************************************************************
      * Set the remaining number of minutes
      *
      * @param minutes the number of minutes
-     */
+     ********************************************************************/
     public void setMinutes(int minutes) {
         this.minutes = minutes;
     }
 
-    /**
+    /*********************************************************************
      * Get the remaining number of seconds
      *
      * @return the number of seconds
-     */
+     ********************************************************************/
     public int getSeconds() {
         return seconds;
     }
 
-    /**
+    /*********************************************************************
      * Set the remaining number of seconds
      *
      * @param seconds the number of seconds
-     */
+     ********************************************************************/
     public void setSeconds(int seconds) {
         this.seconds = seconds;
     }
 
-    /**
+    /*********************************************************************
      * Gets the total value of the timer in seconds
      *
      * @return The total value in seconds
-     */
+     ********************************************************************/
     public int getOverallSeconds() {
         return hours * 3600 + minutes * 60 + seconds;
     }
