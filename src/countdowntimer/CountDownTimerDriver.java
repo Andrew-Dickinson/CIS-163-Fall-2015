@@ -2,9 +2,10 @@ package countdowntimer;
 
 import javax.swing.*;
 
-/**
+/***********************************************************************
+ * Launches a demo of the MultipleCDTPanel with 3 CDTPanels
  * Created by Andrew on 9/5/15.
- */
+ **********************************************************************/
 public class CountDownTimerDriver {
     public static void main(String[] args){
         JFrame frame = new JFrame("Count Down Timer");

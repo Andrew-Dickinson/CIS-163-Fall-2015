@@ -6,9 +6,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
 
-/**
+/***********************************************************************
+ * A gui with a numpad, display, and play & pause buttons for
+ * interfacing with the CountDownTimer class
  * Created by Andrew on 9/11/15.
- */
+ **********************************************************************/
 public class CDTPanel extends JPanel {
     private CountDownTimer countDownTimer;
 
@@ -99,17 +101,6 @@ public class CDTPanel extends JPanel {
     }
 
     /**
-     * Get an icon from the Java Look and Feel Repository
-     *
-     * @param urlString url of the icon
-     * @return The icon
-     */
-    private ImageIcon getIconFromUrl(String urlString) {
-        URL url = this.getClass().getResource(urlString);
-        return new ImageIcon(url);
-    }
-
-    /**
      * Adds colons and appropriate zeros
      *
      * @param entered The raw string entered
@@ -126,6 +117,17 @@ public class CDTPanel extends JPanel {
                 .insert(tempString.length() - 4, ":").toString();
 
         return tempString;
+    }
+
+    /**
+     * Get an icon from the Java Look and Feel Repository
+     *
+     * @param urlString url of the icon
+     * @return The icon
+     */
+    private ImageIcon getIconFromUrl(String urlString) {
+        URL url = this.getClass().getResource(urlString);
+        return new ImageIcon(url);
     }
 
     /**

@@ -6,10 +6,10 @@ import java.util.IllegalFormatCodePointException;
 
 import static org.junit.Assert.*;
 
-/**
+/***********************************************************************
  * Contains various tests for the CountDownTimer class
  * Created by Andrew on 9/5/15.
- */
+ **********************************************************************/
 public class CountDownTimerTest {
 
     //Test the default constructor

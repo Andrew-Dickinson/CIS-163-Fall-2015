@@ -5,9 +5,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-/**
+/***********************************************************************
+ * A GUI Panel that houses a variable number of CDTPanels and
+ * a shared suspend button
  * Created by Andrew on 9/11/2015.
- */
+ **********************************************************************/
 public class MultipleCDTPanel extends JPanel{
     private final String SUSPEND_TEXT = "Suspend All";
     private final String UNSUSPEND_TEXT = "UnSuspend All";
