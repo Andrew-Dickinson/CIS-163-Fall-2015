@@ -53,11 +53,13 @@ public class CDTPanel extends JPanel {
         }
 
 
-        String enterUrlString = "/toolbarButtonGraphics/general/Export16.gif";
+        String enterUrlString
+                = "/toolbarButtonGraphics/general/Export16.gif";
         enter_button = new JButton(getIconFromUrl(enterUrlString));
         enter_button.addActionListener(listener);
 
-        String undoUrlString = "/toolbarButtonGraphics/general/Undo16.gif";
+        String undoUrlString
+                = "/toolbarButtonGraphics/general/Undo16.gif";
         clear_button = new JButton(getIconFromUrl(undoUrlString));
         clear_button.addActionListener(listener);
 
@@ -68,11 +70,13 @@ public class CDTPanel extends JPanel {
 
         controlsPanel.add(numPadPanel, BorderLayout.CENTER);
 
-        String stopUrlString = "/toolbarButtonGraphics/general/Stop16.gif";
+        String stopUrlString
+                = "/toolbarButtonGraphics/general/Stop16.gif";
         stop_button = new JButton(getIconFromUrl(stopUrlString));
         stop_button.addActionListener(listener);
 
-        String startUrlString = "/toolbarButtonGraphics/media/Play16.gif";
+        String startUrlString
+                = "/toolbarButtonGraphics/media/Play16.gif";
         play_button = new JButton(getIconFromUrl(startUrlString));
         play_button.addActionListener(listener);
 
