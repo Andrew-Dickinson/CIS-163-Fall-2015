@@ -20,7 +20,9 @@ public class MultipleCDTPanel extends JPanel{
         ButtonListener buttonListener = new ButtonListener();
 
         CDTPanel[] timerPanels = new CDTPanel[numberOfTimers];
-        JPanel gridPanel = new JPanel(new GridLayout(1, timerPanels.length, 30, 0));
+        JPanel gridPanel = new JPanel(
+                new GridLayout(1, timerPanels.length, 30, 0)
+        );
         for (int i = 0; i < timerPanels.length; i++){
             timerPanels[i] = new CDTPanel();
             gridPanel.add(timerPanels[i]);

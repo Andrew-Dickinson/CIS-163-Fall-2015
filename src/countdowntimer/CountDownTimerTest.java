@@ -16,28 +16,32 @@ public class CountDownTimerTest {
     @Test
     public void testDefaultConstructor(){
         CountDownTimer def = new CountDownTimer();
-        assertTrue(def.getHours() == 0 && def.getMinutes() == 0 && def.getSeconds() == 0);
+        assertTrue(def.getHours() == 0 && def.getMinutes() == 0
+                && def.getSeconds() == 0);
     }
 
     //Test empty string constructor
     @Test
     public void testDefaultConstructorWithString(){
         CountDownTimer def = new CountDownTimer("");
-        assertTrue(def.getHours() == 0 && def.getMinutes() == 0 && def.getSeconds() == 0);
+        assertTrue(def.getHours() == 0 && def.getMinutes() == 0
+                && def.getSeconds() == 0);
     }
 
     //Test the seconds only constructor
     @Test
     public void testDefaultConstructorWithSecondsValid(){
         CountDownTimer def = new CountDownTimer(24);
-        assertTrue(def.getHours() == 0 && def.getMinutes() == 0 && def.getSeconds() == 24);
+        assertTrue(def.getHours() == 0 && def.getMinutes() == 0
+                && def.getSeconds() == 24);
     }
 
     //Test the seconds only string constructor
     @Test
     public void testDefaultConstructorWithSecondsStringValid(){
         CountDownTimer def = new CountDownTimer("24");
-        assertTrue(def.getHours() == 0 && def.getMinutes() == 0 && def.getSeconds() == 24);
+        assertTrue(def.getHours() == 0 && def.getMinutes() == 0
+                && def.getSeconds() == 24);
     }
 
     //Test the seconds only constructor with a negative value
@@ -68,14 +72,16 @@ public class CountDownTimerTest {
     @Test
     public void testDefaultConstructorWithMinutesValid(){
         CountDownTimer def = new CountDownTimer(24, 0);
-        assertTrue(def.getHours() == 0 && def.getMinutes() == 24 && def.getSeconds() == 0);
+        assertTrue(def.getHours() == 0 && def.getMinutes() == 24
+                && def.getSeconds() == 0);
     }
 
     //Test the minutes and seconds string constructor
     @Test
     public void testDefaultConstructorWithMinutesValidWithString(){
         CountDownTimer def = new CountDownTimer("24:0");
-        assertTrue(def.getHours() == 0 && def.getMinutes() == 24 && def.getSeconds() == 0);
+        assertTrue(def.getHours() == 0 && def.getMinutes() == 24
+                && def.getSeconds() == 0);
     }
 
     //Test the minutes and seconds constructor with negative values
@@ -84,7 +90,8 @@ public class CountDownTimerTest {
         CountDownTimer def = new CountDownTimer(-4, 0);
     }
 
-    //Test the minutes and seconds string constructor with negative values
+    //Test the minutes and seconds string constructor
+    // with negative values
     @Test(expected=IllegalArgumentException.class)
     public void testDefaultConstructorWithMinutesNegativeWithString(){
         CountDownTimer def = new CountDownTimer("-4:0");
@@ -96,7 +103,8 @@ public class CountDownTimerTest {
         CountDownTimer def = new CountDownTimer(67, 0);
     }
 
-    //Test the minutes and seconds string constructor with too high values
+    //Test the minutes and seconds string constructor
+    // with too high values
     @Test(expected=IllegalArgumentException.class)
     public void testDefaultConstructorWithMinutesHighWithString(){
         CountDownTimer def = new CountDownTimer("67:0");
@@ -106,37 +114,45 @@ public class CountDownTimerTest {
     @Test
     public void testDefaultConstructorWithHoursValid(){
         CountDownTimer def = new CountDownTimer(16, 0, 0);
-        assertTrue(def.getHours() == 16 && def.getMinutes() == 0 && def.getSeconds() == 0);
+        assertTrue(def.getHours() == 16 && def.getMinutes() == 0
+                && def.getSeconds() == 0);
     }
 
     //Test the hours minutes and seconds string constructor
     @Test
     public void testDefaultConstructorWithHoursValidWithString(){
         CountDownTimer def = new CountDownTimer("16:0:0");
-        assertTrue(def.getHours() == 16 && def.getMinutes() == 0 && def.getSeconds() == 0);
+        assertTrue(def.getHours() == 16 && def.getMinutes() == 0
+                && def.getSeconds() == 0);
     }
 
-    //Test the hours minutes and seconds constructor with all values initialized
+    //Test the hours minutes and seconds constructor
+    // with all values initialized
     @Test
     public void testDefaultConstructorWithHoursValidAll(){
         CountDownTimer def = new CountDownTimer(4, 33, 15);
-        assertTrue(def.getHours() == 4 && def.getMinutes() == 33 && def.getSeconds() == 15);
+        assertTrue(def.getHours() == 4 && def.getMinutes() == 33
+                && def.getSeconds() == 15);
     }
 
-    //Test the hours minutes and seconds string constructor with all values initialized
+    //Test the hours minutes and seconds string constructor
+    // with all values initialized
     @Test
     public void testDefaultConstructorWithHoursValidAllWithString(){
         CountDownTimer def = new CountDownTimer("4:33:15");
-        assertTrue(def.getHours() == 4 && def.getMinutes() == 33 && def.getSeconds() == 15);
+        assertTrue(def.getHours() == 4 && def.getMinutes() ==
+                33 && def.getSeconds() == 15);
     }
 
-    //Test the hours minutes and seconds constructor with all values invalid
+    //Test the hours minutes and seconds constructor
+    // with all values invalid
     @Test(expected = IllegalArgumentException.class)
     public void testDefaultConstructorWithAllInvalid(){
         CountDownTimer def = new CountDownTimer(-60, 60, 60);
     }
 
-    //Test the hours minutes and seconds string constructor with all values invalid
+    //Test the hours minutes and seconds string constructor
+    // with all values invalid
     @Test(expected = IllegalArgumentException.class)
     public void testDefaultConstructorWithAllInvalidString(){
         CountDownTimer def = new CountDownTimer("-60:60:60");
@@ -148,7 +164,8 @@ public class CountDownTimerTest {
         CountDownTimer def = new CountDownTimer(-4, 0, 0);
     }
 
-    //Test the hours minutes and seconds string constructor with hours negative
+    //Test the hours minutes and seconds string constructor
+    // with hours negative
     @Test(expected=IllegalArgumentException.class)
     public void testDefaultConstructorWithHoursNegativeWithString() {
         CountDownTimer def = new CountDownTimer("-4:0:0");
@@ -168,7 +185,8 @@ public class CountDownTimerTest {
     @Test
     public void testStringConstructorHMS(){
         CountDownTimer def = new CountDownTimer("03:45:23");
-        assertTrue(def.getHours() == 3 && def.getMinutes() == 45 && def.getSeconds() == 23);
+        assertTrue(def.getHours() == 3 && def.getMinutes() == 45
+                && def.getSeconds() == 23);
     }
 
     //Test the string constructor with an invalid minute parameter
@@ -187,21 +205,24 @@ public class CountDownTimerTest {
     @Test
     public void testStringConstructorMS(){
         CountDownTimer def = new CountDownTimer("45:23");
-        assertTrue(def.getHours() == 0 && def.getMinutes() == 45 && def.getSeconds() == 23);
+        assertTrue(def.getHours() == 0 && def.getMinutes() == 45
+                && def.getSeconds() == 23);
     }
 
     //Test the string constructor with valid seconds
     @Test
     public void testStringConstructorS(){
         CountDownTimer def = new CountDownTimer("23");
-        assertTrue(def.getHours() == 0 && def.getMinutes() == 0 && def.getSeconds() == 23);
+        assertTrue(def.getHours() == 0 && def.getMinutes() == 0
+                && def.getSeconds() == 23);
     }
 
     //Test the string constructor with empty string
     @Test
     public void testStringConstructorEmpty(){
         CountDownTimer def = new CountDownTimer("");
-        assertTrue(def.getHours() == 0 && def.getMinutes() == 0 && def.getSeconds() == 0);
+        assertTrue(def.getHours() == 0 && def.getMinutes() == 0
+                && def.getSeconds() == 0);
     }
 
     //Test the string constructor with giberish
@@ -292,7 +313,8 @@ public class CountDownTimerTest {
     public void testSubtractValid(){
         CountDownTimer def = new CountDownTimer(4, 33, 15);
         def.subtract(17);
-        assertTrue(def.getHours() == 4 && def.getMinutes() == 32 && def.getSeconds() == 58);
+        assertTrue(def.getHours() == 4 && def.getMinutes() == 32
+                && def.getSeconds() == 58);
     }
 
     //Test the subtract function with a negative parameter
@@ -302,7 +324,8 @@ public class CountDownTimerTest {
         def.subtract(-17);
     }
 
-    //Test the subtract function when the amount is more than the countdown timer has
+    //Test the subtract function when the amount is more
+    // than the countdown timer has
     @Test(expected=IllegalArgumentException.class)
     public void testSubtractTooFar(){
         CountDownTimer def = new CountDownTimer(0, 1, 15);
@@ -315,7 +338,8 @@ public class CountDownTimerTest {
         CountDownTimer def1 = new CountDownTimer(4, 33, 15);
         CountDownTimer def2 = new CountDownTimer(0, 3, 20);
         def1.subtract(def2);
-        assertTrue(def1.getHours() == 4 && def1.getMinutes() == 29 && def1.getSeconds() == 55);
+        assertTrue(def1.getHours() == 4 && def1.getMinutes() == 29
+                && def1.getSeconds() == 55);
     }
 
     //Test the dec function
@@ -323,7 +347,8 @@ public class CountDownTimerTest {
     public void testDecValid(){
         CountDownTimer def = new CountDownTimer(0, 1, 15);
         def.dec();
-        assertTrue(def.getHours() == 0 && def.getMinutes() == 1 && def.getSeconds() == 14);
+        assertTrue(def.getHours() == 0 && def.getMinutes() == 1
+                && def.getSeconds() == 14);
     }
 
     //Test the dec function when it is unsupported
@@ -338,7 +363,8 @@ public class CountDownTimerTest {
     public void testAddValid(){
         CountDownTimer def = new CountDownTimer(4, 33, 15);
         def.add(56);
-        assertTrue(def.getHours() == 4 && def.getMinutes() == 34 && def.getSeconds() == 11);
+        assertTrue(def.getHours() == 4 && def.getMinutes() == 34
+                && def.getSeconds() == 11);
     }
 
     //Test add with a negative parameter
@@ -354,7 +380,8 @@ public class CountDownTimerTest {
         CountDownTimer def1 = new CountDownTimer(4, 33, 15);
         CountDownTimer def2 = new CountDownTimer(0, 3, 20);
         def1.add(def2);
-        assertTrue(def1.getHours() == 4 && def1.getMinutes() == 36 && def1.getSeconds() == 35);
+        assertTrue(def1.getHours() == 4 && def1.getMinutes() == 36
+                && def1.getSeconds() == 35);
     }
 
     //Test increment function
@@ -362,7 +389,8 @@ public class CountDownTimerTest {
     public void testIncValid(){
         CountDownTimer def = new CountDownTimer(0, 1, 15);
         def.inc();
-        assertTrue(def.getHours() == 0 && def.getMinutes() == 1 && def.getSeconds() == 16);
+        assertTrue(def.getHours() == 0 && def.getMinutes() == 1
+                && def.getSeconds() == 16);
     }
 
     //Test the output of the getOverallSeconds function
@@ -414,7 +442,8 @@ public class CountDownTimerTest {
         def1.dec();
         def1.subtract(8);
 
-        assertTrue(def1.getHours() == 100 && def1.getMinutes() == 5 && def1.getSeconds() == 23);
+        assertTrue(def1.getHours() == 100 && def1.getMinutes() == 5
+                && def1.getSeconds() == 23);
         assertFalse(CountDownTimer.isSuspended());
     }
 
