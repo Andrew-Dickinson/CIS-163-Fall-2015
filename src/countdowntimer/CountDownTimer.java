@@ -178,7 +178,7 @@ public class CountDownTimer {
         return suspended;
     }
 
-    /*
+    /* *****************************************************************
      * Sets the instance variables with the given parameters
      *
      * @param hours   The value of the hours instance variable
@@ -187,7 +187,7 @@ public class CountDownTimer {
      *
      * @throws IllegalArgumentException If seconds, minutes,
      * or hours is below zero or minutes or seconds is above 59
-     */
+     ******************************************************************/
     private void constructTimer(int hours, int minutes, int seconds) {
         if (hours < 0 || minutes < 0 || minutes >= 60
                 || seconds < 0 || seconds >= 60)
@@ -304,14 +304,14 @@ public class CountDownTimer {
         return hourString + ":" + minuteString + ":" + secondString;
     }
 
-    /*
+    /* *****************************************************************
      * Adds or subtracts the indicated amount in seconds if the class
      * is not suspended
      * @param amount The amount in seconds. Negative to subtract.
      *               Positive to add
      * @throws IllegalArgumentException If subtraction
      *                                  goes to less than zero
-     */
+     ******************************************************************/
     private void modify(int amount) {
         if (!suspended) {
             int tempOverallSeconds = getOverallSeconds();
