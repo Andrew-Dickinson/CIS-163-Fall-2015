@@ -8,17 +8,17 @@ public enum GameStatus {
     /**
      * Player 1 is the winner. Game is finished
      */
-    Player1Won,
+    PLAYER_1_WON,
     /**
      * Player 2 is the winner. Game is finished
      */
-    Player2Won,
+    PLAYER_2_WON,
     /**
      * There is a tie. Game is finished
      */
-    Cats,
+    CATS,
     /**
      * The game is still in progress
      */
-    InProgress
+    IN_PROGRESS
 }
