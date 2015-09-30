@@ -132,6 +132,7 @@ public class ConnectFourGame {
             }
 
             if (undoStack.get(undoStack.size() - 1) != -1) {
+                //The most recent entry is not -1
                 //We don't have to reconstruct the board
                 int relevantColumn = undoStack.remove(undoStack.size() - 1);
 
@@ -146,6 +147,7 @@ public class ConnectFourGame {
                     }
                 }
             } else {
+                //The most recent entry is -1
                 //We have to reconstruct the board
 
                 //Get rid of the board cleared indicator ("-1")
@@ -156,6 +158,7 @@ public class ConnectFourGame {
                 for (int i = undoStack.size() - 1; i >= 0; i--){
                     if (undoStack.get(i) == -1){
                         start = i + 1;
+                        break;
                     }
                 }
 
@@ -163,13 +166,14 @@ public class ConnectFourGame {
                 //and add it to currentBoardColumnStack
                 ArrayList<Integer> currentBoardColumnStack = new ArrayList<Integer>();
                 for (int i = start; i < undoStack.size(); i++){
-                    currentBoardColumnStack.add(undoStack.remove(i));
+                    currentBoardColumnStack.add(undoStack.remove(start));
                 }
 
                 //Reconstruct the board
                 for (int col : currentBoardColumnStack){
                     selectColumn(col); //Rebuilds the old stack
                 }
+
                 //TODO: Fix this mess
                 return true;
             }
