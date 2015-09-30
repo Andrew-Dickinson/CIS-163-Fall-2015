@@ -162,11 +162,14 @@ public class ConnectFourGame {
                     }
                 }
 
+                //TODO: Try reversing this process i.e. counting i down
+                //And then flip currentBoardColumnStack
+
                 //Cut the old stack out of undoStack to prevent duplication
                 //and add it to currentBoardColumnStack
                 ArrayList<Integer> currentBoardColumnStack = new ArrayList<Integer>();
                 for (int i = start; i < undoStack.size(); i++){
-                    currentBoardColumnStack.add(undoStack.remove(start));
+                    currentBoardColumnStack.add(undoStack.get(i));
                 }
 
                 //Reconstruct the board
