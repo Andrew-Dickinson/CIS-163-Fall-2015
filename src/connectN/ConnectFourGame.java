@@ -120,9 +120,11 @@ public class ConnectFourGame {
 
     /**
      * Undoes the most recent move
-     * @return Was the undo preformed
+     * @return If an undo was not preformed: -2
+     *         If no player who won right before the undo, -1
+     *         If a player who won right before the undo, their number
      */
-    public boolean undoMove(){
+    public int undoMove(){
         if (undoStack.size() > 1) {
             //Invert turn
             if (currentTurn == PLAYER1_TURN) {
@@ -143,7 +145,7 @@ public class ConnectFourGame {
 
                         getGameStatus(); //Update the status variable for accuracy
 
-                        return true;
+                        return -1;
                     }
                 }
             } else {
@@ -155,21 +157,38 @@ public class ConnectFourGame {
 
                 //Find the most recent reset indicator
                 int start = -1;
-                for (int i = undoStack.size() - 1; i >= 0; i--){
-                    if (undoStack.get(i) == -1){
+                for (int i = undoStack.size() - 1; i >= 0; i--) {
+                    if (undoStack.get(i) == -1) {
                         start = i + 1;
                         break;
                     }
                 }
 
-                //TODO: Try reversing this process i.e. counting i down
-                //And then flip currentBoardColumnStack
-
-                //Cut the old stack out of undoStack to prevent duplication
-                //and add it to currentBoardColumnStack
+                //Add each item from the most recent -1 onward to currentBoardColumnStack
                 ArrayList<Integer> currentBoardColumnStack = new ArrayList<Integer>();
                 for (int i = start; i < undoStack.size(); i++){
                     currentBoardColumnStack.add(undoStack.get(i));
+                }
+
+                //Cut the old stack out of undoStack to prevent duplication
+                //Has to count down to prevent out of bounds
+                int size  =  undoStack.size();
+                for (int i = size - 1; i >= start; i--){
+                    undoStack.remove(i);
+                }
+
+
+
+                //If the number of turns we're going back is even,
+                //we need to switch who's turn it is
+                int numberOfTurnsAgo = size - start;
+                if (numberOfTurnsAgo % 2 == 0){
+                    //Invert turn
+                    if (currentTurn == PLAYER1_TURN) {
+                        currentTurn = PLAYER2_TURN;
+                    } else if (currentTurn == PLAYER2_TURN) {
+                        currentTurn = PLAYER1_TURN;
+                    }
                 }
 
                 //Reconstruct the board
@@ -177,14 +196,19 @@ public class ConnectFourGame {
                     selectColumn(col); //Rebuilds the old stack
                 }
 
-                //TODO: Fix this mess
-                return true;
+                if (getGameStatus() == GameStatus.PLAYER_1_WON){
+                    undoMove(); //Undoes the winning play
+                    return PLAYER1_TURN;
+                } else if (getGameStatus() == GameStatus.PLAYER_2_WON){
+                    undoMove(); //Undoes the winning play
+                    return PLAYER2_TURN;
+                }
             }
 
 
         }
 
-        return false;
+        return -2;
     }
 
     /**

@@ -276,10 +276,11 @@ public class ConnectFourPanel extends JPanel {
             }
 
             if (e.getSource() == undoButton){
-                boolean undone = game.undoMove();
-                //TODO: Deal with undoing wins
-                //If undoing was possible
-                if (undone){
+                int undone = game.undoMove();
+
+                //If undoing was preformed
+                if (undone != -2){
+                    //Update the board
                     for (int row = 0; row < board.length; row++){
                         for (int col = 0; col < board[0].length; col++){
                             int value = game.getBoardCell(row, col);
@@ -292,19 +293,36 @@ public class ConnectFourPanel extends JPanel {
                             }
                         }
                     }
+
+                    //Undo win indicator
+                    if (undone == ConnectFourGame.PLAYER1_TURN){
+                        player1Wins -= 1;
+                        player1WinsLabel.setText("Player 1: " + player1Wins);
+                    } else if (undone == ConnectFourGame.PLAYER2_TURN){
+                        player2Wins -= 1;
+                        player2WinsLabel.setText("Player 2: " + player2Wins);
+                    }
                 }
             }
 
             GameStatus currentStatus = game.getGameStatus();
             if (currentStatus != GameStatus.IN_PROGRESS) {
                 if (currentStatus == GameStatus.PLAYER_1_WON) {
-                    System.out.println("Player 1 wins");
                     player1Wins++;
+                    JOptionPane.showMessageDialog(null,
+                            "Player 1 connected enough chips to win!",
+                            "Player 1 wins",
+                            JOptionPane.INFORMATION_MESSAGE);
                 } else if (currentStatus == GameStatus.PLAYER_2_WON) {
-                    System.out.println("Player 2 wins");
                     player2Wins++;
+                    JOptionPane.showMessageDialog(null,
+                            "Player 2 connected enough chips to win!",
+                            "Player 2 wins",
+                            JOptionPane.INFORMATION_MESSAGE);
                 } else if (currentStatus == GameStatus.CATS) {
-                    System.out.println("Cats game");
+                    JOptionPane.showMessageDialog(null,
+                         "The board is full and there is no winner!",
+                         "Cat's Game", JOptionPane.INFORMATION_MESSAGE);
                 }
 
                 //Reset the game board
