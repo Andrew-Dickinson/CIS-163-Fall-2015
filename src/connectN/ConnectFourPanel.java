@@ -79,9 +79,9 @@ public class ConnectFourPanel extends JPanel {
     private JPanel boardPanel;
 
     /**
-     * A borderlayout panel containing the boardPanel and buttonsPanel
+     * A borderlayout panel containing the gui elements for this panel
      */
-    private JPanel gamePanel;
+    private JPanel overallPanel;
 
     /**
      * Stores the number of wins for each player
@@ -176,7 +176,7 @@ public class ConnectFourPanel extends JPanel {
      ******************************************************************/
     private void setUpNewGamePanel(boolean useDefaultIfEntryInvalid){
         //Instantiate the game panel
-        this.gamePanel = new JPanel(new BorderLayout());
+        JPanel gamePanel = new JPanel(new BorderLayout());
 
         //Setup a new game instance from prompts given to the user
         this.game = createGameFromPrompts(useDefaultIfEntryInvalid);
@@ -191,11 +191,14 @@ public class ConnectFourPanel extends JPanel {
         playerWinLabelsPanel = new JPanel(
                 new GridLayout(game.getNumberOfPlayers(), 1)
         );
+
         playerWinLabelsPanel.setPreferredSize(
                 new Dimension(150, 30 * game.getNumberOfPlayers())
         );
+
         JPanel tempFlowPanel = new JPanel(new FlowLayout());
         tempFlowPanel.add(playerWinLabelsPanel);
+
         for (int i = 0; i < game.getNumberOfPlayers(); i++){
             playerWins[i] = 0;
             playerWinLabels[i] = new JLabel();
@@ -211,9 +214,9 @@ public class ConnectFourPanel extends JPanel {
 
         updateWinIndicators();
 
-        JPanel leftPanel = new JPanel(new BorderLayout());
-        leftPanel.add(tempFlowPanel, BorderLayout.CENTER);
-        leftPanel.add(undoButton, BorderLayout.NORTH);
+        JPanel rightPanel = new JPanel(new BorderLayout());
+        rightPanel.add(tempFlowPanel, BorderLayout.CENTER);
+        rightPanel.add(undoButton, BorderLayout.NORTH);
 
         //Construct the board panel with a
         //two dimensional array of JLabels
@@ -244,9 +247,11 @@ public class ConnectFourPanel extends JPanel {
         gamePanel.add(buttonPanel, BorderLayout.NORTH);
         gamePanel.add(boardPanel, BorderLayout.CENTER);
 
-        JPanel overallPanel = new JPanel(new BorderLayout());
+        overallPanel = new JPanel(new BorderLayout());
         overallPanel.add(gamePanel, BorderLayout.CENTER);
-        overallPanel.add(leftPanel, BorderLayout.WEST);
+        overallPanel.add(rightPanel, BorderLayout.EAST);
+        overallPanel.add(Box.createHorizontalStrut(20), BorderLayout.WEST);
+        overallPanel.add(Box.createVerticalStrut(20), BorderLayout.SOUTH);
 
         add(overallPanel);
 
@@ -479,6 +484,20 @@ public class ConnectFourPanel extends JPanel {
      */
     private void updateWinIndicators(){
         for (int i = 0; i < playerWins.length; i++){
+            try {
+                Image img = ImageIO.read(ConnectFourPanel.class
+                        .getResourceAsStream(getIconPath(i)));
+
+                img = img.getScaledInstance(20, 20, Image.SCALE_DEFAULT);
+
+                //Convert image to icon
+                ImageIcon icon = new ImageIcon(img);
+
+                playerWinLabels[i].setIcon(icon);
+            } catch (IOException e){
+                e.printStackTrace();
+            }
+
             playerWinLabels[i].setText(PLAYER_TOTAL_WINS_TEXT
                     + (i + 1) + ": " + playerWins[i]);
         }
@@ -495,15 +514,8 @@ public class ConnectFourPanel extends JPanel {
     private void setCell(int row, int col, int player){
         try {
             //Get image
-            Image img;
-            if (player != -1) {
-                img = ImageIO.read(ConnectFourPanel.class
-                  .getResourceAsStream("player" + player + "Cell.png"));
-
-            } else {
-                img = ImageIO.read(ConnectFourPanel.class
-                                 .getResourceAsStream("blankCell.png"));
-            }
+            Image img = ImageIO.read(ConnectFourPanel.class
+                  .getResourceAsStream(getIconPath(player)));
 
             //Convert image to icon
             ImageIcon icon = new ImageIcon(img);
@@ -512,6 +524,19 @@ public class ConnectFourPanel extends JPanel {
             board[row][col].setIcon(icon);
         } catch (IOException e){
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Computes an icon path for finding a particular icon
+     * @param player The player to get it for (or -1 for blank)
+     * @return The path of the image file
+     */
+    private String getIconPath(int player){
+        if (player != -1) {
+            return "player" + player + "Cell.png";
+        } else {
+            return "blankCell.png";
         }
     }
 
@@ -576,7 +601,7 @@ public class ConnectFourPanel extends JPanel {
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == newGameButton){
                 //Get rid of the old game panel
-                remove(gamePanel);
+                remove(overallPanel);
 
                 //Set up the new one
                 setUpNewGamePanel(false);
