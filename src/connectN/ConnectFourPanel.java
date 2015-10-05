@@ -11,16 +11,81 @@ import java.awt.event.ActionListener;
  **********************************************************************/
 public class ConnectFourPanel extends JPanel {
     /**
-     * Defines the text to display in the cells
+     * Defines the text to display in empty cells
      */
     private static final String DISPLAY_EMPTY = "-";
+
+    /**
+     * Defines the text to display in player 1's cells
+     */
     private static final String DISPLAY_PLAYER1 = "X";
+
+    /**
+     * Defines the text to display in player 2's cells
+     */
     private static final String DISPLAY_PLAYER2 = "O";
 
     /**
-     * Defines the text to display on buttons and labels
+     * Defines the text to display on the select buttons
      */
     private static final String SELECT_TEXT = "Select";
+
+    /**
+     * The text to display on the undo button
+     */
+    private static final String UNDO_BUTTON_TEXT = "Undo";
+
+    /**
+     * The text to display on the wins indicator for player 1
+     */
+    private static final String PLAYER_1_WINS_TEXT = "Player 1: ";
+
+    /**
+     * The text to display on the wins indicator for player 2
+     */
+    private static final String PLAYER_2_WINS_TEXT = "Player 2: ";
+
+    /**
+     * The text of the labels that appear on the setup prompt
+     */
+    private static final String SETUP_DIALOG_TITLE
+                         = "Please enter information about the board: ";
+    private static final String WIDTH_PROMPT_LABEL = "Board Width: ";
+    private static final String HEIGHT_PROMPT_LABEL = "Board Height: ";
+    private static final String WIN_LENGTH_PROMPT_LABEL = "Win length: ";
+    private static final String PLAYERS_PROMPT_LABEL
+                                           = "Number of Players: ";
+    private static final String FIRST_PLAYER_PROMPT_LABEL
+                                           = "Player that goes first: ";
+
+    /**
+     * The text to appear on warning dialogs
+     */
+    private static final String INVALID_ENTRY_TEXT = "Invalid Entry";
+    private static final String DEFAULT_VALUES_WILL_BE_USED
+                                       = "Default Values will be used.";
+    private static final String ENTER_VALID_VALUES_TEXT
+                                       = "Please enter valid values.";
+    public static final String INVALID_SELECTION_TITLE = "Invalid Selection";
+    private static final String COLUMN_FULL_ERROR
+          = "The column you selected is full. \n Please select another";
+
+    /**
+     * The text of the win dialog boxes
+     */
+    public static final String PLAYER_1_WIN_TEXT
+            = "Player 1 connected enough chips to win!";
+    public static final String PLAYER_1_WIN_TITLE
+            = "Player 1 wins";
+    public static final String PLAYER_2_WIN_TEXT
+            = "Player 2 connected enough chips to win!";
+    public static final String PLAYER_2_WIN_TITLE
+            = "Player 2 wins";
+    public static final String CATS_GAME_TEXT
+            = "The board is full and there is no winner!";
+    public static final String CATS_GAME_TITLE
+            = "Cat's Game";
+
 
     /**
      * These JLabels display the status of the game board
@@ -38,19 +103,27 @@ public class ConnectFourPanel extends JPanel {
     private JPanel gamePanel;
 
     /**
-     * Stores the number of wins for each player
+     * Stores the number of wins for player 1
      */
     private int player1Wins;
+
+    /**
+     * Stores the number of wins for player 2
+     */
     private int player2Wins;
 
     /**
-     * These JLabels display the number of wins for each player
+     * These JLabels display the number of wins for player1
      */
     private JLabel player1WinsLabel;
+
+    /**
+     * These JLabels display the number of wins for player2
+     */
     private JLabel player2WinsLabel;
 
     /**
-     * These buttons allow the players to play chips
+     * These buttons allow the players to play chips in specific columns
      */
     private JButton[] selection;
 
@@ -70,9 +143,13 @@ public class ConnectFourPanel extends JPanel {
     private ButtonListener buttonListener;
 
     /**
-     * The menu buttons from the frame above
+     * A menu button from the frame above for closing the frame
      */
     private JMenuItem quitButton;
+
+    /**
+     * A menu button from the frame above for creating a new game
+     */
     private JMenuItem newGameButton;
 
     /**
@@ -80,10 +157,20 @@ public class ConnectFourPanel extends JPanel {
      */
     private ConnectFourGame game;
 
+    /*******************************************************************
+     * Sets up the panel to begin playing a game on it
+     *
+     * @param quitItem The quit menu item from the frame above
+     * @param newGameItem The new game menu item from the frame above
+     ******************************************************************/
     public ConnectFourPanel(JMenuItem quitItem, JMenuItem newGameItem){
-        //Used to process menu button clicks
+        //Processes menu button clicks
         MenuButtonListener menuListener = new MenuButtonListener();
 
+        //Handles all other button clicks in this panel
+        buttonListener = new ButtonListener();
+
+        //Set the menu button instance variables
         this.quitButton = quitItem;
         this.newGameButton = newGameItem;
 
@@ -91,13 +178,42 @@ public class ConnectFourPanel extends JPanel {
         this.quitButton.addActionListener(menuListener);
         this.newGameButton.addActionListener(menuListener);
 
-        //Setup a new game instance
-        this.game = createGameFromPrompts(true);
+        //Initialize the win indicators and add them to the panel
+        player1WinsLabel = new JLabel();
+        player2WinsLabel = new JLabel();
+        add(player1WinsLabel);
+        add(player2WinsLabel);
+
+        //Instantiate the undo button and add it to the panel
+        undoButton = new JButton(UNDO_BUTTON_TEXT);
+        undoButton.addActionListener(buttonListener);
+        add(undoButton);
+
+        //Call the private helper method to prompt for game info
+        //and create the board GUI
+        setUpNewGamePanel(true);
+    }
+
+    /*******************************************************************
+     * Sets up a new game. Prompts the user to enter board size,
+     * win length, and starting player. Sets up the board GUI including
+     * board buttons and win indicators
+     *
+     * @param useDefaultIfEntryInvalid If the user enters an invalid
+     *          value in a prompt and this is true, a default value
+     *          will be used instead of prompting the user to re-enter
+     *          the value
+     ******************************************************************/
+    private void setUpNewGamePanel(boolean useDefaultIfEntryInvalid){
+        //Instantiate the game panel
+        this.gamePanel = new JPanel(new BorderLayout());
+
+        //Setup a new game instance from prompts given to the user
+        this.game = createGameFromPrompts(useDefaultIfEntryInvalid);
+
+        //Get the width and height from the game object
         int width = game.getBoardWidth();
         int height = game.getBoardHeight();
-
-        //Used for all button events in this panel
-        buttonListener = new ButtonListener();
 
         //Construct the board panel with a
         //two dimensional array of JLabels
@@ -119,148 +235,273 @@ public class ConnectFourPanel extends JPanel {
             buttonPanel.add(selection[col]);
         }
 
-        this.gamePanel = new JPanel(new BorderLayout());
         gamePanel.add(buttonPanel, BorderLayout.NORTH);
         gamePanel.add(boardPanel, BorderLayout.CENTER);
+        add(gamePanel);
 
-
-        //Initialize the win counters to 0
+        //Set the win counters to 0
         this.player1Wins = 0;
         this.player2Wins = 0;
 
-        //Initialize the win indicators
-        player1WinsLabel = new JLabel("Player 1: " + player1Wins);
-        player2WinsLabel = new JLabel("Player 2: " + player2Wins);
-        add(player1WinsLabel);
-        add(player2WinsLabel);
-
-        undoButton = new JButton("Undo");
-        undoButton.addActionListener(buttonListener);
-        add(undoButton);
-
-        add(gamePanel);
+        //Update the win indicators
+        player1WinsLabel.setText(PLAYER_1_WINS_TEXT + player1Wins);
+        player2WinsLabel.setText(PLAYER_2_WINS_TEXT + player2Wins);
     }
 
-    /**
+    /*******************************************************************
      * Closes the parent frame to this panel
-     */
+     ******************************************************************/
     private void closeParentFrame(){
+        //Get the parent frame and call its dispose method
         SwingUtilities.windowForComponent(this).dispose();
     }
 
-    /**
-     * Closes the parent frame to this panel
-     */
+    /*******************************************************************
+     * Calls the parent frame's pack method
+     ******************************************************************/
     private void packParentFrame(){
+        //Get the parent frame and call its pack method
         SwingUtilities.windowForComponent(this).pack();
     }
 
-    /**
-     * Creates a game based on prompts to the user about game details
+    /*******************************************************************
+     * Creates a game object from prompts to the user about game details
+     *
      * @param useDefaultIfEntryInvalid If the user enters an invalid
      *          value and this is true, a default value will be used
      *          instead of prompting the user to re-enter the value
-     * @return The generated game
-     */
+     * @return The generated game object
+     ******************************************************************/
     private ConnectFourGame createGameFromPrompts(
             boolean useDefaultIfEntryInvalid){
-        int[] boardInfo = promptForBoardInfo(useDefaultIfEntryInvalid);
 
-        String startingPlayer = JOptionPane.showInputDialog(null,
-                "Who starts first? (1 or 2)",
-                "Pick a starting player", JOptionPane.PLAIN_MESSAGE);
-
-        int startingPlayerNumber;
-        try {
-            startingPlayerNumber = Integer.parseInt(startingPlayer) - 1;
-        } catch (NumberFormatException e){
-            startingPlayerNumber = 0;
+        //4-19 is the range for the width and height of a board
+        DefaultComboBoxModel<String> widthModel =
+                new DefaultComboBoxModel<String>();
+        DefaultComboBoxModel<String> heightModel =
+                new DefaultComboBoxModel<String>();
+        for (int i = 4; i < 20; i++){
+            widthModel.addElement(Integer.toString(i));
+            heightModel.addElement(Integer.toString(i));
         }
 
-        if (startingPlayerNumber < 0 || startingPlayerNumber > 1){
-            startingPlayerNumber = 0;
+        //Select a 10 by 10 board by default
+        widthModel.setSelectedItem(Integer.toString(10));
+        heightModel.setSelectedItem(Integer.toString(10));
+
+        //4-19 is the range for the win length. We check below if
+        // it's greater than the size of the board allows
+        DefaultComboBoxModel<String> winLengthModel =
+                new DefaultComboBoxModel<String>();
+        for (int i = 4; i < 20; i++){
+            winLengthModel.addElement(Integer.toString(i));
         }
 
-        return new ConnectFourGame(boardInfo[0],
-                boardInfo[1], boardInfo[2], startingPlayerNumber);
-    }
+        //2-10 is the range for the number of players
+        DefaultComboBoxModel<String> playersModel =
+                new DefaultComboBoxModel<String>();
+        for (int i = 2; i < 11; i++){
+            playersModel.addElement(Integer.toString(i));
+        }
 
-    private int[] promptForBoardInfo(boolean useDefaultIfEntryInvalid){
-        JTextField widthField = new JTextField(2);
-        JTextField heightField = new JTextField(2);
-        JTextField lengthField = new JTextField(2);
+        //1-10 is the range for the selection of a player
+        DefaultComboBoxModel<String> playerSelModel =
+                new DefaultComboBoxModel<String>();
+        for (int i = 1; i < 11; i++){
+            playerSelModel.addElement(Integer.toString(i));
+        }
 
-        JPanel dialogFieldPanel = new JPanel();
-        dialogFieldPanel.add(new JLabel("Width: "));
-        dialogFieldPanel.add(widthField);
-        dialogFieldPanel.add(new JLabel("Height: "));
-        dialogFieldPanel.add(heightField);
-        dialogFieldPanel.add(new JLabel("Win length: "));
-        dialogFieldPanel.add(lengthField);
+        //Create
+        JComboBox widthComboBox = new JComboBox<String>(widthModel);
+        JComboBox heightComboBox = new JComboBox<String>(heightModel);
+        JComboBox winLengthCBox = new JComboBox<String>(winLengthModel);
+        JComboBox numPlayersCBox = new JComboBox<String>(playersModel);
+        JComboBox firstPlayerCBox = new JComboBox<String>(playerSelModel);
 
+        JPanel dialogFieldPanel = new JPanel(new GridLayout(5, 2));
+        dialogFieldPanel.add(new JLabel(WIDTH_PROMPT_LABEL));
+        dialogFieldPanel.add(widthComboBox);
+        dialogFieldPanel.add(new JLabel(HEIGHT_PROMPT_LABEL));
+        dialogFieldPanel.add(heightComboBox);
+        dialogFieldPanel.add(new JLabel(WIN_LENGTH_PROMPT_LABEL));
+        dialogFieldPanel.add(winLengthCBox);
+        dialogFieldPanel.add(new JLabel(PLAYERS_PROMPT_LABEL));
+        dialogFieldPanel.add(numPlayersCBox);
+        dialogFieldPanel.add(new JLabel(FIRST_PLAYER_PROMPT_LABEL));
+        dialogFieldPanel.add(firstPlayerCBox);
+
+        boolean entriesInvalid = true;
+
+        //Default values. They get overwritten
         int width = -1;
         int height = -1;
         int winLength = -1;
-        while ((width == -1 || height == -1 || winLength == -1)) {
-            int result = JOptionPane.showConfirmDialog(null, dialogFieldPanel,
-                    "Please enter the size of the board: ",
+        int players = -1;
+        int startingPlayer = -1;
+        while (entriesInvalid) {
+            int result = JOptionPane.showConfirmDialog(null,
+                    dialogFieldPanel,
+                    SETUP_DIALOG_TITLE,
                     JOptionPane.OK_CANCEL_OPTION);
 
+            //If cancel was pressed, we leave all the values at -1
             if (result == JOptionPane.OK_OPTION) {
-                String widthString = widthField.getText();
-                String heightString = heightField.getText();
-                String lengthString = lengthField.getText();
+                //Get the string values from the comboboxes
+                String widthString =
+                        (String) widthComboBox.getSelectedItem();
+                String heightString =
+                        (String) heightComboBox.getSelectedItem();
+                String lengthString =
+                        (String) winLengthCBox.getSelectedItem();
+                String playersString =
+                        (String) numPlayersCBox.getSelectedItem();
+                String startingString =
+                        (String) firstPlayerCBox.getSelectedItem();
 
-                try {
-                    width = Integer.parseInt(widthString);
-                    height = Integer.parseInt(heightString);
-                    winLength = Integer.parseInt(lengthString);
-                } catch (NumberFormatException e) {
-                    //Numbers stay at -1
-                }
+                //Parse the strings out into ints
+                width = Integer.parseInt(widthString);
+                height = Integer.parseInt(heightString);
+                winLength = Integer.parseInt(lengthString);
+                players = Integer.parseInt(playersString);
+                startingPlayer = Integer.parseInt(startingString);
             }
 
-            if (width >= 20 || width <= 3 || height >= 20
-                    || height <= 3 || winLength <= 1) {
-                width = -1;
-                height = -1;
-                winLength = -1;
+            //Determine if the win length is longer than
+            //the smaller dimension of the board
+            boolean winLengthTooLong;
+            if (width < height) {
+                winLengthTooLong = winLength > width;
+            } else {
+                winLengthTooLong = winLength > height;
+            }
 
+            //If any condition is invalid, including
+            // if width or height is still -1, we set entriesInvalid
+            if (width >= 20 || width <= 3 || height >= 20
+                    || height <= 3 || winLength <= 1
+                    || winLengthTooLong || startingPlayer > players) {
+                entriesInvalid = true;
+            } else {
+                entriesInvalid = false;
+            }
+
+            //If things are bad, we tell the user
+            if (entriesInvalid) {
                 String warningMessage;
                 int messageType;
-                if (useDefaultIfEntryInvalid){
-                    warningMessage = "Default Values will be used.";
+                if (useDefaultIfEntryInvalid) {
+                    warningMessage = DEFAULT_VALUES_WILL_BE_USED;
                     messageType = JOptionPane.WARNING_MESSAGE;
                 } else {
-                    warningMessage = "Please enter valid values.";
+                    warningMessage = ENTER_VALID_VALUES_TEXT;
                     messageType = JOptionPane.ERROR_MESSAGE;
                 }
 
                 JOptionPane.showMessageDialog(null, warningMessage,
-                        "Invalid Entry", messageType);
+                        INVALID_ENTRY_TEXT, messageType);
             }
 
-            if ((width == -1 || height == -1 || winLength == -1)
-                    && useDefaultIfEntryInvalid){
+            //Fill in default values if necessary
+            if (entriesInvalid && useDefaultIfEntryInvalid){
                 width = 10;
                 height = 10;
                 winLength = 4;
+                players = 2;
+                startingPlayer = 1;
+
+                entriesInvalid = false;
             }
         }
 
-        int[] returnVals = {width, height, winLength};
-        return returnVals;
+        //Build and return the board object
+        return new ConnectFourGame(width, height, winLength,
+                players, startingPlayer);
     }
 
+    /*******************************************************************
+     * Checks for a win or cat's game and updates the
+     * board and win counters accordingly
+     ******************************************************************/
+    private void checkForAndProcessWin(){
+        GameStatus currentStatus = game.getGameStatus();
+        if (currentStatus != GameStatus.IN_PROGRESS) {
+            if (currentStatus == GameStatus.PLAYER_1_WON) {
+                player1Wins++;
+                JOptionPane.showMessageDialog(null,
+                        PLAYER_1_WIN_TEXT,
+                        PLAYER_1_WIN_TITLE,
+                        JOptionPane.INFORMATION_MESSAGE);
+            } else if (currentStatus == GameStatus.PLAYER_2_WON) {
+                player2Wins++;
+                JOptionPane.showMessageDialog(null,
+                        PLAYER_2_WIN_TEXT,
+                        PLAYER_2_WIN_TITLE,
+                        JOptionPane.INFORMATION_MESSAGE);
+            } else if (currentStatus == GameStatus.CATS) {
+                JOptionPane.showMessageDialog(null,
+                        CATS_GAME_TEXT,
+                        CATS_GAME_TITLE, JOptionPane.INFORMATION_MESSAGE);
+            }
+
+            //Reset the game board
+            game.resetBoard();
+
+            //Reset the gui board
+            for (int row = 0; row < board.length; row++){
+                for (int col = 0; col < board[0].length; col++){
+                    board[row][col].setText(DISPLAY_EMPTY);
+                }
+            }
+
+            //Update the win indicators
+            player1WinsLabel.setText(PLAYER_1_WINS_TEXT + player1Wins);
+            player2WinsLabel.setText(PLAYER_2_WINS_TEXT + player2Wins);
+        }
+    }
+
+    /*******************************************************************
+     * Updates the JLabels of the board based on the game object
+     ******************************************************************/
+    public void updateBoardFromGameObject(){
+        //Iterate over the board
+        for (int row = 0; row < board.length; row++){
+            for (int col = 0; col < board[0].length; col++){
+                //For each cell on the board, update it based
+                //on the corresponding game object cell
+                int value = game.getBoardCell(row, col);
+                if (value == ConnectFourGame
+                        .PLAYER_1_BOARD_CELL){
+                    //Cell belongs to player 1
+                    board[row][col].setText(DISPLAY_PLAYER1);
+                } else if (value == ConnectFourGame
+                        .PLAYER_2_BOARD_CELL){
+                    //Cell belongs to player 2
+                    board[row][col].setText(DISPLAY_PLAYER2);
+                } else if (value == ConnectFourGame
+                        .BLANK_BOARD_CELL){
+                    //Cell is empty
+                    board[row][col].setText(DISPLAY_EMPTY);
+                }
+            }
+        }
+    }
+
+    /*******************************************************************
+     * Handles button clicks other than those on the menu items
+     ******************************************************************/
     private class ButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             int player = game.getTurnTakingPlayer();
 
+            //For each button of the selection buttons
             for (int col = 0; col < selection.length; col++){
                 if (e.getSource() == selection[col]) {
+                    //Call the game's selectColumn method with
+                    //the corresponding column number
                     int chipRow = game.selectColumn(col);
 
+                    //If the selection was successful
                     if (chipRow != -1) {
                         if (player == ConnectFourGame.PLAYER1_TURN) {
                             board[chipRow][col].setText(DISPLAY_PLAYER1);
@@ -268,6 +509,12 @@ public class ConnectFourPanel extends JPanel {
                                 ConnectFourGame.PLAYER2_TURN) {
                             board[chipRow][col].setText(DISPLAY_PLAYER2);
                         }
+                    } else {
+                        //The column is full, alert the user
+                        JOptionPane.showMessageDialog(null,
+                                COLUMN_FULL_ERROR,
+                                INVALID_SELECTION_TITLE,
+                                JOptionPane.ERROR_MESSAGE);
                     }
 
                     //No need to continue. We found the button
@@ -276,116 +523,53 @@ public class ConnectFourPanel extends JPanel {
             }
 
             if (e.getSource() == undoButton){
+                //Call the undoMove method on the game
                 int undone = game.undoMove();
 
-                //If undoing was preformed
+                //If undo was preformed then undone is not -2
                 if (undone != -2){
-                    //Update the board
-                    for (int row = 0; row < board.length; row++){
-                        for (int col = 0; col < board[0].length; col++){
-                            int value = game.getBoardCell(row, col);
-                            if (value == ConnectFourGame.PLAYER_1_BOARD_CELL) {
-                                board[row][col].setText(DISPLAY_PLAYER1);
-                            } else if (value == ConnectFourGame.PLAYER_2_BOARD_CELL){
-                                board[row][col].setText(DISPLAY_PLAYER2);
-                            } else if (value == ConnectFourGame.BLANK_BOARD_CELL){
-                                board[row][col].setText(DISPLAY_EMPTY);
-                            }
-                        }
-                    }
+                    //Update the board based on the game object
+                    updateBoardFromGameObject();
 
-                    //Undo win indicator
+                    //Undo win indicator (if necessary)
                     if (undone == ConnectFourGame.PLAYER1_TURN){
                         player1Wins -= 1;
-                        player1WinsLabel.setText("Player 1: " + player1Wins);
+                        player1WinsLabel
+                             .setText(PLAYER_1_WINS_TEXT + player1Wins);
                     } else if (undone == ConnectFourGame.PLAYER2_TURN){
                         player2Wins -= 1;
-                        player2WinsLabel.setText("Player 2: " + player2Wins);
+                        player2WinsLabel
+                              .setText(PLAYER_2_WINS_TEXT+ player2Wins);
                     }
                 }
             }
 
-            GameStatus currentStatus = game.getGameStatus();
-            if (currentStatus != GameStatus.IN_PROGRESS) {
-                if (currentStatus == GameStatus.PLAYER_1_WON) {
-                    player1Wins++;
-                    JOptionPane.showMessageDialog(null,
-                            "Player 1 connected enough chips to win!",
-                            "Player 1 wins",
-                            JOptionPane.INFORMATION_MESSAGE);
-                } else if (currentStatus == GameStatus.PLAYER_2_WON) {
-                    player2Wins++;
-                    JOptionPane.showMessageDialog(null,
-                            "Player 2 connected enough chips to win!",
-                            "Player 2 wins",
-                            JOptionPane.INFORMATION_MESSAGE);
-                } else if (currentStatus == GameStatus.CATS) {
-                    JOptionPane.showMessageDialog(null,
-                         "The board is full and there is no winner!",
-                         "Cat's Game", JOptionPane.INFORMATION_MESSAGE);
-                }
-
-                //Reset the game board
-                game.resetBoard();
-
-                //Reset the gui board
-                for (int row = 0; row < board.length; row++){
-                    for (int col = 0; col < board[0].length; col++){
-                        board[row][col].setText(DISPLAY_EMPTY);
-                    }
-                }
-
-                //Update the win indicators
-                player1WinsLabel.setText("Player 1: " + player1Wins);
-                player2WinsLabel.setText("Player 2: " + player2Wins);
-            }
+            //Checks for a win and updates the board
+            checkForAndProcessWin();
         }
     }
 
+    /*******************************************************************
+     * Handles the clicks on the menu items: quit and newGame
+     ******************************************************************/
     private class MenuButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == newGameButton){
-                game = createGameFromPrompts(false);
-                int width = game.getBoardWidth();
-                int height = game.getBoardHeight();
-
-                //Update the win indicators
-                player1WinsLabel.setText("Player 1: " + player1Wins);
-                player2WinsLabel.setText("Player 2: " + player2Wins);
-
+                //Get rid of the old game panel
                 remove(gamePanel);
 
-                //Re-Initialize board
-                boardPanel = new JPanel(new GridLayout(height, width));
-                board = new JLabel[height][width];
-                for (int row = 0; row < height; row++){
-                    for (int col = 0; col < width; col++){
-                        board[row][col] = new JLabel(DISPLAY_EMPTY);
-                        boardPanel.add(board[row][col]);
-                    }
-                }
+                //Set up the new one
+                setUpNewGamePanel(false);
 
-                //Construct an array of selection buttons
-                selection = new JButton[width];
-                buttonPanel = new JPanel(new GridLayout(1, width));
-                for (int col = 0; col < width; col++){
-                    selection[col] = new JButton(SELECT_TEXT);
-                    selection[col].addActionListener(buttonListener);
-                    buttonPanel.add(selection[col]);
-                }
+                //Update the UI to reflect the new gamePanel
+                validate();
+                repaint();
 
-                gamePanel = new JPanel(new BorderLayout());
-                gamePanel.add(buttonPanel, BorderLayout.NORTH);
-                gamePanel.add(boardPanel, BorderLayout.CENTER);
-
-                add(gamePanel);
-
-                updateUI();
+                //Resize the parent frame appropriately
                 packParentFrame();
-
-
             } else if (e.getSource() == quitButton){
+                //Close the parent frame
                 closeParentFrame();
             }
         }
