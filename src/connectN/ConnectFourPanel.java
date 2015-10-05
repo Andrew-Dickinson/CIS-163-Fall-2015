@@ -14,22 +14,21 @@ import java.io.IOException;
  * Created by Andrew on 9/21/15.
  **********************************************************************/
 public class ConnectFourPanel extends JPanel {
+    public static final String CATS_GAME_TITLE
+            = "Cat's Game";
     /**
      * Defines the text to display on the select buttons
      */
     private static final String SELECT_TEXT = "Pick";
-
     /**
      * The text to display on the undo button
      */
     private static final String UNDO_BUTTON_TEXT = "Undo";
-
     /**
      * The text to display on the wins indicators
      */
     private static final String PLAYER_TOTAL_WINS_TEXT
             = "Wins for player ";
-
     /**
      * The text of the labels that appear on the setup prompt
      */
@@ -42,7 +41,6 @@ public class ConnectFourPanel extends JPanel {
                                            = "Number of Players: ";
     private static final String FIRST_PLAYER_PROMPT_LABEL
                                            = "Player that goes first: ";
-
     /**
      * The text to appear on warning dialogs
      */
@@ -54,7 +52,6 @@ public class ConnectFourPanel extends JPanel {
     private static final String INVALID_SELECTION_TITLE = "Invalid Selection";
     private static final String COLUMN_FULL_ERROR
           = "The column you selected is full. \n Please select another";
-
     /**
      * The text of the win dialog boxes
      */
@@ -64,10 +61,6 @@ public class ConnectFourPanel extends JPanel {
             = "Win for player ";
     private static final String CATS_GAME_TEXT
             = "The board is full and there is no winner!";
-    public static final String CATS_GAME_TITLE
-            = "Cat's Game";
-
-
     /**
      * These JLabels display the status of the game board
      */
@@ -193,7 +186,7 @@ public class ConnectFourPanel extends JPanel {
         );
 
         playerWinLabelsPanel.setPreferredSize(
-                new Dimension(150, 30 * game.getNumberOfPlayers())
+                new Dimension(200, 30 * game.getNumberOfPlayers())
         );
 
         JPanel tempFlowPanel = new JPanel(new FlowLayout());
