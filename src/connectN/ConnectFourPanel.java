@@ -1,9 +1,13 @@
 package connectN;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.BevelBorder;
+import javax.swing.plaf.BorderUIResource;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 /***********************************************************************
  * Displays the ConnectFourGame so the user can play it
@@ -11,24 +15,9 @@ import java.awt.event.ActionListener;
  **********************************************************************/
 public class ConnectFourPanel extends JPanel {
     /**
-     * Defines the text to display in empty cells
-     */
-    private static final String DISPLAY_EMPTY = "-";
-
-    /**
-     * Defines the text to display in player 1's cells
-     */
-    private static final String DISPLAY_PLAYER1 = "X";
-
-    /**
-     * Defines the text to display in player 2's cells
-     */
-    private static final String DISPLAY_PLAYER2 = "O";
-
-    /**
      * Defines the text to display on the select buttons
      */
-    private static final String SELECT_TEXT = "Select";
+    private static final String SELECT_TEXT = "Pick";
 
     /**
      * The text to display on the undo button
@@ -36,14 +25,10 @@ public class ConnectFourPanel extends JPanel {
     private static final String UNDO_BUTTON_TEXT = "Undo";
 
     /**
-     * The text to display on the wins indicator for player 1
+     * The text to display on the wins indicators
      */
-    private static final String PLAYER_1_WINS_TEXT = "Player 1: ";
-
-    /**
-     * The text to display on the wins indicator for player 2
-     */
-    private static final String PLAYER_2_WINS_TEXT = "Player 2: ";
+    private static final String PLAYER_TOTAL_WINS_TEXT
+            = "Wins for player ";
 
     /**
      * The text of the labels that appear on the setup prompt
@@ -66,22 +51,18 @@ public class ConnectFourPanel extends JPanel {
                                        = "Default Values will be used.";
     private static final String ENTER_VALID_VALUES_TEXT
                                        = "Please enter valid values.";
-    public static final String INVALID_SELECTION_TITLE = "Invalid Selection";
+    private static final String INVALID_SELECTION_TITLE = "Invalid Selection";
     private static final String COLUMN_FULL_ERROR
           = "The column you selected is full. \n Please select another";
 
     /**
      * The text of the win dialog boxes
      */
-    public static final String PLAYER_1_WIN_TEXT
-            = "Player 1 connected enough chips to win!";
-    public static final String PLAYER_1_WIN_TITLE
-            = "Player 1 wins";
-    public static final String PLAYER_2_WIN_TEXT
-            = "Player 2 connected enough chips to win!";
-    public static final String PLAYER_2_WIN_TITLE
-            = "Player 2 wins";
-    public static final String CATS_GAME_TEXT
+    private static final String PLAYER_WIN_TEXT
+            = "The following player won the game: Player ";
+    private static final String PLAYER_WIN_TITLE
+            = "Win for player ";
+    private static final String CATS_GAME_TEXT
             = "The board is full and there is no winner!";
     public static final String CATS_GAME_TITLE
             = "Cat's Game";
@@ -103,24 +84,19 @@ public class ConnectFourPanel extends JPanel {
     private JPanel gamePanel;
 
     /**
-     * Stores the number of wins for player 1
+     * Stores the number of wins for each player
      */
-    private int player1Wins;
+    private int[] playerWins;
 
     /**
-     * Stores the number of wins for player 2
+     * These JLabels display the number of wins for each player
      */
-    private int player2Wins;
+    private JLabel[] playerWinLabels;
 
     /**
-     * These JLabels display the number of wins for player1
+     * Panel to store the playerWinLabels
      */
-    private JLabel player1WinsLabel;
-
-    /**
-     * These JLabels display the number of wins for player2
-     */
-    private JLabel player2WinsLabel;
+    private JPanel playerWinLabelsPanel;
 
     /**
      * These buttons allow the players to play chips in specific columns
@@ -178,16 +154,10 @@ public class ConnectFourPanel extends JPanel {
         this.quitButton.addActionListener(menuListener);
         this.newGameButton.addActionListener(menuListener);
 
-        //Initialize the win indicators and add them to the panel
-        player1WinsLabel = new JLabel();
-        player2WinsLabel = new JLabel();
-        add(player1WinsLabel);
-        add(player2WinsLabel);
-
-        //Instantiate the undo button and add it to the panel
+        //Instantiate the undo button.
+        // It gets added in the setUpNewGamePanel method
         undoButton = new JButton(UNDO_BUTTON_TEXT);
         undoButton.addActionListener(buttonListener);
-        add(undoButton);
 
         //Call the private helper method to prompt for game info
         //and create the board GUI
@@ -215,14 +185,50 @@ public class ConnectFourPanel extends JPanel {
         int width = game.getBoardWidth();
         int height = game.getBoardHeight();
 
+        //Initialize the win indicators and add them to the panel
+        playerWins = new int[game.getNumberOfPlayers()];
+        playerWinLabels = new JLabel[game.getNumberOfPlayers()];
+        playerWinLabelsPanel = new JPanel(
+                new GridLayout(game.getNumberOfPlayers(), 1)
+        );
+        playerWinLabelsPanel.setPreferredSize(
+                new Dimension(150, 30 * game.getNumberOfPlayers())
+        );
+        JPanel tempFlowPanel = new JPanel(new FlowLayout());
+        tempFlowPanel.add(playerWinLabelsPanel);
+        for (int i = 0; i < game.getNumberOfPlayers(); i++){
+            playerWins[i] = 0;
+            playerWinLabels[i] = new JLabel();
+            playerWinLabels[i]
+                    .setHorizontalAlignment(SwingConstants.CENTER);
+            playerWinLabels[i].setBorder(
+                    new BorderUIResource.BevelBorderUIResource(
+                            BevelBorder.LOWERED
+                    )
+            );
+            playerWinLabelsPanel.add(playerWinLabels[i]);
+        }
+
+        updateWinIndicators();
+
+        JPanel leftPanel = new JPanel(new BorderLayout());
+        leftPanel.add(tempFlowPanel, BorderLayout.CENTER);
+        leftPanel.add(undoButton, BorderLayout.NORTH);
+
         //Construct the board panel with a
         //two dimensional array of JLabels
         this.boardPanel = new JPanel(new GridLayout(height, width));
         this.board = new JLabel[height][width];
         for (int row = 0; row < height; row++){
             for (int col = 0; col < width; col++){
-                board[row][col] = new JLabel(DISPLAY_EMPTY);
-                boardPanel.add(board[row][col]);
+                try {
+                    Image img = ImageIO.read(ConnectFourPanel.class
+                            .getResourceAsStream("blankCell.png"));
+                    board[row][col] = new JLabel(new ImageIcon(img));
+                    boardPanel.add(board[row][col]);
+                } catch (IOException e){
+                    e.printStackTrace();
+                }
             }
         }
 
@@ -237,15 +243,18 @@ public class ConnectFourPanel extends JPanel {
 
         gamePanel.add(buttonPanel, BorderLayout.NORTH);
         gamePanel.add(boardPanel, BorderLayout.CENTER);
-        add(gamePanel);
+
+        JPanel overallPanel = new JPanel(new BorderLayout());
+        overallPanel.add(gamePanel, BorderLayout.CENTER);
+        overallPanel.add(leftPanel, BorderLayout.WEST);
+
+        add(overallPanel);
 
         //Set the win counters to 0
-        this.player1Wins = 0;
-        this.player2Wins = 0;
+        this.playerWins = new int[game.getNumberOfPlayers()];
 
         //Update the win indicators
-        player1WinsLabel.setText(PLAYER_1_WINS_TEXT + player1Wins);
-        player2WinsLabel.setText(PLAYER_2_WINS_TEXT + player2Wins);
+        updateWinIndicators();
     }
 
     /*******************************************************************
@@ -415,7 +424,7 @@ public class ConnectFourPanel extends JPanel {
 
         //Build and return the board object
         return new ConnectFourGame(width, height, winLength,
-                players, startingPlayer);
+                players, startingPlayer - 1);
     }
 
     /*******************************************************************
@@ -423,19 +432,15 @@ public class ConnectFourPanel extends JPanel {
      * board and win counters accordingly
      ******************************************************************/
     private void checkForAndProcessWin(){
-        GameStatus currentStatus = game.getGameStatus();
+        int currentStatus = game.getGameStatus();
         if (currentStatus != GameStatus.IN_PROGRESS) {
-            if (currentStatus == GameStatus.PLAYER_1_WON) {
-                player1Wins++;
+            if (currentStatus > -1 && currentStatus < 10){
+                playerWins[currentStatus]++;
+
+                //+1's convert to 1-Based indexes
                 JOptionPane.showMessageDialog(null,
-                        PLAYER_1_WIN_TEXT,
-                        PLAYER_1_WIN_TITLE,
-                        JOptionPane.INFORMATION_MESSAGE);
-            } else if (currentStatus == GameStatus.PLAYER_2_WON) {
-                player2Wins++;
-                JOptionPane.showMessageDialog(null,
-                        PLAYER_2_WIN_TEXT,
-                        PLAYER_2_WIN_TITLE,
+                        PLAYER_WIN_TEXT + (currentStatus + 1),
+                        PLAYER_WIN_TITLE + (currentStatus + 1),
                         JOptionPane.INFORMATION_MESSAGE);
             } else if (currentStatus == GameStatus.CATS) {
                 JOptionPane.showMessageDialog(null,
@@ -447,42 +452,66 @@ public class ConnectFourPanel extends JPanel {
             game.resetBoard();
 
             //Reset the gui board
-            for (int row = 0; row < board.length; row++){
-                for (int col = 0; col < board[0].length; col++){
-                    board[row][col].setText(DISPLAY_EMPTY);
-                }
-            }
+            updateBoardFromGameObject();
 
             //Update the win indicators
-            player1WinsLabel.setText(PLAYER_1_WINS_TEXT + player1Wins);
-            player2WinsLabel.setText(PLAYER_2_WINS_TEXT + player2Wins);
+            updateWinIndicators();
         }
     }
 
     /*******************************************************************
      * Updates the JLabels of the board based on the game object
      ******************************************************************/
-    public void updateBoardFromGameObject(){
+    private void updateBoardFromGameObject(){
         //Iterate over the board
         for (int row = 0; row < board.length; row++){
             for (int col = 0; col < board[0].length; col++){
                 //For each cell on the board, update it based
                 //on the corresponding game object cell
                 int value = game.getBoardCell(row, col);
-                if (value == ConnectFourGame
-                        .PLAYER_1_BOARD_CELL){
-                    //Cell belongs to player 1
-                    board[row][col].setText(DISPLAY_PLAYER1);
-                } else if (value == ConnectFourGame
-                        .PLAYER_2_BOARD_CELL){
-                    //Cell belongs to player 2
-                    board[row][col].setText(DISPLAY_PLAYER2);
-                } else if (value == ConnectFourGame
-                        .BLANK_BOARD_CELL){
-                    //Cell is empty
-                    board[row][col].setText(DISPLAY_EMPTY);
-                }
+                setCell(row, col, value);
             }
+        }
+    }
+
+    /**
+     * Updates the win indicators from the wins instance variable
+     */
+    private void updateWinIndicators(){
+        for (int i = 0; i < playerWins.length; i++){
+            playerWinLabels[i].setText(PLAYER_TOTAL_WINS_TEXT
+                    + (i + 1) + ": " + playerWins[i]);
+        }
+    }
+
+    /*******************************************************************
+     * Sets a specific cell to an image corresponding to
+     * the player provided
+     *
+     * @param row The row of the cell
+     * @param col The column of the cell
+     * @param player The player to set it to (or -1 for blank)
+     ******************************************************************/
+    private void setCell(int row, int col, int player){
+        try {
+            //Get image
+            Image img;
+            if (player != -1) {
+                img = ImageIO.read(ConnectFourPanel.class
+                  .getResourceAsStream("player" + player + "Cell.png"));
+
+            } else {
+                img = ImageIO.read(ConnectFourPanel.class
+                                 .getResourceAsStream("blankCell.png"));
+            }
+
+            //Convert image to icon
+            ImageIcon icon = new ImageIcon(img);
+
+            //Set icon on board
+            board[row][col].setIcon(icon);
+        } catch (IOException e){
+            e.printStackTrace();
         }
     }
 
@@ -503,12 +532,7 @@ public class ConnectFourPanel extends JPanel {
 
                     //If the selection was successful
                     if (chipRow != -1) {
-                        if (player == ConnectFourGame.PLAYER1_TURN) {
-                            board[chipRow][col].setText(DISPLAY_PLAYER1);
-                        } else if (player ==
-                                ConnectFourGame.PLAYER2_TURN) {
-                            board[chipRow][col].setText(DISPLAY_PLAYER2);
-                        }
+                        setCell(chipRow, col, player);
                     } else {
                         //The column is full, alert the user
                         JOptionPane.showMessageDialog(null,
@@ -532,14 +556,9 @@ public class ConnectFourPanel extends JPanel {
                     updateBoardFromGameObject();
 
                     //Undo win indicator (if necessary)
-                    if (undone == ConnectFourGame.PLAYER1_TURN){
-                        player1Wins -= 1;
-                        player1WinsLabel
-                             .setText(PLAYER_1_WINS_TEXT + player1Wins);
-                    } else if (undone == ConnectFourGame.PLAYER2_TURN){
-                        player2Wins -= 1;
-                        player2WinsLabel
-                              .setText(PLAYER_2_WINS_TEXT+ player2Wins);
+                    if (undone != -1){
+                        playerWins[undone] -= 1;
+                        updateWinIndicators();
                     }
                 }
             }

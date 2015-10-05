@@ -14,29 +14,9 @@ import java.util.ArrayList;
  **********************************************************************/
 public class ConnectFourGame {
     /**
-     * Represents it being the turn of player1
-     */
-    public static final int PLAYER1_TURN = 0;
-
-    /**
-     * Represents it being the turn of player2
-     */
-    public static final int PLAYER2_TURN = 1;
-
-    /**
      * Represents a blank board cell
      */
     public static final int BLANK_BOARD_CELL = -1;
-
-    /**
-     * Represents board cells belonging to player1
-     */
-    public static final int PLAYER_1_BOARD_CELL = 0;
-
-    /**
-     * Represents board cells belonging to player 2
-     */
-    public static final int PLAYER_2_BOARD_CELL = 1;
 
     /**
      * Stores all of the data on the contents of the board
@@ -56,21 +36,36 @@ public class ConnectFourGame {
     /**
      * The status of the game
      */
-    private GameStatus status;
+    private int gameStatus;
+
+    /**
+     * Represent states of the gameStatus variable where
+     */
+    private static final int IN_PROGRESS = -1;
+    private static final int CATS_GAME = -2;
 
     /**
      * Stores who's turn it is
      */
     private int currentTurn;
 
+    /**
+     * Stores the number of players in this game instance
+     */
+    private int numberOfPlayers;
+
 
     /*******************************************************************
-     * Instantiates a new ConnectFourGame with a board width and height
+     * Instantiates a new ConnectFourGame with a board width and height,
+     * win length, number of players, and starting player.
      *
      * @param width The width of the board
      * @param height The height of the board
      * @param winLength The number of consecutive
      *                  connections required to win
+     * @param numberOfPlayers The number of players for this instance
+     * @param startingPlayerNumber Zero based index of the player who
+     *                             should begin the game
      ******************************************************************/
     public ConnectFourGame(int width, int height, int winLength,
                            int numberOfPlayers,
@@ -84,10 +79,13 @@ public class ConnectFourGame {
         //Set the starting player appropriately
         this.currentTurn = startingPlayerNumber;
 
+        //Set the number of players appropriately
+        this.numberOfPlayers = numberOfPlayers;
+
         //Initialize the undoStack
         this.undoStack = new ArrayList<Integer>();
 
-        //Fill the board with blanks, set game status,
+        //Fill the board with blanks, set game gameStatus,
         //and add a -1 to the undoStack
         resetBoard();
     }
@@ -112,13 +110,11 @@ public class ConnectFourGame {
         if (row != -1){
             this.undoStack.add(column);
 
-            if (currentTurn == PLAYER1_TURN){
-                board[row][column] = PLAYER_1_BOARD_CELL;
-                currentTurn = PLAYER2_TURN;
-            } else if (currentTurn == PLAYER2_TURN){
-                board[row][column] = PLAYER_2_BOARD_CELL;
-                currentTurn = PLAYER1_TURN;
-            }
+            //Set the board cell according to the player who's turn it is
+            board[row][column] = currentTurn;
+
+            //Increase currentTurn to reflect the next player's turn
+            nextTurn();
         }
 
         return row;
@@ -127,7 +123,7 @@ public class ConnectFourGame {
     /*******************************************************************
      * Set the board to its original state
      *
-     * Fills the board with blanks, sets the game status,
+     * Fills the board with blanks, sets the game gameStatus,
      * and adds a -1 to the undo stack to indicate a reset
      ******************************************************************/
     public void resetBoard(){
@@ -138,8 +134,8 @@ public class ConnectFourGame {
             }
         }
 
-        //Set the game status to indicate the game is starting
-        this.status = GameStatus.IN_PROGRESS;
+        //Set the game gameStatus to indicate the game is starting
+        this.gameStatus = GameStatus.IN_PROGRESS;
 
         //Add a -1 to indicate a reset
         this.undoStack.add(-1);
@@ -156,17 +152,14 @@ public class ConnectFourGame {
         //An undo is impossible if there is only
         //one element in the undostack: -1
         if (undoStack.size() > 1) {
-            //Invert turn
-            if (currentTurn == PLAYER1_TURN) {
-                currentTurn = PLAYER2_TURN;
-            } else if (currentTurn == PLAYER2_TURN) {
-                currentTurn = PLAYER1_TURN;
-            }
-
             if (undoStack.get(undoStack.size() - 1) != -1) {
                 //The most recent entry is not -1
                 //This is a non winning undo
                 //We don't have to reconstruct the board
+
+
+                //Go back one turn
+                pastTurn();
 
                 //The column to undo from. Get and remove from stack
                 int relevantColumn =
@@ -177,7 +170,7 @@ public class ConnectFourGame {
                     if (board[row][relevantColumn] != BLANK_BOARD_CELL){
                         board[row][relevantColumn] = BLANK_BOARD_CELL;
 
-                        //Update the status variable for accuracy
+                        //Update the gameStatus variable for accuracy
                         getGameStatus();
 
                         return -1;
@@ -186,7 +179,7 @@ public class ConnectFourGame {
             } else {
                 //The most recent entry is a -1
                 //We must undo a game ending move
-                undoWinningMove();
+                return undoWinningMove();
             }
         }
 
@@ -232,17 +225,11 @@ public class ConnectFourGame {
             undoStack.remove(i);
         }
 
-        //If the number of turns we're going back is even,
-        //we need to switch who's turn it is so that the calls
+        //We need to switch who's turn it is so that the calls
         // to selectColumn make sense
         int numberOfTurnsAgo = size - start;
-        if (numberOfTurnsAgo % 2 == 0){
-            //Invert turn
-            if (currentTurn == PLAYER1_TURN) {
-                currentTurn = PLAYER2_TURN;
-            } else if (currentTurn == PLAYER2_TURN) {
-                currentTurn = PLAYER1_TURN;
-            }
+        for (int i = 0; i < numberOfTurnsAgo; i++){
+            pastTurn();
         }
 
         //Reconstruct the board by calling selectColumn as if the
@@ -251,47 +238,42 @@ public class ConnectFourGame {
             selectColumn(col); //Adds entries back into undoStack
         }
 
+        //Compute who the winner was before we erase the last move
+        int winnerWas = getGameStatus();
+
         //Undoes the game ending move that the user
         //was trying to undo in the first place
         undoMove();
 
         //Return the appropriate value
-        if (getGameStatus() == GameStatus.PLAYER_1_WON){
-            return PLAYER1_TURN;
-        } else if (getGameStatus() == GameStatus.PLAYER_2_WON){
-            return PLAYER2_TURN;
-        } else {
-            //Must be a cat's game
-            return -1;
-        }
+        return winnerWas;
     }
 
     /*******************************************************************
-     * Compute the current gameStatus according the status of the board
+     * Compute the current gameStatus according the gameStatus of the board
      *
      * @return The current GameStatus of this game
      ******************************************************************/
-    public GameStatus getGameStatus() {
+    public int getGameStatus() {
         //Determine if individual players won
-        boolean player1Victory =
-                evaluatePlayerVictory(PLAYER_1_BOARD_CELL);
-        boolean player2Victory =
-                evaluatePlayerVictory(PLAYER_2_BOARD_CELL);
-
-        if (player1Victory){
-            this.status = GameStatus.PLAYER_1_WON;
-        } else if (player2Victory){
-            this.status = GameStatus.PLAYER_2_WON;
-        } else {
-            //We need to check for a cats game
-            if (isBoardFull()){
-                this.status = GameStatus.CATS;
-            } else {
-                this.status = GameStatus.IN_PROGRESS;
+        boolean[] playerVictory = new boolean[numberOfPlayers];
+        for (int player = 0; player < playerVictory.length; player++){
+            playerVictory[player] = evaluatePlayerVictory(player);
+            if (playerVictory[player]) {
+                //Return the number of the player that won
+                this.gameStatus = player;
+                return player;
             }
         }
 
-        return this.status;
+        //If we made it here, nobody won yet, so IN_PROGRESS OR CATS
+        if (isBoardFull()){
+            this.gameStatus = GameStatus.CATS;
+        } else {
+            this.gameStatus = GameStatus.IN_PROGRESS;
+        }
+
+        return this.gameStatus;
     }
 
     /*******************************************************************
@@ -337,10 +319,8 @@ public class ConnectFourGame {
 
             //Wraps around the board in the opposite direction
             // of wrappedRowWithOffset
-            //Complicated so that negative numbers wrap correctly
-            int wrappedColWithNegOffset =
-                (((col - offset) % board[0].length) + board[0].length)
-                % board[0].length;
+            int wrappedColWithNegOffset = Math.floorMod(col - offset,
+                    board[0].length);
 
             //Scan horizontally
             if (board[row][wrappedColWithOffset] != player) {
@@ -399,6 +379,21 @@ public class ConnectFourGame {
     }
 
     /*******************************************************************
+     * Changes the currentTurn variable to reflect a new turn
+     ******************************************************************/
+    private void nextTurn(){
+        currentTurn = (currentTurn + 1) % (numberOfPlayers);
+    }
+
+    /*******************************************************************
+     * Changes the currentTurn variable to reflect the past turn.
+     * Used by the undo method to go back one turn
+     ******************************************************************/
+    private void pastTurn(){
+        currentTurn = Math.floorMod(currentTurn - 1, numberOfPlayers);
+    }
+
+    /*******************************************************************
      * Gets the current player that is taking their turn
      *
      * @return An int corresponding to the player who is currently
@@ -435,5 +430,13 @@ public class ConnectFourGame {
      ******************************************************************/
     public int getBoardCell(int row, int col){
         return board[row][col];
+    }
+
+    /**
+     * Gets the number of players in this game instance
+     * @return The number of players
+     */
+    public int getNumberOfPlayers() {
+        return numberOfPlayers;
     }
 }

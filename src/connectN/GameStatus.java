@@ -1,27 +1,19 @@
 package connectN;
 
 /***********************************************************************
- * The four states that the game can be in
+ * Two of the states the game can be in. Other states range from
+ * 0 to 9 and represent that the corresponding player number has won
+ *
  * Created by Andrew on 9/22/15.
  **********************************************************************/
-public enum GameStatus {
-    /**
-     * Player 1 is the winner. Game is finished
-     */
-    PLAYER_1_WON,
-
-    /**
-     * Player 2 is the winner. Game is finished
-     */
-    PLAYER_2_WON,
-
+public class GameStatus {
     /**
      * There is a tie. Game is finished
      */
-    CATS,
+    public static final int CATS = -2;
 
     /**
      * The game is still in progress
      */
-    IN_PROGRESS
+    public static final int IN_PROGRESS = -1;
 }
