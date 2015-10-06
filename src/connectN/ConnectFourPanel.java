@@ -178,6 +178,12 @@ public class ConnectFourPanel extends JPanel {
         int width = game.getBoardWidth();
         int height = game.getBoardHeight();
 
+        //So that we don't erase current win data
+        int[] old_player_wins = null;
+        if (playerWins != null){
+            old_player_wins = playerWins.clone();
+        }
+
         //Initialize the win indicators and add them to the panel
         playerWins = new int[game.getNumberOfPlayers()];
         playerWinLabels = new JLabel[game.getNumberOfPlayers()];
@@ -203,6 +209,20 @@ public class ConnectFourPanel extends JPanel {
                     )
             );
             playerWinLabelsPanel.add(playerWinLabels[i]);
+        }
+
+        //Restore the old win data
+        if (old_player_wins != null){
+            int max = 0;
+            if (playerWins.length > old_player_wins.length){
+                max = old_player_wins.length;
+            } else {
+                max = playerWins.length;
+            }
+
+            for (int i = 0; i < max; i++){
+                playerWins[i] = old_player_wins[i];
+            }
         }
 
         updateWinIndicators();
@@ -247,12 +267,6 @@ public class ConnectFourPanel extends JPanel {
         overallPanel.add(Box.createVerticalStrut(20), BorderLayout.SOUTH);
 
         add(overallPanel);
-
-        //Set the win counters to 0
-        this.playerWins = new int[game.getNumberOfPlayers()];
-
-        //Update the win indicators
-        updateWinIndicators();
     }
 
     /*******************************************************************

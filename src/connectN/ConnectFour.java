@@ -12,27 +12,26 @@ import javax.swing.*;
  **********************************************************************/
 public class ConnectFour {
     /**
-     * The title of the frame to display
-     */
-    private static final String FRAME_TITLE = "ConnectFour++";
-
-    /**
      * The name of the game menu
      */
     public static final String GAME_MENU_TITLE = "Game";
-
     /**
      * The name of the new game menu item
      */
     public static final String NEW_GAME_MENU_ITEM = "New Game";
-
     /**
      * The name of the quit game menu item
      */
     public static final String QUIT_MENU_ITEM = "Quit Game";
+    /**
+     * The title of the frame to display
+     */
+    private static final String FRAME_TITLE = "ConnectFour++";
 
     public static void main(String args[]){
         JMenuBar menuBar = new JMenuBar();
+
+        JFrame.setDefaultLookAndFeelDecorated(true);
 
         //Create the Game menu
         JMenu menu = new JMenu(GAME_MENU_TITLE);
