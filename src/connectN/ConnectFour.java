@@ -51,8 +51,8 @@ public class ConnectFour {
         frame.setJMenuBar(menuBar);
 
         //Create the panel
-        ConnectFourPanel panel = new ConnectFourPanel(quitGameMenuButton,
-                newGameMenuButton);
+        ConnectFourPanel panel = new ConnectFourPanel(frame,
+                quitGameMenuButton, newGameMenuButton);
 
         //Add the panel to the frame
         frame.getContentPane().add(panel);

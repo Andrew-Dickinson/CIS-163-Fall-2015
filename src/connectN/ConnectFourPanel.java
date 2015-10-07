@@ -1,5 +1,7 @@
 package connectN;
 
+import oracle.jrockit.jfr.JFR;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
@@ -139,13 +141,21 @@ public class ConnectFourPanel extends JPanel {
      */
     private ConnectFourGame game;
 
+    /**
+     * The parent frame to this panel
+     */
+    private JFrame parentFrame;
+
     /*******************************************************************
      * Sets up the panel to begin playing a game on it
      *
      * @param quitItem The quit menu item from the frame above
      * @param newGameItem The new game menu item from the frame above
      ******************************************************************/
-    public ConnectFourPanel(JMenuItem quitItem, JMenuItem newGameItem){
+    public ConnectFourPanel(JFrame frame, JMenuItem quitItem,
+                                          JMenuItem newGameItem){
+        this.parentFrame = frame;
+
         //Processes menu button clicks
         MenuButtonListener menuListener = new MenuButtonListener();
 
@@ -365,7 +375,7 @@ public class ConnectFourPanel extends JPanel {
         }
 
         //Finally, prompt the user with this panel
-        int result = JOptionPane.showConfirmDialog(null,
+        int result = JOptionPane.showConfirmDialog(parentFrame,
                 colorNameDialogPanel,
                 SETUP_DIALOG_TITLE,
                 JOptionPane.OK_CANCEL_OPTION);
@@ -376,23 +386,8 @@ public class ConnectFourPanel extends JPanel {
                 playerNames[i] = nameFields[i].getText();
             }
         } else {
-            //Cancel was pressed
-            // Let's reset all of our stuff to default
-
-            //Set playerColors to all -1
-            for (int i = 0; i < players; i++){
-                playerColors[i] = -1;
-            }
-
-            //Set playerNames to all ""
-            playerNames = new String[players];
-            for (int i = 0; i < players; i++){
-                playerNames[i] = "";
-            }
-
-            //Let the user know they canceled a thing
-            JOptionPane.showMessageDialog(null, DEFAULT_VALUES_WILL_BE_USED,
-                    INVALID_ENTRY_TEXT, JOptionPane.WARNING_MESSAGE);
+            //Cancel was pressed. Let's close the app
+            System.exit(-1);
         }
 
         //Fill any blanks with default values
@@ -433,7 +428,7 @@ public class ConnectFourPanel extends JPanel {
             }
         }
 
-        int result = JOptionPane.showConfirmDialog(null,
+        int result = JOptionPane.showConfirmDialog(parentFrame,
                 optionButtons,
                 SETUP_DIALOG_TITLE,
                 JOptionPane.OK_CANCEL_OPTION);
@@ -488,7 +483,7 @@ public class ConnectFourPanel extends JPanel {
      ******************************************************************/
     private void closeParentFrame(){
         //Get the parent frame and call its dispose method
-        SwingUtilities.windowForComponent(this).dispose();
+        parentFrame.dispose();
     }
 
     /*******************************************************************
@@ -496,7 +491,7 @@ public class ConnectFourPanel extends JPanel {
      ******************************************************************/
     private void packParentFrame(){
         //Get the parent frame and call its pack method
-        SwingUtilities.windowForComponent(this).pack();
+        parentFrame.pack();
     }
 
     /*******************************************************************
@@ -574,7 +569,7 @@ public class ConnectFourPanel extends JPanel {
         int players = -1;
         int startingPlayer = -1;
         while (entriesInvalid) {
-            int result = JOptionPane.showConfirmDialog(null,
+            int result = JOptionPane.showConfirmDialog(parentFrame,
                     dialogFieldPanel,
                     SETUP_DIALOG_TITLE,
                     JOptionPane.OK_CANCEL_OPTION);
@@ -599,6 +594,9 @@ public class ConnectFourPanel extends JPanel {
                 winLength = Integer.parseInt(lengthString);
                 players = Integer.parseInt(playersString);
                 startingPlayer = Integer.parseInt(startingString);
+            } else {
+                //Cancel was pressed. Let's close the app
+                System.exit(-1);
             }
 
             //Determine if the win length is longer than
@@ -632,7 +630,7 @@ public class ConnectFourPanel extends JPanel {
                     messageType = JOptionPane.ERROR_MESSAGE;
                 }
 
-                JOptionPane.showMessageDialog(null, warningMessage,
+                JOptionPane.showMessageDialog(parentFrame, warningMessage,
                         INVALID_ENTRY_TEXT, messageType);
             }
 
@@ -663,12 +661,12 @@ public class ConnectFourPanel extends JPanel {
             if (currentStatus > -1 && currentStatus < 10){
                 playerWins[currentStatus]++;
 
-                JOptionPane.showMessageDialog(null,
+                JOptionPane.showMessageDialog(parentFrame,
                         playerNames[currentStatus] + PLAYER_WIN_TEXT,
                         PLAYER_WIN_TITLE + playerNames[currentStatus],
                         JOptionPane.INFORMATION_MESSAGE);
             } else if (currentStatus == GameStatus.CATS) {
-                JOptionPane.showMessageDialog(null,
+                JOptionPane.showMessageDialog(parentFrame,
                         CATS_GAME_TEXT,
                         CATS_GAME_TITLE, JOptionPane.INFORMATION_MESSAGE);
             }
@@ -834,7 +832,7 @@ public class ConnectFourPanel extends JPanel {
                         setCell(chipRow, col, player);
                     } else {
                         //The column is full, alert the user
-                        JOptionPane.showMessageDialog(null,
+                        JOptionPane.showMessageDialog(parentFrame,
                                 COLUMN_FULL_ERROR,
                                 INVALID_SELECTION_TITLE,
                                 JOptionPane.ERROR_MESSAGE);
