@@ -8,6 +8,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 
 /***********************************************************************
  * Displays the ConnectFourGame so the user can play it
@@ -28,7 +30,7 @@ public class ConnectFourPanel extends JPanel {
      * The text to display on the wins indicators
      */
     private static final String PLAYER_TOTAL_WINS_TEXT
-            = "Wins for player ";
+            = "Wins for ";
     /**
      * The text of the labels that appear on the setup prompt
      */
@@ -49,16 +51,17 @@ public class ConnectFourPanel extends JPanel {
                                        = "Default Values will be used.";
     private static final String ENTER_VALID_VALUES_TEXT
                                        = "Please enter valid values.";
-    private static final String INVALID_SELECTION_TITLE = "Invalid Selection";
+    private static final String INVALID_SELECTION_TITLE
+                                       = "Invalid Selection";
     private static final String COLUMN_FULL_ERROR
           = "The column you selected is full. \n Please select another";
     /**
      * The text of the win dialog boxes
      */
     private static final String PLAYER_WIN_TEXT
-            = "The following player won the game: Player ";
+            = " won the game!";
     private static final String PLAYER_WIN_TITLE
-            = "Win for player ";
+            = "Win for ";
     private static final String CATS_GAME_TEXT
             = "The board is full and there is no winner!";
     /**
@@ -80,6 +83,16 @@ public class ConnectFourPanel extends JPanel {
      * Stores the number of wins for each player
      */
     private int[] playerWins;
+
+    /**
+     * Stores the names of all the players
+     */
+    private String[] playerNames;
+
+    /**
+     * Stores the color codes for each player
+     */
+    private int[] playerColors;
 
     /**
      * These JLabels display the number of wins for each player
@@ -174,6 +187,9 @@ public class ConnectFourPanel extends JPanel {
         //Setup a new game instance from prompts given to the user
         this.game = createGameFromPrompts(useDefaultIfEntryInvalid);
 
+        //Fill in the colors and names
+        promptForNamesAndColors();
+
         //Get the width and height from the game object
         int width = game.getBoardWidth();
         int height = game.getBoardHeight();
@@ -213,7 +229,7 @@ public class ConnectFourPanel extends JPanel {
 
         //Restore the old win data
         if (old_player_wins != null){
-            int max = 0;
+            int max;
             if (playerWins.length > old_player_wins.length){
                 max = old_player_wins.length;
             } else {
@@ -253,6 +269,7 @@ public class ConnectFourPanel extends JPanel {
         this.buttonPanel = new JPanel(new GridLayout(1, width));
         for (int col = 0; col < width; col++){
             selection[col] = new JButton(SELECT_TEXT);
+            selection[col].setFont(new Font("Arial", Font.BOLD, 11));
             selection[col].addActionListener(buttonListener);
             buttonPanel.add(selection[col]);
         }
@@ -267,6 +284,203 @@ public class ConnectFourPanel extends JPanel {
         overallPanel.add(Box.createVerticalStrut(20), BorderLayout.SOUTH);
 
         add(overallPanel);
+    }
+
+    /*******************************************************************
+     * Prompts the user for player name and color info
+     * and sets the appropriate variables
+     *
+     * PreCondition: this.game has been set up with number of players
+     * PostCondition: this.playerNames and this.playerColors
+     *                    have been set
+     ******************************************************************/
+    private void promptForNamesAndColors(){
+        int players = game.getNumberOfPlayers();
+
+        JPanel colorNameDialogPanel =
+                new JPanel(new GridLayout(players + 1, 3, 15, 5));
+        colorNameDialogPanel.setPreferredSize(
+                new Dimension(500, players * 45)
+        );
+
+        colorNameDialogPanel.add(new JLabel("Player"));
+        colorNameDialogPanel.add(new JLabel("Name"));
+        colorNameDialogPanel.add(new JLabel("Color"));
+
+        //Initialize playerColors to all -1
+        playerColors = new int[players];
+        for (int i = 0; i < players; i++){
+            playerColors[i] = -1;
+        }
+
+        //Set playerColors to default values and player names to ""
+        playerNames = new String[players];
+        for (int i = 0; i < players; i++){
+            playerColors[i] = getPossibleColors(playerColors).get(0);
+            playerNames[i] = "";
+        }
+
+        JTextField[] nameFields = new JTextField[players];
+        JButton[] colorButtons = new JButton[players];
+
+        for (int i = 0; i < players; i++){
+            //For each player, create a row in the gridlayout
+
+            //Add a label
+            colorNameDialogPanel.add(
+                    new JLabel("Player " + (i + 1) + ": "));
+
+            //Add a name field
+            nameFields[i] = new JTextField("");
+            colorNameDialogPanel.add(nameFields[i]);
+
+            //Add a button to launch the color picker
+            colorButtons[i] = new JButton("Pick Color");
+            try {
+                colorButtons[i].setIcon(getPlayerSmallIcon(i));
+                colorButtons[i].setText("Change");
+            } catch (IOException er){
+                er.printStackTrace();
+            }
+
+            colorButtons[i].addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    for (int i = 0; i < colorButtons.length; i++) {
+                        if (e.getSource() == colorButtons[i]){
+                            //Player number is i
+                            playerColors[i] =
+                                    promptColorChoice(playerColors, i);
+                            try {
+                                colorButtons[i]
+                                        .setIcon(getPlayerSmallIcon(i));
+                            } catch (IOException er){
+                                er.printStackTrace();
+                            }
+                        }
+                    }
+                }
+            });
+            colorNameDialogPanel.add(colorButtons[i]);
+        }
+
+        //Finally, prompt the user with this panel
+        int result = JOptionPane.showConfirmDialog(null,
+                colorNameDialogPanel,
+                SETUP_DIALOG_TITLE,
+                JOptionPane.OK_CANCEL_OPTION);
+
+        if (result == JOptionPane.OK_OPTION){
+            //Okay was pressed
+            for (int i = 0; i < nameFields.length; i++){
+                playerNames[i] = nameFields[i].getText();
+            }
+        } else {
+            //Cancel was pressed
+            // Let's reset all of our stuff to default
+
+            //Set playerColors to all -1
+            for (int i = 0; i < players; i++){
+                playerColors[i] = -1;
+            }
+
+            //Set playerNames to all ""
+            playerNames = new String[players];
+            for (int i = 0; i < players; i++){
+                playerNames[i] = "";
+            }
+
+            //Let the user know they canceled a thing
+            JOptionPane.showMessageDialog(null, DEFAULT_VALUES_WILL_BE_USED,
+                    INVALID_ENTRY_TEXT, JOptionPane.WARNING_MESSAGE);
+        }
+
+        //Fill any blanks with default values
+        for (int i = 0; i < players; i++){
+            if (playerColors[i] == -1){
+                playerColors[i] = getPossibleColors(playerColors).get(0);
+            }
+
+            if (playerNames[i].equals("")){
+                playerNames[i] = "Player " + (i + 1);
+            }
+        }
+    }
+
+    /*******************************************************************
+     * Creates a prompt to ask the user to select a color
+     * @param old_colors_picked An array indicating colors already taken
+     * @return The color selected
+     ******************************************************************/
+    private int promptColorChoice(int[] old_colors_picked, int player){
+        ArrayList<Integer> options = getPossibleColors(old_colors_picked);
+
+        ButtonGroup colorButtonGroup = new ButtonGroup();
+        JRadioButton[] optionButtons = new JRadioButton[options.size()];
+        for (int i = 0; i < options.size(); i++){
+            try {
+                boolean selected = (i == 0);
+                Icon icon = getSmallIcon(options.get(i));
+
+                JRadioButton colorButton = new JRadioButton(
+                        "Color " + options.get(i), icon, selected
+                );
+
+                colorButtonGroup.add(colorButton);
+                optionButtons[i] = colorButton;
+            } catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+
+        int result = JOptionPane.showConfirmDialog(null,
+                optionButtons,
+                SETUP_DIALOG_TITLE,
+                JOptionPane.OK_CANCEL_OPTION);
+
+        if (result == JOptionPane.OK_OPTION){
+            //Determine which one was selected
+            for (int i = 0; i < optionButtons.length; i++){
+                if (optionButtons[i].isSelected()){
+                    return options.get(i);
+                }
+            }
+        }
+
+        //Something went wrong. Return the current value or a default
+        if (playerColors[player] == -1) {
+            return options.get(0);
+        } else {
+            return playerColors[player];
+        }
+    }
+
+    /*******************************************************************
+     * Generates an arrayList of the colors that are still available
+     * @param old_colors_picked An array of the
+     *                          colors that have already been picked
+     * @return An arrayList of the available colors
+     ******************************************************************/
+    private ArrayList<Integer> getPossibleColors(int[] old_colors_picked){
+        ArrayList<Integer> options = new ArrayList<Integer>();
+
+        //Colors range from 0 to 9
+        for (int i = 0; i < 10; i++){
+            boolean taken = false;
+            for (int j = 0; j < old_colors_picked.length; j++){
+                if (old_colors_picked[j] == i){
+                    taken = true;
+                }
+            }
+
+            if (!taken){
+                options.add(i);
+            }
+        }
+
+        Collections.sort(options);
+
+        return options;
     }
 
     /*******************************************************************
@@ -449,10 +663,9 @@ public class ConnectFourPanel extends JPanel {
             if (currentStatus > -1 && currentStatus < 10){
                 playerWins[currentStatus]++;
 
-                //+1's convert to 1-Based indexes
                 JOptionPane.showMessageDialog(null,
-                        PLAYER_WIN_TEXT + (currentStatus + 1),
-                        PLAYER_WIN_TITLE + (currentStatus + 1),
+                        playerNames[currentStatus] + PLAYER_WIN_TEXT,
+                        PLAYER_WIN_TITLE + playerNames[currentStatus],
                         JOptionPane.INFORMATION_MESSAGE);
             } else if (currentStatus == GameStatus.CATS) {
                 JOptionPane.showMessageDialog(null,
@@ -486,27 +699,19 @@ public class ConnectFourPanel extends JPanel {
         }
     }
 
-    /**
+    /*******************************************************************
      * Updates the win indicators from the wins instance variable
-     */
+     ******************************************************************/
     private void updateWinIndicators(){
         for (int i = 0; i < playerWins.length; i++){
             try {
-                Image img = ImageIO.read(ConnectFourPanel.class
-                        .getResourceAsStream(getIconPath(i)));
-
-                img = img.getScaledInstance(20, 20, Image.SCALE_DEFAULT);
-
-                //Convert image to icon
-                ImageIcon icon = new ImageIcon(img);
-
-                playerWinLabels[i].setIcon(icon);
+                playerWinLabels[i].setIcon(getPlayerSmallIcon(i));
             } catch (IOException e){
                 e.printStackTrace();
             }
 
-            playerWinLabels[i].setText(PLAYER_TOTAL_WINS_TEXT
-                    + (i + 1) + ": " + playerWins[i]);
+            playerWinLabels[i].setText(PLAYER_TOTAL_WINS_TEXT +
+                    playerNames[i] + ": " + playerWins[i]);
         }
     }
 
@@ -520,31 +725,93 @@ public class ConnectFourPanel extends JPanel {
      ******************************************************************/
     private void setCell(int row, int col, int player){
         try {
-            //Get image
-            Image img = ImageIO.read(ConnectFourPanel.class
-                  .getResourceAsStream(getIconPath(player)));
-
-            //Convert image to icon
-            ImageIcon icon = new ImageIcon(img);
-
             //Set icon on board
-            board[row][col].setIcon(icon);
+            board[row][col].setIcon(getPlayerIcon(player));
         } catch (IOException e){
             e.printStackTrace();
         }
     }
 
-    /**
+    /*******************************************************************
      * Computes an icon path for finding a particular icon
-     * @param player The player to get it for (or -1 for blank)
+     * @param color The color to get it for (or -1 for blank)
      * @return The path of the image file
-     */
-    private String getIconPath(int player){
-        if (player != -1) {
-            return "player" + player + "Cell.png";
+     ******************************************************************/
+    private String getIconPath(int color){
+        if (color != -1) {
+            return "player" + color + "Cell.png";
         } else {
             return "blankCell.png";
         }
+    }
+
+    /*******************************************************************
+     * Gets an icon corresponding to a particular player
+     * @param player The player to get it for (or -1 for blank)
+     * @return The corresponding icon
+     ******************************************************************/
+    private Icon getPlayerIcon(int player) throws IOException{
+        if (player != -1) {
+            return getIcon(playerColors[player]);
+        } else {
+            return getIcon(-1);
+        }
+    }
+
+    /*******************************************************************
+     * Gets a small icon corresponding to a particular player
+     * @param player The player to get it for (or -1 for blank)
+     * @return The corresponding icon
+     ******************************************************************/
+    private Icon getPlayerSmallIcon(int player) throws IOException{
+        if (player != -1) {
+            return getSmallIcon(playerColors[player]);
+        } else {
+            return getSmallIcon(-1);
+        }
+    }
+
+    /*******************************************************************
+     * Gets an icon corresponding to a particular color
+     * @param color The color to get it for (or -1 for blank)
+     * @return The corresponding icon
+     ******************************************************************/
+    private Icon getIcon(int color) throws IOException{
+        if (color != -1) {
+            return new ImageIcon(ImageIO.read(
+                    ConnectFourPanel.class.getResourceAsStream(
+                            getIconPath(color)
+                    )
+            ));
+        } else {
+            return new ImageIcon(ImageIO.read(
+                    ConnectFourPanel.class.getResourceAsStream(
+                            "blankCell.png"
+                    )
+            ));
+        }
+    }
+
+    /*******************************************************************
+     * Gets a small icon corresponding to a particular color
+     * @param color The color to get it for (or -1 for blank)
+     * @return The corresponding icon
+     ******************************************************************/
+    private Icon getSmallIcon(int color) throws IOException{
+        String path;
+        if (color != -1) {
+            path = getIconPath(color);
+        } else {
+            path = "blankCell.png";
+        }
+
+        Image img = ImageIO.read(ConnectFourPanel.class
+                .getResourceAsStream(path));
+
+        img = img.getScaledInstance(20, 20, Image.SCALE_DEFAULT);
+
+        //Convert image to icon and return
+        return new ImageIcon(img);
     }
 
     /*******************************************************************
