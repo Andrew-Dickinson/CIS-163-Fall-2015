@@ -86,7 +86,7 @@ public class Message {
      * @param character The character to insert
      * @throws IllegalArgumentException if pos > length() or < 0
      ******************************************************************/
-    private void insertIn(int pos, @NotNull Character character){
+    private void insertIn(int pos, Character character){
         //If pos is invalid, thrown an exception
         if (pos > length() || pos < 0)
             throw new IllegalArgumentException();
