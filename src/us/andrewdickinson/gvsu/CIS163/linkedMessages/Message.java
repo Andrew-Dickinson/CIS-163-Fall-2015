@@ -148,7 +148,6 @@ public class Message {
      * @param pos The position to insert the character into
      * @param character The character to insert
      * @throws IllegalArgumentException if pos > length() or < 0
-     *                                  or character == null
      ******************************************************************/
     public void insertCharacter(int pos, Character character){
         if (character == null) throw new IllegalArgumentException();
@@ -175,6 +174,52 @@ public class Message {
 
         changeStack.add(
                 new Modification(ModificationType.DELETION, pos));
+    }
+
+    /*******************************************************************
+     * Replaces a character in the linked list representation and
+     * creates an appropriate change stack entry
+     * @param pos The position to replace the character at
+     * @param character The new character to replace the old one
+     * @throws IllegalArgumentException if pos > length() or < 0
+     ******************************************************************/
+    public void replaceCharacter(int pos, Character character){
+        //If pos is invalid, thrown an exception
+        if (pos >= length() || pos < 0)
+            throw new IllegalArgumentException();
+
+        //Remove the previous character
+        removeCharacter(pos);
+
+        //Replace it with the new character
+        insertCharacter(pos, character);
+    }
+
+    /*******************************************************************
+     * Get the character at the provided index in the current (modified)
+     * linked list
+     * @param index The index of the character to get
+     * @return The character at the provided location
+     * @throws IllegalArgumentException if index >= length() or < 0
+     ******************************************************************/
+    public Character getCharacter(int index){
+        //If index is invalid, thrown an exception
+        if (index >= length() || index < 0)
+            throw new IllegalArgumentException();
+
+        int out = 0;
+        Link<Character> cur = top;
+        while (cur != null){
+            if (out == index){
+                return cur.getData();
+            }
+
+            out++;
+            cur = cur.getNext();
+        }
+
+        //Should never happen
+        return null;
     }
 
     /*******************************************************************

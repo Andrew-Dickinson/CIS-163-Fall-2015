@@ -112,6 +112,57 @@ public class Tests {
         assertEquals("abc", m.getString());
     }
 
+    //Test the lower boundary of the exception handling
+    @Test (expected = IllegalArgumentException.class)
+    public void testReplaceCharacterLowBound() {
+        Message m = new Message("5#@0safa");
+
+        m.replaceCharacter(-1, 'a');
+    }
+
+    //Test the upper boundary of the exception handling
+    @Test (expected = IllegalArgumentException.class)
+    public void testReplaceCharacterUpperBound() {
+        Message m = new Message("5#@0safa");
+
+        m.replaceCharacter(10, 'g');
+    }
+
+    //Test the upper boundary of the exception handling empty message
+    @Test (expected = IllegalArgumentException.class)
+    public void testReplaceCharacterUpperBoundEmpty() {
+        Message m = new Message("");
+
+        m.replaceCharacter(1, 'y');
+    }
+
+    //Test replacing a character at the beginning of the message
+    @Test
+    public void testReplaceCharacterAtBeginning() {
+        Message m = new Message("abcd");
+        m.replaceCharacter(0, 'x');
+
+        assertEquals("xbcd", m.getString());
+    }
+
+    //Test replacing a character in the middle of the message
+    @Test
+    public void testReplaceCharacterInMiddle() {
+        Message m = new Message("abcd");
+        m.replaceCharacter(2, 'e');
+
+        assertEquals("abed", m.getString());
+    }
+
+    //Test replacing a character at the end of the message
+    @Test
+    public void testReplaceCharacterAtEnd() {
+        Message m = new Message("abcd");
+        m.replaceCharacter(3, '6');
+
+        assertEquals("abc6", m.getString());
+    }
+
     //Test that the length method returns zero when there are no elements
     @Test
     public void testLengthZero() {
@@ -142,6 +193,54 @@ public class Tests {
         Message m = new Message("gahn2");
 
         assertEquals("gahn2", m.getString());
+    }
+
+    //Test the getChar method with an empty string
+    @Test (expected = IllegalArgumentException.class)
+    public void testGetCharEmptyString() {
+        Message m = new Message("");
+
+        m.getCharacter(0);
+    }
+
+    //Test the getChar method with a too low index
+    @Test (expected = IllegalArgumentException.class)
+    public void testGetCharLowBound() {
+        Message m = new Message("daslfj");
+
+        m.getCharacter(-1);
+    }
+
+    //Test the getChar method with a too high index
+    @Test (expected = IllegalArgumentException.class)
+    public void testGetCharHighBound() {
+        Message m = new Message("daslfj");
+
+        m.getCharacter(7);
+    }
+
+    //Test the getChar method on the first character
+    @Test
+    public void testGetFirstChar() {
+        Message m = new Message("gahn2");
+
+        assertTrue(m.getCharacter(0).equals('g'));
+    }
+
+    //Test the getChar method on the last character
+    @Test
+    public void testGetLastChar() {
+        Message m = new Message("gahn2");
+
+        assertTrue(m.getCharacter(4).equals('2'));
+    }
+
+    //Test the getChar method on one of the middle characters
+    @Test
+    public void testGetMiddleChar() {
+        Message m = new Message("gahn2");
+
+        assertTrue(m.getCharacter(2).equals('h'));
     }
 
     //Test the Link.hasNext() method when it should be true
