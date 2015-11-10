@@ -8,6 +8,12 @@ import java.util.ArrayList;
  * Created by Andrew on 11/9/15.
  **********************************************************************/
 public class Message {
+    //TODO: Export changeStack
+    //TODO: re-assembly mechanic
+    //TODO: Add scramble(N) method
+    //TODO: File interaction
+    //TODO: Tail pointer?
+
     /**
      * The top of the linked list that stores the message
      */
