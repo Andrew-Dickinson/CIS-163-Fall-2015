@@ -1,7 +1,5 @@
 package us.andrewdickinson.gvsu.CIS163.linkedMessages;
 
-import com.sun.istack.internal.NotNull;
-
 import java.util.ArrayList;
 
 /***********************************************************************
