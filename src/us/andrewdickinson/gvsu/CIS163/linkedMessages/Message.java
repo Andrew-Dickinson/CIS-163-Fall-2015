@@ -196,6 +196,29 @@ public class Message {
     }
 
     /*******************************************************************
+     * Swaps the characters at the given positions and
+     * creates an appropriate change stack entry
+     * @param pos1 The index of the first character to reference
+     * @param pos2 The index of the second character to reference
+     * @throws IllegalArgumentException if pos1/pos2 >= length() or < 0
+     ******************************************************************/
+    public void swapCharacters(int pos1, int pos2){
+        //If a pos is invalid, throw an exception
+        if (pos1 >= length() || pos1 < 0 || pos2 >= length() || pos2 < 0)
+            throw new IllegalArgumentException();
+
+        //Save the character from pos1
+        Character temp = getCharacter(pos1);
+
+        //Replace the pos1 character with the pos2 character
+        replaceCharacter(pos1, getCharacter(pos2));
+
+        //Replace the pos2 character with the saved pos1 character
+        replaceCharacter(pos2, temp);
+
+    }
+
+    /*******************************************************************
      * Get the character at the provided index in the current (modified)
      * linked list
      * @param index The index of the character to get

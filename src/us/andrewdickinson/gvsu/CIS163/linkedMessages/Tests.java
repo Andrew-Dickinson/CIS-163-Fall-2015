@@ -163,6 +163,74 @@ public class Tests {
         assertEquals("abc6", m.getString());
     }
 
+    //Test the lower boundary of the exception handling
+    @Test (expected = IllegalArgumentException.class)
+    public void testSwapCharacterLowBound1() {
+        Message m = new Message("5#@0safa");
+
+        m.swapCharacters(-1, 4);
+    }
+
+    //Test the lower boundary of the exception handling
+    @Test (expected = IllegalArgumentException.class)
+    public void testSwapCharacterLowBound2() {
+        Message m = new Message("5#@0safa");
+
+        m.swapCharacters(2, -4);
+    }
+
+    //Test the upper boundary of the exception handling
+    @Test (expected = IllegalArgumentException.class)
+    public void testSwapCharacterUpperBound1() {
+        Message m = new Message("5#@0safa");
+
+        m.swapCharacters(10, 2);
+    }
+
+
+    //Test the upper boundary of the exception handling
+    @Test (expected = IllegalArgumentException.class)
+    public void testSwapCharacterUpperBound2() {
+        Message m = new Message("5#@0safa");
+
+        m.swapCharacters(4, 10);
+    }
+
+    //Test the upper boundary of the exception handling empty message
+    @Test (expected = IllegalArgumentException.class)
+    public void testSwapCharacterUpperBoundEmpty() {
+        Message m = new Message("");
+
+        m.swapCharacters(1, 0);
+    }
+
+    //Test swapping a character at the beginning of the message
+    @Test
+    public void testSwapCharacterAtBeginning() {
+        Message m = new Message("abcd");
+        m.swapCharacters(0, 2);
+
+        assertEquals("cbad", m.getString());
+    }
+
+    //Test swapping a character in the middle of the message
+    @Test
+    public void testSwapCharacterInMiddle() {
+        Message m = new Message("abcd");
+        m.swapCharacters(2, 1);
+
+        assertEquals("acbd", m.getString());
+    }
+
+    //Test swapping a character at the end of the message
+    @Test
+    public void testSwapCharacterAtEnd() {
+        Message m = new Message("abcd");
+        m.swapCharacters(0, 3);
+
+        assertEquals("dbca", m.getString());
+    }
+
     //Test that the length method returns zero when there are no elements
     @Test
     public void testLengthZero() {
