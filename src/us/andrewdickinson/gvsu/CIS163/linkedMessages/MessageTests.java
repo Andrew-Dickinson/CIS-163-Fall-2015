@@ -5,10 +5,10 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /***********************************************************************
- * Comprehensive testing for this package
+ * Comprehensive testing for the message class
  * Created by Andrew on 11/9/15.
  **********************************************************************/
-public class Tests {
+public class MessageTests {
 
     //Test the lower boundary of the exception handling
     @Test (expected = IllegalArgumentException.class)
@@ -309,20 +309,5 @@ public class Tests {
         Message m = new Message("gahn2");
 
         assertTrue(m.getCharacter(2).equals('h'));
-    }
-
-    //Test the Link.hasNext() method when it should be true
-    @Test
-    public void testHasNextTrue(){
-        Link<Character> l = new Link<>('a');
-        l.setNext(new Link<Character>('b'));
-        assertEquals(true, l.hasNext());
-    }
-
-    //Test the Link.hasNext method when it should be false
-    @Test
-    public void testHasNextFalse(){
-        Link<Character> l = new Link<>('a');
-        assertEquals(false, l.hasNext());
     }
 }

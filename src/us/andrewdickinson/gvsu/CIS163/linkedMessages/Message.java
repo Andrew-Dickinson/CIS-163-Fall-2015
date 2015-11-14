@@ -17,12 +17,12 @@ public class Message {
     /**
      * The top of the linked list that stores the message
      */
-    private Link<Character> top;
+    private LinkedList<Character> characterList;
 
     /**
      * A list of modifications made to this message since its creation
      */
-    private ArrayList<Modification> changeStack;
+    private LinkedList<Modification> changeStack;
 
     public Message(String plainMessage){
         //Call default constructor
@@ -34,23 +34,23 @@ public class Message {
         }
     }
 
-    public Message(Link<Character> top,
-                   ArrayList<Modification> changeStack){
+    public Message(LinkedList<Character> characterList,
+                   LinkedList<Modification> changeStack){
         this.changeStack = changeStack;
-        this.top = top;
+        this.characterList = characterList;
     }
 
-    public Message(Link<Character> top) {
+    public Message(LinkedList<Character> characterList) {
         this();
-        this.top = top;
+        this.characterList = characterList;
     }
 
     public Message(){
         //Initialize top to null
-        top = null;
+        characterList = new LinkedList<>();
 
-        //Initialize an empty changeStack
-        changeStack = new ArrayList<>();
+        //Initialize the changeStack list to null
+        changeStack = new LinkedList<>();
     }
 
     /*******************************************************************
@@ -59,7 +59,7 @@ public class Message {
      * @param character The character to add
      ******************************************************************/
     private void addAtBegin(Character character){
-        top = new Link<>(character, top);
+        characterList.add(0, character);
     }
 
     /*******************************************************************
@@ -68,19 +68,7 @@ public class Message {
      * @param character The character to add
      ******************************************************************/
     private void addAtEnd(Character character){
-        //Handle a null top
-        if (top == null) {
-            top = new Link<>(character, null);
-        } else {
-            //Set cur to the current final link
-            Link<Character> cur = top;
-            while (cur.hasNext()) {
-                cur = cur.getNext();
-            }
-
-            //Append the new character
-            cur.setNext(new Link<>(character, null));
-        }
+        characterList.add(character);
     }
 
     /*******************************************************************
@@ -95,25 +83,7 @@ public class Message {
         if (pos > length() || pos < 0)
             throw new IllegalArgumentException();
 
-        //Handle the beginning/end cases with the appropriate methods
-        if (pos == 0){
-            addAtBegin(character);
-        } else if (pos == length()) {
-            addAtEnd(character);
-        } else {
-            //If pos is somewhere in the middle, insert appropriately
-            int out = 0;
-            Link<Character> cur = top;
-            while (cur != null){
-                if (out + 1 == pos){
-                    //Catch the spot one before the intended insert point
-                    cur.setNext(new Link<>(character, cur.getNext()));
-                }
-
-                out++;
-                cur = cur.getNext();
-            }
-        }
+        characterList.add(pos, character);
     }
 
     /*******************************************************************
@@ -127,23 +97,7 @@ public class Message {
         if (pos >= length() || pos < 0)
             throw new IllegalArgumentException();
 
-        //Handle the beginning case
-        if (pos == 0){
-            top = top.getNext();
-        } else {
-            //If pos is somewhere in the middle, remove appropriately
-            int out = 0;
-            Link<Character> cur = top;
-            while (cur != null){
-                if (out + 1 == pos){
-                    //Catch the spot one before the intended remove point
-                    cur.setNext(cur.getNext().getNext());
-                }
-
-                out++;
-                cur = cur.getNext();
-            }
-        }
+        characterList.remove(pos);
     }
 
     /*******************************************************************
@@ -234,19 +188,7 @@ public class Message {
         if (index >= length() || index < 0)
             throw new IllegalArgumentException();
 
-        int out = 0;
-        Link<Character> cur = top;
-        while (cur != null){
-            if (out == index){
-                return cur.getData();
-            }
-
-            out++;
-            cur = cur.getNext();
-        }
-
-        //Should never happen
-        return null;
+        return characterList.get(index);
     }
 
     /*******************************************************************
@@ -254,14 +196,7 @@ public class Message {
      * @return The number of characters
      ******************************************************************/
     public int length(){
-        int out = 0;
-        Link<Character> cur = top;
-        while (cur != null){
-            out++;
-            cur = cur.getNext();
-        }
-
-        return out;
+        return characterList.size();
     }
 
     /*******************************************************************
@@ -270,10 +205,8 @@ public class Message {
      ******************************************************************/
     public String getString(){
         String out = "";
-        Link<Character> cur = top;
-        while (cur != null){
-            out += cur.getData();
-            cur = cur.getNext();
+        for (int i = 0; i < characterList.size(); i++){
+            out += characterList.get(i);
         }
 
         return out;
