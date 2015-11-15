@@ -182,4 +182,21 @@ public class Message {
 
         return out;
     }
+
+    /*******************************************************************
+     * Get a LinkedList of strings representing the the change stack
+     * @return A LinkedList of the strings from Modification.toString()
+     ******************************************************************/
+    public LinkedList<String> exportChangeStack(){
+        if (changeStack == null)
+            return new LinkedList<>();
+
+        LinkedList<String> out = new LinkedList<>();
+
+        for (int i = 0; i < changeStack.size(); i++){
+            out.add(changeStack.get(i).toString());
+        }
+
+        return out;
+    }
 }

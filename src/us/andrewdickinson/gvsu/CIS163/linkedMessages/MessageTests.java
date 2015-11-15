@@ -312,14 +312,57 @@ public class MessageTests {
         assertTrue(m.getCharacter(2).equals('h'));
     }
 
-    //Test the toString() and length() methods when
+    //Test the exportChanges() method when no changes have been made
+    @Test
+    public void testExportChangesWithNoChanges(){
+        Message m = new Message("ytyj#jadf");
+        assertEquals(new LinkedList<String>(), m.exportChangeStack());
+    }
+
+    //Test the exportChanges() method when lots of changes are made
+    @Test
+    public void testExportChangesWithSomeChanges(){
+        Message m = new Message("abcdefghij%#*356");
+        m.swapCharacters(9, 1);
+        m.insertCharacter(5, 'r');
+        m.replaceCharacter(3, '$');
+        m.removeCharacter(0);
+        m.insertCharacter(10, '9');
+
+        //Build a LinkedList representing the changes made above
+        LinkedList<Modification> expected = new LinkedList<>();
+        expected.add(new Modification(ModificationType.DELETION, 9));
+        expected.add(new Modification(ModificationType.INSERTION, 9, 'b'));
+        expected.add(new Modification(ModificationType.DELETION, 1));
+        expected.add(new Modification(ModificationType.INSERTION, 1, 'j'));
+        expected.add(new Modification(ModificationType.INSERTION, 5, 'r'));
+        expected.add(new Modification(ModificationType.DELETION, 3));
+        expected.add(new Modification(ModificationType.INSERTION, 3, '$'));
+        expected.add(new Modification(ModificationType.DELETION, 0));
+        expected.add(new Modification(ModificationType.INSERTION, 10, '9'));
+
+        //Convert expected to a LinkedList of Strings
+        LinkedList<String> expectedStrings = new LinkedList<>();
+        for (int i = 0; i < expected.size(); i++){
+            expectedStrings.add(expected.get(i).toString());
+        }
+
+        //Export the generated LinkedList from the message
+        LinkedList<String> export = m.exportChangeStack();
+
+        //Compare the generated one to the expected one
+        assertEquals(expectedStrings, export);
+    }
+
+    //Test the toString(), length(), and exportChangeStack() methods when
     //Message.characterList and Message.changeStack are both null
     @Test
-    public void testToStringAndLengthWithNullInstanceVars(){
+    public void testToStringLengthAndExportChangesWithNullInstanceVars(){
         Message m = new Message(null, null);
 
         assertEquals("", m.toString());
         assertEquals(0, m.length());
+        assertEquals(new LinkedList<String>(), m.exportChangeStack());
     }
 
     //Test the remove() method when
