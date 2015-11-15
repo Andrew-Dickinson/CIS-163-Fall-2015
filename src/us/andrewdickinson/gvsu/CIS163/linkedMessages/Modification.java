@@ -19,18 +19,28 @@ public class Modification {
     /**
      * The character (optional) that is represented by this class
      */
-    private char character;
+    private Character character;
 
     public Modification(ModificationType type, int location){
+        if (type == ModificationType.INSERTION)
+            throw new IllegalArgumentException();
+
         this.type = type;
         this.location = location;
     }
 
     public Modification(ModificationType type, int location,
-                        char character){
+                        Character character){
+        if (character == null || type == ModificationType.DELETION)
+            throw new IllegalArgumentException();
+
         this.character = character;
         this.type = type;
         this.location = location;
+    }
+
+    public Modification(String generatedString){
+        parseFromString(generatedString);
     }
 
     /*******************************************************************
@@ -53,7 +63,74 @@ public class Modification {
      * Get the character (if applicable) for this modification
      * @return The applicable character (or null) from this modification
      ******************************************************************/
-    public char getCharacter() {
+    public Character getCharacter() {
         return character;
+    }
+
+    /*******************************************************************
+     * Return a string representation of the modification
+     * @return A string in the form of:
+     *          "MODIFICATION_TYPE LOCATION (Optional: CHARACTER)"
+     ******************************************************************/
+    @Override
+    public String toString(){
+        String out = "";
+
+        out += type.name();
+
+        out += " " + location;
+
+        if (character != null){
+            out += " " + character;
+        }
+
+        return out;
+    }
+
+    /*******************************************************************
+     * Set this object's fields according to a string from toString()
+     * @param input The string to parse
+     * @throws IllegalArgumentException if input is invalid in any way
+     ******************************************************************/
+    public void parseFromString(String input){
+        if (input == null)
+            throw new IllegalArgumentException();
+
+        String[] data = input.split(" ");
+
+        //The data should be in two or three chunks
+        if (data.length != 2 && data.length != 3)
+            throw new IllegalArgumentException();
+
+        ModificationType type;
+        try {
+            String incomingType = data[0];
+            type = Enum.valueOf(ModificationType.class, incomingType);
+        } catch (IllegalArgumentException e){
+            //We want to be the source of the exception
+            throw new IllegalArgumentException();
+        }
+
+        int location;
+        try {
+            String incomingLocation = data[1];
+            location = Integer.parseInt(incomingLocation);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException();
+        }
+
+        Character character = null;
+        if (data.length == 3) {
+            String incomingCharacter = data[2];
+            if (incomingCharacter.length() != 1)
+                throw new IllegalArgumentException();
+
+            character = incomingCharacter.charAt(0);
+        }
+
+        //If we made it this far, the data is all valid
+        this.type = type;
+        this.location = location;
+        this.character = character;
     }
 }

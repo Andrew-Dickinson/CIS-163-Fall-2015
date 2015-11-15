@@ -1,5 +1,6 @@
 package us.andrewdickinson.gvsu.CIS163.linkedMessages;
 
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -373,5 +374,96 @@ public class MessageTests {
     public void testReplaceNullCharacter(){
         Message m = new Message("abd");
         m.replaceCharacter(0, null);
+    }
+
+    //Test Modification's toString() method for an insert modification
+    @Test
+    public void testToStringForModificationInsert(){
+        Modification m
+                = new Modification(ModificationType.INSERTION, 4, 'a');
+
+        assertEquals("INSERTION 4 a", m.toString());
+    }
+
+    //Test Modification's toString() method for a deletion modification
+    @Test
+    public void testToStringForModificationDelete(){
+        Modification m = new Modification(ModificationType.DELETION, 7);
+
+        assertEquals("DELETION 7", m.toString());
+    }
+
+    //Confirm the exception throw for Modification.parseFromString(null)
+    @Test(expected=IllegalArgumentException.class)
+    public void testModificationParseWithNullString(){
+        Modification m = new Modification(null);
+    }
+
+    //Confirm the exception throw for Modification.parseFromString("")
+    @Test(expected=IllegalArgumentException.class)
+    public void testModificationParseWithEmptyString(){
+        Modification m = new Modification("");
+    }
+
+    //Confirm the exception throw for
+    //Modification.parseFromString("pizza")
+    @Test(expected=IllegalArgumentException.class)
+    public void testModificationParseWithGibberish(){
+        Modification m = new Modification("ajlkfsajldf;$32%");
+    }
+
+    //Confirm the exception throw for
+    //Modification.parseFromString("piz za")
+    @Test(expected=IllegalArgumentException.class)
+    public void testModificationParseWithGibberishOneSpace(){
+        Modification m = new Modification("ajlkfsa jldf;$32%");
+    }
+
+    //Confirm the exception throw for
+    //Modification.parseFromString("pi z za")
+    @Test(expected=IllegalArgumentException.class)
+    public void testModificationParseWithGibberishTwoSpaces(){
+        Modification m = new Modification("ajlkfs ajldf; $32%");
+    }
+
+    //Test Modification's ability to parse a string in the format:
+    //"INSERTION N X"
+    @Test
+    public void testModificationParseInsertion(){
+        Modification m = new Modification("INSERTION 3 &");
+    }
+
+    //Test Modification's ability to parse a string in the format:
+    //"DELETION N"
+    @Test
+    public void testModificationParseDeletion(){
+        Modification m = new Modification("DELETION 8");
+    }
+
+    //Test Modification's ability to parse output from its toString()
+    //for an insertion
+    @Test
+    public void testModificationParseToStringInsertion(){
+        Modification oldM
+                = new Modification(ModificationType.INSERTION, 9, 'k');
+
+        Modification newM = new Modification(oldM.toString());
+
+        assertEquals(ModificationType.INSERTION, newM.getType());
+        assertEquals(9, newM.getLocation());
+        assertEquals(new Character('k'), newM.getCharacter());
+    }
+
+    //Test Modification's ability to parse output from its toString()
+    //for a deletion
+    @Test
+    public void testModificationParseToStringDeletion(){
+        Modification oldM
+                = new Modification(ModificationType.DELETION, 11);
+
+        Modification newM = new Modification(oldM.toString());
+
+        assertEquals(ModificationType.DELETION, newM.getType());
+        assertEquals(11, newM.getLocation());
     }
 }
