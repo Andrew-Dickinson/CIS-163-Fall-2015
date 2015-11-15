@@ -65,7 +65,7 @@ public class LinkedList<E> {
     /*******************************************************************
      * Removes a node from the linked list
      * @param pos The index of the node to remove
-     * @return The removed element or null if not in the list
+     * @return The removed element
      * @throws IndexOutOfBoundsException if pos >= length() or < 0
      ******************************************************************/
     public E remove(int pos){
@@ -80,7 +80,14 @@ public class LinkedList<E> {
                 tail = null;
             }
 
+            //We're removing top, so we have to save it to return it's data
+            Link<E> temp = top;
+
+            //Remove the element in top
             top = top.getNext();
+
+            //Return the data we removed
+            return temp.getData();
         } else {
             //If pos is somewhere in the middle, remove appropriately
 
@@ -111,6 +118,7 @@ public class LinkedList<E> {
             }
         }
 
+        //This should never occur
         return null;
     }
 
