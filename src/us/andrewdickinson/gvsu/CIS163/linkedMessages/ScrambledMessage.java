@@ -1,7 +1,7 @@
 package us.andrewdickinson.gvsu.CIS163.linkedMessages;
 
 /***********************************************************************
- * Contains a linked list representing a message and an a list of all
+ * Contains a linked list representing a message and a list of all
  * of the modifications made to it
  * Created by Andrew on 11/9/15.
  **********************************************************************/

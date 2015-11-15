@@ -5,7 +5,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /***********************************************************************
- * Comprehensive testing for the message class
+ * Comprehensive testing for the ScrambledMessage class
  * Created by Andrew on 11/9/15.
  **********************************************************************/
 public class ScrambledMessageTests {
