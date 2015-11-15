@@ -311,50 +311,64 @@ public class MessageTests {
         assertTrue(m.getCharacter(2).equals('h'));
     }
 
+    //Test the toString() and length() methods when
+    //Message.characterList and Message.changeStack are both null
     @Test
-    public void testToStringAndLenthWithNullInstanceVars(){
+    public void testToStringAndLengthWithNullInstanceVars(){
         Message m = new Message(null, null);
 
         assertEquals("", m.toString());
         assertEquals(0, m.length());
     }
 
+    //Test the remove() method when
+    //Message.characterList and Message.changeStack are both null
     @Test(expected=IndexOutOfBoundsException.class)
     public void testRemoveWithNullInstanceVars(){
         Message m = new Message(null, null);
         m.removeCharacter(0);
     }
 
+    //Test the getCharacter() method when
+    //Message.characterList and Message.changeStack are both null
     @Test(expected=IndexOutOfBoundsException.class)
     public void testGetCharacterWithNullInstanceVars(){
         Message m = new Message(null, null);
         m.getCharacter(0);
     }
 
+    //Test the swapCharacters() method when
+    //Message.characterList and Message.changeStack are both null
     @Test(expected=IndexOutOfBoundsException.class)
     public void testSwapCharactersWithNullInstanceVars(){
         Message m = new Message(null, null);
         m.swapCharacters(0, 1);
     }
 
+    //Test the insertCharacter() method when
+    //Message.characterList and Message.changeStack are both null
     @Test
     public void testInsertCharacterWithNullInstanceVars(){
         Message m = new Message(null, null);
         m.insertCharacter(0, 'a');
     }
 
+    //Test the replaceCharacter() method when
+    //Message.characterList and Message.changeStack are both null
     @Test(expected=IndexOutOfBoundsException.class)
     public void testReplaceCharacterWithNullInstanceVars(){
         Message m = new Message(null, null);
         m.replaceCharacter(0, 'a');
     }
 
+    //Test the exception throw for insertCharacter(null)
     @Test(expected=IllegalArgumentException.class)
     public void testInsertNullCharacter(){
         Message m = new Message();
         m.insertCharacter(0, null);
     }
 
+    //Test the exception throw for replaceCharacter(X, null)
     @Test(expected=IllegalArgumentException.class)
     public void testReplaceNullCharacter(){
         Message m = new Message("abd");
