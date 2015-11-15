@@ -1,6 +1,5 @@
 package us.andrewdickinson.gvsu.CIS163.linkedMessages;
 
-import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -9,12 +8,12 @@ import static org.junit.Assert.*;
  * Comprehensive testing for the message class
  * Created by Andrew on 11/9/15.
  **********************************************************************/
-public class MessageTests {
+public class ScrambledMessageTests {
 
     //Test the lower boundary of the exception handling
     @Test (expected = IndexOutOfBoundsException.class)
     public void testInsertCharacterLowBound() {
-        Message m = new Message("5#@0safa");
+        ScrambledMessage m = new ScrambledMessage("5#@0safa");
 
         m.insertCharacter(-1, 'a');
     }
@@ -22,7 +21,7 @@ public class MessageTests {
     //Test the upper boundary of the exception handling
     @Test (expected = IndexOutOfBoundsException.class)
     public void testInsertCharacterUpperBound() {
-        Message m = new Message("5#@0safa");
+        ScrambledMessage m = new ScrambledMessage("5#@0safa");
 
         m.insertCharacter(10, 'g');
     }
@@ -30,7 +29,7 @@ public class MessageTests {
     //Test the upper boundary of the exception handling empty message
     @Test (expected = IndexOutOfBoundsException.class)
     public void testInsertCharacterUpperBoundEmpty() {
-        Message m = new Message("");
+        ScrambledMessage m = new ScrambledMessage("");
 
         m.insertCharacter(1, 'y');
     }
@@ -38,7 +37,7 @@ public class MessageTests {
     //Test inserting a character at the beginning of the message
     @Test
     public void testInsertCharacterAtBeginning() {
-        Message m = new Message("abcd");
+        ScrambledMessage m = new ScrambledMessage("abcd");
         m.insertCharacter(0, 'x');
 
         assertEquals("xabcd", m.toString());
@@ -47,7 +46,7 @@ public class MessageTests {
     //Test inserting a character in the middle of the message
     @Test
     public void testInsertCharacterInMiddle() {
-        Message m = new Message("abcd");
+        ScrambledMessage m = new ScrambledMessage("abcd");
         m.insertCharacter(2, 'e');
 
         assertEquals("abecd", m.toString());
@@ -56,7 +55,7 @@ public class MessageTests {
     //Test inserting a character at the end of the message
     @Test
     public void testInsertCharacterAtEnd() {
-        Message m = new Message("abcd");
+        ScrambledMessage m = new ScrambledMessage("abcd");
         m.insertCharacter(4, '6');
 
         assertEquals("abcd6", m.toString());
@@ -65,7 +64,7 @@ public class MessageTests {
     //Test the lower boundary of the exception handling
     @Test (expected = IndexOutOfBoundsException.class)
     public void testRemoveCharacterLowBound() {
-        Message m = new Message("5#@0safa");
+        ScrambledMessage m = new ScrambledMessage("5#@0safa");
 
         m.removeCharacter(-1);
     }
@@ -73,7 +72,7 @@ public class MessageTests {
     //Test the upper boundary of the exception handling
     @Test (expected = IndexOutOfBoundsException.class)
     public void testRemoveCharacterUpperBound() {
-        Message m = new Message("5#@0safa");
+        ScrambledMessage m = new ScrambledMessage("5#@0safa");
 
         m.removeCharacter(9);
     }
@@ -81,7 +80,7 @@ public class MessageTests {
     //Test the upper boundary of the exception handling empty message
     @Test (expected = IndexOutOfBoundsException.class)
     public void testRemoveCharacterUpperBoundEmpty() {
-        Message m = new Message("");
+        ScrambledMessage m = new ScrambledMessage("");
 
         m.removeCharacter(0);
     }
@@ -89,7 +88,7 @@ public class MessageTests {
     //Test removing a character from the beginning of the message
     @Test
     public void testRemoveCharacterFromBeginning() {
-        Message m = new Message("abcd");
+        ScrambledMessage m = new ScrambledMessage("abcd");
         m.removeCharacter(0);
 
         assertEquals("bcd", m.toString());
@@ -98,7 +97,7 @@ public class MessageTests {
     //Test removing a character from the middle of the message
     @Test
     public void testRemoveCharacterFromMiddle() {
-        Message m = new Message("abcd");
+        ScrambledMessage m = new ScrambledMessage("abcd");
         m.removeCharacter(2);
 
         assertEquals("abd", m.toString());
@@ -107,7 +106,7 @@ public class MessageTests {
     //Test removing a character from the end of the message
     @Test
     public void testRemoveCharacterFromEnd() {
-        Message m = new Message("abcd");
+        ScrambledMessage m = new ScrambledMessage("abcd");
         m.removeCharacter(3);
 
         assertEquals("abc", m.toString());
@@ -116,7 +115,7 @@ public class MessageTests {
     //Test the lower boundary of the exception handling
     @Test (expected = IndexOutOfBoundsException.class)
     public void testReplaceCharacterLowBound() {
-        Message m = new Message("5#@0safa");
+        ScrambledMessage m = new ScrambledMessage("5#@0safa");
 
         m.replaceCharacter(-1, 'a');
     }
@@ -124,7 +123,7 @@ public class MessageTests {
     //Test the upper boundary of the exception handling
     @Test (expected = IndexOutOfBoundsException.class)
     public void testReplaceCharacterUpperBound() {
-        Message m = new Message("5#@0safa");
+        ScrambledMessage m = new ScrambledMessage("5#@0safa");
 
         m.replaceCharacter(10, 'g');
     }
@@ -132,7 +131,7 @@ public class MessageTests {
     //Test the upper boundary of the exception handling empty message
     @Test (expected = IndexOutOfBoundsException.class)
     public void testReplaceCharacterUpperBoundEmpty() {
-        Message m = new Message("");
+        ScrambledMessage m = new ScrambledMessage("");
 
         m.replaceCharacter(1, 'y');
     }
@@ -140,7 +139,7 @@ public class MessageTests {
     //Test replacing a character at the beginning of the message
     @Test
     public void testReplaceCharacterAtBeginning() {
-        Message m = new Message("abcd");
+        ScrambledMessage m = new ScrambledMessage("abcd");
         m.replaceCharacter(0, 'x');
 
         assertEquals("xbcd", m.toString());
@@ -149,7 +148,7 @@ public class MessageTests {
     //Test replacing a character in the middle of the message
     @Test
     public void testReplaceCharacterInMiddle() {
-        Message m = new Message("abcd");
+        ScrambledMessage m = new ScrambledMessage("abcd");
         m.replaceCharacter(2, 'e');
 
         assertEquals("abed", m.toString());
@@ -158,7 +157,7 @@ public class MessageTests {
     //Test replacing a character at the end of the message
     @Test
     public void testReplaceCharacterAtEnd() {
-        Message m = new Message("abcd");
+        ScrambledMessage m = new ScrambledMessage("abcd");
         m.replaceCharacter(3, '6');
 
         assertEquals("abc6", m.toString());
@@ -167,7 +166,7 @@ public class MessageTests {
     //Test the lower boundary of the exception handling
     @Test (expected = IndexOutOfBoundsException.class)
     public void testSwapCharacterLowBound1() {
-        Message m = new Message("5#@0safa");
+        ScrambledMessage m = new ScrambledMessage("5#@0safa");
 
         m.swapCharacters(-1, 4);
     }
@@ -175,7 +174,7 @@ public class MessageTests {
     //Test the lower boundary of the exception handling
     @Test (expected = IndexOutOfBoundsException.class)
     public void testSwapCharacterLowBound2() {
-        Message m = new Message("5#@0safa");
+        ScrambledMessage m = new ScrambledMessage("5#@0safa");
 
         m.swapCharacters(2, -4);
     }
@@ -183,7 +182,7 @@ public class MessageTests {
     //Test the upper boundary of the exception handling
     @Test (expected = IndexOutOfBoundsException.class)
     public void testSwapCharacterUpperBound1() {
-        Message m = new Message("5#@0safa");
+        ScrambledMessage m = new ScrambledMessage("5#@0safa");
 
         m.swapCharacters(10, 2);
     }
@@ -192,7 +191,7 @@ public class MessageTests {
     //Test the upper boundary of the exception handling
     @Test (expected = IndexOutOfBoundsException.class)
     public void testSwapCharacterUpperBound2() {
-        Message m = new Message("5#@0safa");
+        ScrambledMessage m = new ScrambledMessage("5#@0safa");
 
         m.swapCharacters(4, 10);
     }
@@ -200,7 +199,7 @@ public class MessageTests {
     //Test the upper boundary of the exception handling empty message
     @Test (expected = IndexOutOfBoundsException.class)
     public void testSwapCharacterUpperBoundEmpty() {
-        Message m = new Message("");
+        ScrambledMessage m = new ScrambledMessage("");
 
         m.swapCharacters(1, 0);
     }
@@ -208,7 +207,7 @@ public class MessageTests {
     //Test swapping a character at the beginning of the message
     @Test
     public void testSwapCharacterAtBeginning() {
-        Message m = new Message("abcd");
+        ScrambledMessage m = new ScrambledMessage("abcd");
         m.swapCharacters(0, 2);
 
         assertEquals("cbad", m.toString());
@@ -217,7 +216,7 @@ public class MessageTests {
     //Test swapping a character in the middle of the message
     @Test
     public void testSwapCharacterInMiddle() {
-        Message m = new Message("abcd");
+        ScrambledMessage m = new ScrambledMessage("abcd");
         m.swapCharacters(2, 1);
 
         assertEquals("acbd", m.toString());
@@ -226,7 +225,7 @@ public class MessageTests {
     //Test swapping a character at the end of the message
     @Test
     public void testSwapCharacterAtEnd() {
-        Message m = new Message("abcd");
+        ScrambledMessage m = new ScrambledMessage("abcd");
         m.swapCharacters(0, 3);
 
         assertEquals("dbca", m.toString());
@@ -235,7 +234,7 @@ public class MessageTests {
     //Test that the length method returns zero when there are no elements
     @Test
     public void testLengthZero() {
-        Message m = new Message();
+        ScrambledMessage m = new ScrambledMessage();
 
         assertEquals(0, m.length());
     }
@@ -243,7 +242,7 @@ public class MessageTests {
     //Test that the length method behaves correctly in a normal situation
     @Test
     public void testLengthNonzero() {
-        Message m = new Message("alsf");
+        ScrambledMessage m = new ScrambledMessage("alsf");
 
         assertEquals(4, m.length());
     }
@@ -251,7 +250,7 @@ public class MessageTests {
     //Test the getString method with an empty string
     @Test
     public void testGetEmptyString() {
-        Message m = new Message("");
+        ScrambledMessage m = new ScrambledMessage("");
 
         assertEquals("", m.toString());
     }
@@ -259,7 +258,7 @@ public class MessageTests {
     //Test the getString method with an full string
     @Test
     public void testGetString() {
-        Message m = new Message("gahn2");
+        ScrambledMessage m = new ScrambledMessage("gahn2");
 
         assertEquals("gahn2", m.toString());
     }
@@ -267,7 +266,7 @@ public class MessageTests {
     //Test the getChar method with an empty string
     @Test (expected = IndexOutOfBoundsException.class)
     public void testGetCharEmptyString() {
-        Message m = new Message("");
+        ScrambledMessage m = new ScrambledMessage("");
 
         m.getCharacter(0);
     }
@@ -275,7 +274,7 @@ public class MessageTests {
     //Test the getChar method with a too low index
     @Test (expected = IndexOutOfBoundsException.class)
     public void testGetCharLowBound() {
-        Message m = new Message("daslfj");
+        ScrambledMessage m = new ScrambledMessage("daslfj");
 
         m.getCharacter(-1);
     }
@@ -283,7 +282,7 @@ public class MessageTests {
     //Test the getChar method with a too high index
     @Test (expected = IndexOutOfBoundsException.class)
     public void testGetCharHighBound() {
-        Message m = new Message("daslfj");
+        ScrambledMessage m = new ScrambledMessage("daslfj");
 
         m.getCharacter(7);
     }
@@ -291,7 +290,7 @@ public class MessageTests {
     //Test the getChar method on the first character
     @Test
     public void testGetFirstChar() {
-        Message m = new Message("gahn2");
+        ScrambledMessage m = new ScrambledMessage("gahn2");
 
         assertTrue(m.getCharacter(0).equals('g'));
     }
@@ -299,7 +298,7 @@ public class MessageTests {
     //Test the getChar method on the last character
     @Test
     public void testGetLastChar() {
-        Message m = new Message("gahn2");
+        ScrambledMessage m = new ScrambledMessage("gahn2");
 
         assertTrue(m.getCharacter(4).equals('2'));
     }
@@ -307,7 +306,7 @@ public class MessageTests {
     //Test the getChar method on one of the middle characters
     @Test
     public void testGetMiddleChar() {
-        Message m = new Message("gahn2");
+        ScrambledMessage m = new ScrambledMessage("gahn2");
 
         assertTrue(m.getCharacter(2).equals('h'));
     }
@@ -315,14 +314,14 @@ public class MessageTests {
     //Test the exportChanges() method when no changes have been made
     @Test
     public void testExportChangesWithNoChanges(){
-        Message m = new Message("ytyj#jadf");
+        ScrambledMessage m = new ScrambledMessage("ytyj#jadf");
         assertEquals(new LinkedList<String>(), m.exportChangeStack());
     }
 
     //Test the exportChanges() method when lots of changes are made
     @Test
     public void testExportChangesWithSomeChanges(){
-        Message m = new Message("abcdefghij%#*356");
+        ScrambledMessage m = new ScrambledMessage("abcdefghij%#*356");
         m.swapCharacters(9, 1);
         m.insertCharacter(5, 'r');
         m.replaceCharacter(3, '$');
@@ -355,10 +354,10 @@ public class MessageTests {
     }
 
     //Test the toString(), length(), and exportChangeStack() methods when
-    //Message.characterList and Message.changeStack are both null
+    //ScrambledMessage.characterList and ScrambledMessage.changeStack are both null
     @Test
     public void testToStringLengthAndExportChangesWithNullInstanceVars(){
-        Message m = new Message(null, null);
+        ScrambledMessage m = new ScrambledMessage(null, null);
 
         assertEquals("", m.toString());
         assertEquals(0, m.length());
@@ -366,56 +365,56 @@ public class MessageTests {
     }
 
     //Test the remove() method when
-    //Message.characterList and Message.changeStack are both null
+    //ScrambledMessage.characterList and ScrambledMessage.changeStack are both null
     @Test(expected=IndexOutOfBoundsException.class)
     public void testRemoveWithNullInstanceVars(){
-        Message m = new Message(null, null);
+        ScrambledMessage m = new ScrambledMessage(null, null);
         m.removeCharacter(0);
     }
 
     //Test the getCharacter() method when
-    //Message.characterList and Message.changeStack are both null
+    //ScrambledMessage.characterList and ScrambledMessage.changeStack are both null
     @Test(expected=IndexOutOfBoundsException.class)
     public void testGetCharacterWithNullInstanceVars(){
-        Message m = new Message(null, null);
+        ScrambledMessage m = new ScrambledMessage(null, null);
         m.getCharacter(0);
     }
 
     //Test the swapCharacters() method when
-    //Message.characterList and Message.changeStack are both null
+    //ScrambledMessage.characterList and ScrambledMessage.changeStack are both null
     @Test(expected=IndexOutOfBoundsException.class)
     public void testSwapCharactersWithNullInstanceVars(){
-        Message m = new Message(null, null);
+        ScrambledMessage m = new ScrambledMessage(null, null);
         m.swapCharacters(0, 1);
     }
 
     //Test the insertCharacter() method when
-    //Message.characterList and Message.changeStack are both null
+    //ScrambledMessage.characterList and ScrambledMessage.changeStack are both null
     @Test
     public void testInsertCharacterWithNullInstanceVars(){
-        Message m = new Message(null, null);
+        ScrambledMessage m = new ScrambledMessage(null, null);
         m.insertCharacter(0, 'a');
     }
 
     //Test the replaceCharacter() method when
-    //Message.characterList and Message.changeStack are both null
+    //ScrambledMessage.characterList and ScrambledMessage.changeStack are both null
     @Test(expected=IndexOutOfBoundsException.class)
     public void testReplaceCharacterWithNullInstanceVars(){
-        Message m = new Message(null, null);
+        ScrambledMessage m = new ScrambledMessage(null, null);
         m.replaceCharacter(0, 'a');
     }
 
     //Test the exception throw for insertCharacter(null)
     @Test(expected=IllegalArgumentException.class)
     public void testInsertNullCharacter(){
-        Message m = new Message();
+        ScrambledMessage m = new ScrambledMessage();
         m.insertCharacter(0, null);
     }
 
     //Test the exception throw for replaceCharacter(X, null)
     @Test(expected=IllegalArgumentException.class)
     public void testReplaceNullCharacter(){
-        Message m = new Message("abd");
+        ScrambledMessage m = new ScrambledMessage("abd");
         m.replaceCharacter(0, null);
     }
 

@@ -1,51 +1,54 @@
 package us.andrewdickinson.gvsu.CIS163.linkedMessages;
 
-import java.util.ArrayList;
-
 /***********************************************************************
  * Contains a linked list representing a message and an a list of all
  * of the modifications made to it
  * Created by Andrew on 11/9/15.
  **********************************************************************/
-public class Message {
+public class ScrambledMessage {
     //TODO: re-assembly mechanic
     //TODO: Add scramble(N) method
     //TODO: File interaction
 
     /**
-     * The top of the linked list that stores the message
+     * The linked list that stores the scrambled message
      */
-    private LinkedList<Character> characterList;
+    private LinkedList<Character> scrambledMessage;
 
     /**
      * A list of modifications made to this message since its creation
      */
     private LinkedList<Modification> changeStack;
 
-    public Message(String plainMessage){
+    public ScrambledMessage(String plainMessage){
         //Call default constructor
         this();
 
+        //In the beginning, the scrambled text starts out
+        //as the plaintext
+
         //Build the message from the string
         for (int i = 0; i < plainMessage.length(); i++){
-            characterList.add(plainMessage.charAt(i));
+            scrambledMessage.add(plainMessage.charAt(i));
         }
     }
 
-    public Message(LinkedList<Character> characterList,
-                   LinkedList<Modification> changeStack){
+    public ScrambledMessage(LinkedList<Character> scrambledMessage,
+                            LinkedList<Modification> changeStack){
         this.changeStack = changeStack;
-        this.characterList = characterList;
+        this.scrambledMessage = scrambledMessage;
     }
 
-    public Message(LinkedList<Character> characterList) {
+    public ScrambledMessage(LinkedList<Character> plainMessage) {
         this();
-        this.characterList = characterList;
+        //In the beginning, the scrambled text starts out
+        //as the plaintext
+        this.scrambledMessage = plainMessage;
     }
 
-    public Message(){
+    public ScrambledMessage(){
         //Initialize top to null
-        characterList = new LinkedList<>();
+        scrambledMessage = new LinkedList<>();
 
         //Initialize the changeStack list to null
         changeStack = new LinkedList<>();
@@ -62,10 +65,10 @@ public class Message {
     public void insertCharacter(int pos, Character character){
         if (character == null) throw new IllegalArgumentException();
 
-        if (characterList == null)
-            characterList = new LinkedList<>();
+        if (scrambledMessage == null)
+            scrambledMessage = new LinkedList<>();
 
-        characterList.add(pos, character);
+        scrambledMessage.add(pos, character);
 
         if (changeStack == null)
             changeStack = new LinkedList<>();
@@ -84,17 +87,17 @@ public class Message {
      * creates an appropriate change stack entry
      * @param pos The position to remove the character from
      * @throws IndexOutOfBoundsException if pos >= length() or < 0
-     * @throws IllegalArgumentException if characterList is null
+     * @throws IllegalArgumentException if scrambledMessage is null
      ******************************************************************/
     public void removeCharacter(int pos){
-        if (characterList == null)
+        if (scrambledMessage == null)
             //If null, the length is 0, so it's always out of bounds
             throw new IndexOutOfBoundsException();
 
-        Character removed = characterList.remove(pos);
+        Character removed = scrambledMessage.remove(pos);
 
         changeStack.add(
-               new Modification(ModificationType.DELETION, pos, removed)
+                new Modification(ModificationType.DELETION, pos, removed)
         );
     }
 
@@ -149,10 +152,10 @@ public class Message {
      ******************************************************************/
     public Character getCharacter(int index){
         //If index is invalid, thrown an exception
-        if (index >= length() || index < 0 || characterList == null)
+        if (index >= length() || index < 0 || scrambledMessage == null)
             throw new IndexOutOfBoundsException();
 
-        return characterList.get(index);
+        return scrambledMessage.get(index);
     }
 
     /*******************************************************************
@@ -160,10 +163,10 @@ public class Message {
      * @return The number of characters
      ******************************************************************/
     public int length(){
-        if (characterList == null)
+        if (scrambledMessage == null)
             return 0;
 
-        return characterList.size();
+        return scrambledMessage.size();
     }
 
     /*******************************************************************
@@ -172,12 +175,12 @@ public class Message {
      ******************************************************************/
     @Override
     public String toString(){
-        if (characterList == null)
+        if (scrambledMessage == null)
             return "";
 
         String out = "";
-        for (int i = 0; i < characterList.size(); i++){
-            out += characterList.get(i);
+        for (int i = 0; i < scrambledMessage.size(); i++){
+            out += scrambledMessage.get(i);
         }
 
         return out;
