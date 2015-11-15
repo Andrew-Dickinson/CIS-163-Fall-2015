@@ -74,11 +74,7 @@ public class ScrambledMessage {
             changeStack = new LinkedList<>();
 
         changeStack.add(
-                new Modification(
-                        ModificationType.INSERTION,
-                        pos,
-                        character
-                )
+                new Modification(ModificationType.INSERTION, pos)
         );
     }
 

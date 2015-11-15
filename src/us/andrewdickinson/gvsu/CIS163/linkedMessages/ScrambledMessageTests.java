@@ -331,14 +331,14 @@ public class ScrambledMessageTests {
         //Build a LinkedList representing the changes made above
         LinkedList<Modification> expected = new LinkedList<>();
         expected.add(new Modification(ModificationType.DELETION, 9, 'j'));
-        expected.add(new Modification(ModificationType.INSERTION, 9, 'b'));
+        expected.add(new Modification(ModificationType.INSERTION, 9));
         expected.add(new Modification(ModificationType.DELETION, 1, 'b'));
-        expected.add(new Modification(ModificationType.INSERTION, 1, 'j'));
-        expected.add(new Modification(ModificationType.INSERTION, 5, 'r'));
+        expected.add(new Modification(ModificationType.INSERTION, 1));
+        expected.add(new Modification(ModificationType.INSERTION, 5));
         expected.add(new Modification(ModificationType.DELETION, 3, 'd'));
-        expected.add(new Modification(ModificationType.INSERTION, 3, '$'));
+        expected.add(new Modification(ModificationType.INSERTION, 3));
         expected.add(new Modification(ModificationType.DELETION, 0, 'a'));
-        expected.add(new Modification(ModificationType.INSERTION, 10, '9'));
+        expected.add(new Modification(ModificationType.INSERTION, 10));
 
         //Convert expected to a LinkedList of Strings
         LinkedList<String> expectedStrings = new LinkedList<>();
@@ -422,9 +422,9 @@ public class ScrambledMessageTests {
     @Test
     public void testToStringForModificationInsert(){
         Modification m
-                = new Modification(ModificationType.INSERTION, 4, 'a');
+                = new Modification(ModificationType.INSERTION, 4);
 
-        assertEquals("INSERTION 4 a", m.toString());
+        assertEquals("INSERTION 4", m.toString());
     }
 
     //Test Modification's toString() method for a deletion modification
@@ -488,13 +488,12 @@ public class ScrambledMessageTests {
     @Test
     public void testModificationParseToStringInsertion(){
         Modification oldM
-                = new Modification(ModificationType.INSERTION, 9, 'k');
+                = new Modification(ModificationType.INSERTION, 9);
 
         Modification newM = new Modification(oldM.toString());
 
         assertEquals(ModificationType.INSERTION, newM.getType());
         assertEquals(9, newM.getLocation());
-        assertEquals(new Character('k'), newM.getCharacter());
     }
 
     //Test Modification's ability to parse output from its toString()
