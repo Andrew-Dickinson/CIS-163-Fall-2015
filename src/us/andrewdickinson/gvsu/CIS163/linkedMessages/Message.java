@@ -12,7 +12,6 @@ public class Message {
     //TODO: re-assembly mechanic
     //TODO: Add scramble(N) method
     //TODO: File interaction
-    //TODO: Tail pointer?
 
     /**
      * The top of the linked list that stores the message

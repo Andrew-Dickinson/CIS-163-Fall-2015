@@ -291,6 +291,23 @@ public class LinkedListTests {
         }
     }
 
+    //Tests the remove() method on the first element
+    //for all N, 1 through 1024
+    @Test
+    public void testRemoveNSizeObjects() {
+        for (int i = 1; i < 1024; i++) {
+            LinkedList<Object> ll = new LinkedList<>();
+
+            for (int tmp = 0; tmp < i; tmp++) {
+                ll.add(new Object());
+            }
+
+            ll.remove(0);
+
+            assertEquals(i - 1, ll.size());
+        }
+    }
+
     //Test the toString() output for validity
     @Test
     public void testToString() {

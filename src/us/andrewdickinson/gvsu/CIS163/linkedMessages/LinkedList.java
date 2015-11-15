@@ -11,9 +11,15 @@ public class LinkedList<E> {
      */
     private Link<E> top;
 
+    /**
+     * The tail of the linked list
+     */
+    private Link<E> tail;
+
     public LinkedList(){
-        //Initialize top to null
+        //Initialize top and tail to null
         top = null;
+        tail = null;
     }
 
     /*******************************************************************
@@ -69,16 +75,34 @@ public class LinkedList<E> {
 
         //Handle the beginning case
         if (pos == 0){
+            //Handle the size() == 1 case
+            if (tail == top){
+                tail = null;
+            }
+
             top = top.getNext();
         } else {
             //If pos is somewhere in the middle, remove appropriately
+
             int out = 0;
             Link<E> cur = top;
             while (cur != null){
+                //Catch the spot one before the intended remove point
                 if (out + 1 == pos){
-                    //Catch the spot one before the intended remove point
+                    //Save the Link we're gonna return
                     Link<E> temp = cur.getNext();
+
+                    //Bypass the link, removing it from the list
                     cur.setNext(cur.getNext().getNext());
+
+                    //Properly adjust the tail pointer
+                    Link<E> newTail = cur;
+                    while (newTail.getNext() != null){
+                        newTail = newTail.getNext();
+                    }
+                    tail = newTail;
+
+                    //Return the data from the link we removed
                     return temp.getData();
                 }
 
@@ -203,6 +227,11 @@ public class LinkedList<E> {
      ******************************************************************/
     private void addAtBegin(E element){
         top = new Link<>(element, top);
+
+        //This is the case where the list is empty
+        if (tail == null){
+            tail = top;
+        }
     }
 
     /*******************************************************************
@@ -213,15 +242,11 @@ public class LinkedList<E> {
         //Handle a null top
         if (top == null) {
             top = new Link<>(element, null);
+            tail = top;
         } else {
-            //Set cur to the current final link
-            Link<E> cur = top;
-            while (cur.hasNext()) {
-                cur = cur.getNext();
-            }
-
             //Append the new element
-            cur.setNext(new Link<>(element, null));
+            tail.setNext(new Link<>(element, null));
+            tail = tail.getNext();
         }
     }
 
