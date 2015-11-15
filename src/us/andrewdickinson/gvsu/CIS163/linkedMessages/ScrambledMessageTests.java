@@ -353,10 +353,56 @@ public class ScrambledMessageTests {
         assertEquals(expectedStrings, export);
     }
 
+    //Test the exception throw from trying to parse invalid strings
+    @Test(expected=IllegalArgumentException.class)
+    public void testSetChangeStackWithInvalidChange(){
+        ScrambledMessage m = new ScrambledMessage("");
+
+        LinkedList<String> fakeChanges = new LinkedList<>();
+        fakeChanges.add("DELETION 0 j");
+        fakeChanges.add("INSERTION 0");
+
+        //The bad change
+        fakeChanges.add("INSERTIOsadflaslfd");
+
+        //Throws the exception
+        m.setChangeStackFromStrings(fakeChanges);
+    }
+
     //Test the exception throw from trying to de-scramble invalid data
     @Test(expected=IllegalArgumentException.class)
-    public void testDeScrambleWithInvalidChanges(){
-        //TODO: Implement
+    public void testDeScrambleWithInvalidChange(){
+        ScrambledMessage m = new ScrambledMessage("");
+
+        LinkedList<String> fakeChanges = new LinkedList<>();
+        fakeChanges.add("DELETION 0 j");
+        fakeChanges.add("INSERTION 0");
+
+        //The bad change
+        fakeChanges.add("INSERTION 0");
+
+        //No exception is thrown here
+        m.setChangeStackFromStrings(fakeChanges);
+
+        //Throws the exception
+        m.getDeScrambled();
+    }
+
+    //Test the lack of an exception throw from trying to parse valid
+    //strings that are invalid changes
+    @Test
+    public void testParseWithInvalidChange() {
+        ScrambledMessage m = new ScrambledMessage("");
+
+        LinkedList<String> fakeChanges = new LinkedList<>();
+        fakeChanges.add("DELETION 0 j");
+        fakeChanges.add("INSERTION 0");
+
+        //The bad change
+        fakeChanges.add("INSERTION 0");
+
+        //No exception is thrown here
+        m.setChangeStackFromStrings(fakeChanges);
     }
 
     //Test the getDeScrambled() method with valid data
