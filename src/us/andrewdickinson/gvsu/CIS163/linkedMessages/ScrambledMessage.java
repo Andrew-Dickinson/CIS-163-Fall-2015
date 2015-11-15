@@ -6,7 +6,6 @@ package us.andrewdickinson.gvsu.CIS163.linkedMessages;
  * Created by Andrew on 11/9/15.
  **********************************************************************/
 public class ScrambledMessage {
-    //TODO: Add scramble(N) method
     //TODO: File interaction
 
     /**
@@ -151,6 +150,19 @@ public class ScrambledMessage {
             throw new IndexOutOfBoundsException();
 
         return scrambledMessage.get(index);
+    }
+
+    /*******************************************************************
+     * Repeats the process of:
+     *      Pick a random action: insert, delete, replace, or swap; a
+     *      random location in the string (if applicable); and a random
+     *      character (if applicable) and preforms the action.
+     * A certain number of times
+     * @param times The number of times to scramble
+     ******************************************************************/
+    public void randomlyScramble(int times){
+        //TODO: Implement
+        //TODO: Create tests
     }
 
     /*******************************************************************
