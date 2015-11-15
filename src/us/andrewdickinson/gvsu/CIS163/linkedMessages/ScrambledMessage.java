@@ -199,6 +199,34 @@ public class ScrambledMessage {
     }
 
     /*******************************************************************
+     * Set the changeStack based on a LinkedList of strings
+     * Only parses the strings, does not confirm their validity
+     * for the current scrambledMessage
+     * @param input A LinkedList of strings in the format of the output
+     *        from exportChangeStack()
+     * @throws IllegalArgumentException if any of the strings are
+     *         not valid strings in the format created by
+     *         Modification.toString()
+     ******************************************************************/
+    public void setChangeStackFromStrings(LinkedList<String> input){
+        LinkedList<Modification> newChangeStack = new LinkedList<>();
+
+        try {
+            for (int i = 0; i < input.size(); i++) {
+                Modification cur = new Modification(input.get(i));
+                newChangeStack.add(cur);
+            }
+
+            //Set the changeStack instance variable appropriately
+            changeStack = newChangeStack;
+        } catch (IllegalArgumentException e){
+            //Triggered by the constructor of the Modification, but
+            //make this method the source of the exception
+            throw new IllegalArgumentException();
+        }
+    }
+
+    /*******************************************************************
      * Gets the De-Scrambled form of this message. Does not modify
      * the content of the message
      * @throws IllegalArgumentException if the deScrambling instructions

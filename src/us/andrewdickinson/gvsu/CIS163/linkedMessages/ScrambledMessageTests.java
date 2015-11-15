@@ -405,6 +405,17 @@ public class ScrambledMessageTests {
         m.setChangeStackFromStrings(fakeChanges);
     }
 
+    //Tests the behavior of the string parser and the de-scrambler with
+    //an empty changelist
+    @Test
+    public void testParseNoChanges(){
+        ScrambledMessage m = new ScrambledMessage("asdfdsanlj");
+
+        LinkedList<String> fakeChanges = new LinkedList<>();
+        m.setChangeStackFromStrings(fakeChanges);
+        assertEquals("asdfdsanlj", m.getDeScrambled());
+    }
+
     //Test the getDeScrambled() method with valid data
     @Test
     public void testDeScrambleWithLotsOfValidChanges(){
