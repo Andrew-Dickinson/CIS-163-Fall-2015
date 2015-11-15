@@ -308,6 +308,53 @@ public class LinkedListTests {
         }
     }
 
+    //Test the functionality of the reverse() method when the number of
+    //elements is even
+    @Test
+    public void testReverseEven(){
+        LinkedList<Integer> ll = new LinkedList<>();
+        ll.add(1);
+        ll.add(2);
+        ll.add(3);
+        ll.add(4);
+
+        ll.reverse();
+
+        assertEquals(new Integer(4), ll.get(0));
+        assertEquals(new Integer(3), ll.get(1));
+        assertEquals(new Integer(2), ll.get(2));
+        assertEquals(new Integer(1), ll.get(3));
+    }
+
+    //Test the functionality of the reverse() method when the number of
+    //elements is odd
+    @Test
+    public void testReverseOdd(){
+        LinkedList<Integer> ll = new LinkedList<>();
+        ll.add(1);
+        ll.add(2);
+        ll.add(3);
+        ll.add(4);
+        ll.add(5);
+
+        ll.reverse();
+
+        assertEquals(new Integer(5), ll.get(0));
+        assertEquals(new Integer(4), ll.get(1));
+        assertEquals(new Integer(3), ll.get(2));
+        assertEquals(new Integer(2), ll.get(3));
+        assertEquals(new Integer(1), ll.get(4));
+    }
+
+    //Test the functionality of the reverse() method with an empty list
+    @Test
+    public void testReverseEmpty(){
+        LinkedList<Integer> ll = new LinkedList<>();
+        ll.reverse();
+
+        assertEquals(0, ll.size());
+    }
+
     //Test the toString() output for validity
     @Test
     public void testToString() {

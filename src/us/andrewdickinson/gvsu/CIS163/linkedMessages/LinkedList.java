@@ -146,6 +146,17 @@ public class LinkedList<E> implements Cloneable {
     }
 
     /*******************************************************************
+     * Reverses the order of the elements in this LinkedList.
+     ******************************************************************/
+    public void reverse(){
+        if (size() != 0) {
+            for (int i = 0; i < size() / 2; i++) {
+                this.swap(i, size() - i - 1);
+            }
+        }
+    }
+
+    /*******************************************************************
      * Swaps the elements at the given positions
      * @param pos1 The index of the first element to reference
      * @param pos2 The index of the second element to reference
