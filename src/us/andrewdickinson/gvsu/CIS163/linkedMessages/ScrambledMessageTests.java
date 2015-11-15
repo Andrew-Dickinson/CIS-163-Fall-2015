@@ -353,6 +353,40 @@ public class ScrambledMessageTests {
         assertEquals(expectedStrings, export);
     }
 
+    //Test the exception throw from trying to de-scramble invalid data
+    @Test(expected=IllegalArgumentException.class)
+    public void testDeScrambleWithInvalidChanges(){
+        //TODO: Implement
+    }
+
+    //Test the getDeScrambled() method with valid data
+    @Test
+    public void testDeScrambleWithLotsOfValidChanges(){
+        ScrambledMessage m = new ScrambledMessage("abcdefghij%#*356");
+        m.swapCharacters(9, 1);
+        m.insertCharacter(5, 'r');
+        m.replaceCharacter(3, '$');
+        m.removeCharacter(0);
+        m.insertCharacter(10, '9');
+
+        assertEquals("abcdefghij%#*356", m.getDeScrambled());
+        assertNotEquals("abcdefghij%#*356", m.toString());
+    }
+
+    //Test the getDeScrambled() method with no changes made
+    @Test
+    public void testDeScrambleWithNoChanges(){
+        ScrambledMessage m = new ScrambledMessage("abcdefghij%#*356");
+        assertEquals("abcdefghij%#*356", m.getDeScrambled());
+    }
+
+    //Test the getDeScrambled() method with no changes made and an empty string
+    @Test
+    public void testDeScrambleWithNoChangesEmptyString(){
+        ScrambledMessage m = new ScrambledMessage("");
+        assertEquals("", m.getDeScrambled());
+    }
+
     //Test the toString(), length(), and exportChangeStack() methods when
     //ScrambledMessage.characterList and ScrambledMessage.changeStack are both null
     @Test

@@ -6,7 +6,6 @@ package us.andrewdickinson.gvsu.CIS163.linkedMessages;
  * Created by Andrew on 11/9/15.
  **********************************************************************/
 public class ScrambledMessage {
-    //TODO: re-assembly mechanic
     //TODO: Add scramble(N) method
     //TODO: File interaction
 
@@ -197,5 +196,56 @@ public class ScrambledMessage {
         }
 
         return out;
+    }
+
+    /*******************************************************************
+     * Gets the De-Scrambled form of this message. Does not modify
+     * the content of the message
+     * @throws IllegalArgumentException if the deScrambling instructions
+     *         don't make sense for the scrambled message. Or if
+     *         scrambledMessage == null or changeStack == null
+     ******************************************************************/
+    @SuppressWarnings("unchecked")
+    public String getDeScrambled(){
+        if (changeStack == null || scrambledMessage == null)
+            throw new IllegalArgumentException();
+
+        try {
+            //We clone the message so that we don't
+            //de-scramble the original
+            LinkedList<Character> deScrambledMessage
+                    = (LinkedList) scrambledMessage.clone();
+
+            //We have to undo the changes in reverse order
+            LinkedList<Modification> reversedChanges
+                    = ((LinkedList) changeStack.clone());
+            reversedChanges.reverse();
+
+            //For each change in the stack, do its opposite
+            for (int i = 0; i < reversedChanges.size(); i++){
+                Modification mod = reversedChanges.get(i);
+                if (mod.getType() == ModificationType.DELETION){
+                    deScrambledMessage.add(
+                            mod.getLocation(), mod.getCharacter()
+                    );
+                } else if (mod.getType() == ModificationType.INSERTION){
+                    deScrambledMessage.remove(mod.getLocation());
+                }
+            }
+
+            //Build a string representation of the message
+            String message = "";
+            for (int i = 0; i < deScrambledMessage.size(); i++){
+                message += deScrambledMessage.get(i);
+            }
+            return message;
+        } catch (CloneNotSupportedException e){
+            //This will never occur. LinkedList supports cloning
+            throw new IllegalArgumentException();
+        } catch (IllegalArgumentException|IndexOutOfBoundsException e){
+            //Caused by a remove() or add() method with options
+            //We want to be the source of this exception
+            throw new IllegalArgumentException();
+        }
     }
 }
