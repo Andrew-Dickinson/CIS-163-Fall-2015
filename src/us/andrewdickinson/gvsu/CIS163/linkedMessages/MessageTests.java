@@ -331,14 +331,14 @@ public class MessageTests {
 
         //Build a LinkedList representing the changes made above
         LinkedList<Modification> expected = new LinkedList<>();
-        expected.add(new Modification(ModificationType.DELETION, 9));
+        expected.add(new Modification(ModificationType.DELETION, 9, 'j'));
         expected.add(new Modification(ModificationType.INSERTION, 9, 'b'));
-        expected.add(new Modification(ModificationType.DELETION, 1));
+        expected.add(new Modification(ModificationType.DELETION, 1, 'b'));
         expected.add(new Modification(ModificationType.INSERTION, 1, 'j'));
         expected.add(new Modification(ModificationType.INSERTION, 5, 'r'));
-        expected.add(new Modification(ModificationType.DELETION, 3));
+        expected.add(new Modification(ModificationType.DELETION, 3, 'd'));
         expected.add(new Modification(ModificationType.INSERTION, 3, '$'));
-        expected.add(new Modification(ModificationType.DELETION, 0));
+        expected.add(new Modification(ModificationType.DELETION, 0, 'a'));
         expected.add(new Modification(ModificationType.INSERTION, 10, '9'));
 
         //Convert expected to a LinkedList of Strings
@@ -431,9 +431,10 @@ public class MessageTests {
     //Test Modification's toString() method for a deletion modification
     @Test
     public void testToStringForModificationDelete(){
-        Modification m = new Modification(ModificationType.DELETION, 7);
+        Modification m
+                = new Modification(ModificationType.DELETION, 7, 'a');
 
-        assertEquals("DELETION 7", m.toString());
+        assertEquals("DELETION 7 a", m.toString());
     }
 
     //Confirm the exception throw for Modification.parseFromString(null)
@@ -480,7 +481,7 @@ public class MessageTests {
     //"DELETION N"
     @Test
     public void testModificationParseDeletion(){
-        Modification m = new Modification("DELETION 8");
+        Modification m = new Modification("DELETION 8 %");
     }
 
     //Test Modification's ability to parse output from its toString()
@@ -502,11 +503,12 @@ public class MessageTests {
     @Test
     public void testModificationParseToStringDeletion(){
         Modification oldM
-                = new Modification(ModificationType.DELETION, 11);
+                = new Modification(ModificationType.DELETION, 11, '^');
 
         Modification newM = new Modification(oldM.toString());
 
         assertEquals(ModificationType.DELETION, newM.getType());
         assertEquals(11, newM.getLocation());
+        assertEquals(new Character('^'), newM.getCharacter());
     }
 }

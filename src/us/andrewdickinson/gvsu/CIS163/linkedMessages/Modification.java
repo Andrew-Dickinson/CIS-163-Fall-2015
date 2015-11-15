@@ -17,23 +17,12 @@ public class Modification {
     private ModificationType type;
 
     /**
-     * The character (optional) that is represented by this class
+     * The character that is represented by this class
      */
     private Character character;
 
-    public Modification(ModificationType type, int location){
-        if (type == ModificationType.INSERTION)
-            throw new IllegalArgumentException();
-
-        this.type = type;
-        this.location = location;
-    }
-
     public Modification(ModificationType type, int location,
                         Character character){
-        if (character == null || type == ModificationType.DELETION)
-            throw new IllegalArgumentException();
-
         this.character = character;
         this.type = type;
         this.location = location;
@@ -60,8 +49,8 @@ public class Modification {
     }
 
     /*******************************************************************
-     * Get the character (if applicable) for this modification
-     * @return The applicable character (or null) from this modification
+     * Get the character for this modification
+     * @return The character from this modification
      ******************************************************************/
     public Character getCharacter() {
         return character;
@@ -70,19 +59,15 @@ public class Modification {
     /*******************************************************************
      * Return a string representation of the modification
      * @return A string in the form of:
-     *          "MODIFICATION_TYPE LOCATION (Optional: CHARACTER)"
+     *          "MODIFICATION_TYPE LOCATION CHARACTER"
      ******************************************************************/
     @Override
     public String toString(){
         String out = "";
 
         out += type.name();
-
         out += " " + location;
-
-        if (character != null){
-            out += " " + character;
-        }
+        out += " " + character;
 
         return out;
     }
@@ -99,7 +84,7 @@ public class Modification {
         String[] data = input.split(" ");
 
         //The data should be in two or three chunks
-        if (data.length != 2 && data.length != 3)
+        if (data.length != 3)
             throw new IllegalArgumentException();
 
         ModificationType type;
@@ -119,14 +104,11 @@ public class Modification {
             throw new IllegalArgumentException();
         }
 
-        Character character = null;
-        if (data.length == 3) {
-            String incomingCharacter = data[2];
-            if (incomingCharacter.length() != 1)
-                throw new IllegalArgumentException();
+        String incomingCharacter = data[2];
+        if (incomingCharacter.length() != 1)
+            throw new IllegalArgumentException();
 
-            character = incomingCharacter.charAt(0);
-        }
+        Character character = incomingCharacter.charAt(0);
 
         //If we made it this far, the data is all valid
         this.type = type;

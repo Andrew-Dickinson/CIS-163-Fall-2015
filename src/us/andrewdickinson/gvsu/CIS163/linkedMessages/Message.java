@@ -8,7 +8,6 @@ import java.util.ArrayList;
  * Created by Andrew on 11/9/15.
  **********************************************************************/
 public class Message {
-    //TODO: Export changeStack
     //TODO: re-assembly mechanic
     //TODO: Add scramble(N) method
     //TODO: File interaction
@@ -92,10 +91,11 @@ public class Message {
             //If null, the length is 0, so it's always out of bounds
             throw new IndexOutOfBoundsException();
 
-        characterList.remove(pos);
+        Character removed = characterList.remove(pos);
 
         changeStack.add(
-                new Modification(ModificationType.DELETION, pos));
+               new Modification(ModificationType.DELETION, pos, removed)
+        );
     }
 
     /*******************************************************************
