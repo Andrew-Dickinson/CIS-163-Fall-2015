@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
 public class MessageTests {
 
     //Test the lower boundary of the exception handling
-    @Test (expected = IllegalArgumentException.class)
+    @Test (expected = IndexOutOfBoundsException.class)
     public void testInsertCharacterLowBound() {
         Message m = new Message("5#@0safa");
 
@@ -19,7 +19,7 @@ public class MessageTests {
     }
 
     //Test the upper boundary of the exception handling
-    @Test (expected = IllegalArgumentException.class)
+    @Test (expected = IndexOutOfBoundsException.class)
     public void testInsertCharacterUpperBound() {
         Message m = new Message("5#@0safa");
 
@@ -27,7 +27,7 @@ public class MessageTests {
     }
 
     //Test the upper boundary of the exception handling empty message
-    @Test (expected = IllegalArgumentException.class)
+    @Test (expected = IndexOutOfBoundsException.class)
     public void testInsertCharacterUpperBoundEmpty() {
         Message m = new Message("");
 
@@ -40,7 +40,7 @@ public class MessageTests {
         Message m = new Message("abcd");
         m.insertCharacter(0, 'x');
 
-        assertEquals("xabcd", m.getString());
+        assertEquals("xabcd", m.toString());
     }
 
     //Test inserting a character in the middle of the message
@@ -49,7 +49,7 @@ public class MessageTests {
         Message m = new Message("abcd");
         m.insertCharacter(2, 'e');
 
-        assertEquals("abecd", m.getString());
+        assertEquals("abecd", m.toString());
     }
 
     //Test inserting a character at the end of the message
@@ -58,11 +58,11 @@ public class MessageTests {
         Message m = new Message("abcd");
         m.insertCharacter(4, '6');
 
-        assertEquals("abcd6", m.getString());
+        assertEquals("abcd6", m.toString());
     }
 
     //Test the lower boundary of the exception handling
-    @Test (expected = IllegalArgumentException.class)
+    @Test (expected = IndexOutOfBoundsException.class)
     public void testRemoveCharacterLowBound() {
         Message m = new Message("5#@0safa");
 
@@ -70,7 +70,7 @@ public class MessageTests {
     }
 
     //Test the upper boundary of the exception handling
-    @Test (expected = IllegalArgumentException.class)
+    @Test (expected = IndexOutOfBoundsException.class)
     public void testRemoveCharacterUpperBound() {
         Message m = new Message("5#@0safa");
 
@@ -78,7 +78,7 @@ public class MessageTests {
     }
 
     //Test the upper boundary of the exception handling empty message
-    @Test (expected = IllegalArgumentException.class)
+    @Test (expected = IndexOutOfBoundsException.class)
     public void testRemoveCharacterUpperBoundEmpty() {
         Message m = new Message("");
 
@@ -91,7 +91,7 @@ public class MessageTests {
         Message m = new Message("abcd");
         m.removeCharacter(0);
 
-        assertEquals("bcd", m.getString());
+        assertEquals("bcd", m.toString());
     }
 
     //Test removing a character from the middle of the message
@@ -100,7 +100,7 @@ public class MessageTests {
         Message m = new Message("abcd");
         m.removeCharacter(2);
 
-        assertEquals("abd", m.getString());
+        assertEquals("abd", m.toString());
     }
 
     //Test removing a character from the end of the message
@@ -109,11 +109,11 @@ public class MessageTests {
         Message m = new Message("abcd");
         m.removeCharacter(3);
 
-        assertEquals("abc", m.getString());
+        assertEquals("abc", m.toString());
     }
 
     //Test the lower boundary of the exception handling
-    @Test (expected = IllegalArgumentException.class)
+    @Test (expected = IndexOutOfBoundsException.class)
     public void testReplaceCharacterLowBound() {
         Message m = new Message("5#@0safa");
 
@@ -121,7 +121,7 @@ public class MessageTests {
     }
 
     //Test the upper boundary of the exception handling
-    @Test (expected = IllegalArgumentException.class)
+    @Test (expected = IndexOutOfBoundsException.class)
     public void testReplaceCharacterUpperBound() {
         Message m = new Message("5#@0safa");
 
@@ -129,7 +129,7 @@ public class MessageTests {
     }
 
     //Test the upper boundary of the exception handling empty message
-    @Test (expected = IllegalArgumentException.class)
+    @Test (expected = IndexOutOfBoundsException.class)
     public void testReplaceCharacterUpperBoundEmpty() {
         Message m = new Message("");
 
@@ -142,7 +142,7 @@ public class MessageTests {
         Message m = new Message("abcd");
         m.replaceCharacter(0, 'x');
 
-        assertEquals("xbcd", m.getString());
+        assertEquals("xbcd", m.toString());
     }
 
     //Test replacing a character in the middle of the message
@@ -151,7 +151,7 @@ public class MessageTests {
         Message m = new Message("abcd");
         m.replaceCharacter(2, 'e');
 
-        assertEquals("abed", m.getString());
+        assertEquals("abed", m.toString());
     }
 
     //Test replacing a character at the end of the message
@@ -160,11 +160,11 @@ public class MessageTests {
         Message m = new Message("abcd");
         m.replaceCharacter(3, '6');
 
-        assertEquals("abc6", m.getString());
+        assertEquals("abc6", m.toString());
     }
 
     //Test the lower boundary of the exception handling
-    @Test (expected = IllegalArgumentException.class)
+    @Test (expected = IndexOutOfBoundsException.class)
     public void testSwapCharacterLowBound1() {
         Message m = new Message("5#@0safa");
 
@@ -172,7 +172,7 @@ public class MessageTests {
     }
 
     //Test the lower boundary of the exception handling
-    @Test (expected = IllegalArgumentException.class)
+    @Test (expected = IndexOutOfBoundsException.class)
     public void testSwapCharacterLowBound2() {
         Message m = new Message("5#@0safa");
 
@@ -180,7 +180,7 @@ public class MessageTests {
     }
 
     //Test the upper boundary of the exception handling
-    @Test (expected = IllegalArgumentException.class)
+    @Test (expected = IndexOutOfBoundsException.class)
     public void testSwapCharacterUpperBound1() {
         Message m = new Message("5#@0safa");
 
@@ -189,7 +189,7 @@ public class MessageTests {
 
 
     //Test the upper boundary of the exception handling
-    @Test (expected = IllegalArgumentException.class)
+    @Test (expected = IndexOutOfBoundsException.class)
     public void testSwapCharacterUpperBound2() {
         Message m = new Message("5#@0safa");
 
@@ -197,7 +197,7 @@ public class MessageTests {
     }
 
     //Test the upper boundary of the exception handling empty message
-    @Test (expected = IllegalArgumentException.class)
+    @Test (expected = IndexOutOfBoundsException.class)
     public void testSwapCharacterUpperBoundEmpty() {
         Message m = new Message("");
 
@@ -210,7 +210,7 @@ public class MessageTests {
         Message m = new Message("abcd");
         m.swapCharacters(0, 2);
 
-        assertEquals("cbad", m.getString());
+        assertEquals("cbad", m.toString());
     }
 
     //Test swapping a character in the middle of the message
@@ -219,7 +219,7 @@ public class MessageTests {
         Message m = new Message("abcd");
         m.swapCharacters(2, 1);
 
-        assertEquals("acbd", m.getString());
+        assertEquals("acbd", m.toString());
     }
 
     //Test swapping a character at the end of the message
@@ -228,7 +228,7 @@ public class MessageTests {
         Message m = new Message("abcd");
         m.swapCharacters(0, 3);
 
-        assertEquals("dbca", m.getString());
+        assertEquals("dbca", m.toString());
     }
 
     //Test that the length method returns zero when there are no elements
@@ -252,7 +252,7 @@ public class MessageTests {
     public void testGetEmptyString() {
         Message m = new Message("");
 
-        assertEquals("", m.getString());
+        assertEquals("", m.toString());
     }
 
     //Test the getString method with an full string
@@ -260,11 +260,11 @@ public class MessageTests {
     public void testGetString() {
         Message m = new Message("gahn2");
 
-        assertEquals("gahn2", m.getString());
+        assertEquals("gahn2", m.toString());
     }
 
     //Test the getChar method with an empty string
-    @Test (expected = IllegalArgumentException.class)
+    @Test (expected = IndexOutOfBoundsException.class)
     public void testGetCharEmptyString() {
         Message m = new Message("");
 
@@ -272,7 +272,7 @@ public class MessageTests {
     }
 
     //Test the getChar method with a too low index
-    @Test (expected = IllegalArgumentException.class)
+    @Test (expected = IndexOutOfBoundsException.class)
     public void testGetCharLowBound() {
         Message m = new Message("daslfj");
 
@@ -280,7 +280,7 @@ public class MessageTests {
     }
 
     //Test the getChar method with a too high index
-    @Test (expected = IllegalArgumentException.class)
+    @Test (expected = IndexOutOfBoundsException.class)
     public void testGetCharHighBound() {
         Message m = new Message("daslfj");
 
@@ -309,5 +309,55 @@ public class MessageTests {
         Message m = new Message("gahn2");
 
         assertTrue(m.getCharacter(2).equals('h'));
+    }
+
+    @Test
+    public void testToStringAndLenthWithNullInstanceVars(){
+        Message m = new Message(null, null);
+
+        assertEquals("", m.toString());
+        assertEquals(0, m.length());
+    }
+
+    @Test(expected=IndexOutOfBoundsException.class)
+    public void testRemoveWithNullInstanceVars(){
+        Message m = new Message(null, null);
+        m.removeCharacter(0);
+    }
+
+    @Test(expected=IndexOutOfBoundsException.class)
+    public void testGetCharacterWithNullInstanceVars(){
+        Message m = new Message(null, null);
+        m.getCharacter(0);
+    }
+
+    @Test(expected=IndexOutOfBoundsException.class)
+    public void testSwapCharactersWithNullInstanceVars(){
+        Message m = new Message(null, null);
+        m.swapCharacters(0, 1);
+    }
+
+    @Test
+    public void testInsertCharacterWithNullInstanceVars(){
+        Message m = new Message(null, null);
+        m.insertCharacter(0, 'a');
+    }
+
+    @Test(expected=IndexOutOfBoundsException.class)
+    public void testReplaceCharacterWithNullInstanceVars(){
+        Message m = new Message(null, null);
+        m.replaceCharacter(0, 'a');
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void testInsertNullCharacter(){
+        Message m = new Message();
+        m.insertCharacter(0, null);
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void testReplaceNullCharacter(){
+        Message m = new Message("abd");
+        m.replaceCharacter(0, null);
     }
 }

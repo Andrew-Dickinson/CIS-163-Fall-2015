@@ -30,7 +30,7 @@ public class Message {
 
         //Build the message from the string
         for (int i = 0; i < plainMessage.length(); i++){
-            addAtEnd(plainMessage.charAt(i));
+            characterList.add(plainMessage.charAt(i));
         }
     }
 
@@ -54,63 +54,23 @@ public class Message {
     }
 
     /*******************************************************************
-     * Adds a character to the beginning of the linked list.
-     * Doesn't record this as a modification
-     * @param character The character to add
-     ******************************************************************/
-    private void addAtBegin(Character character){
-        characterList.add(0, character);
-    }
-
-    /*******************************************************************
-     * Adds a character to the end of the linked list.
-     * Doesn't record this as a modification
-     * @param character The character to add
-     ******************************************************************/
-    private void addAtEnd(Character character){
-        characterList.add(character);
-    }
-
-    /*******************************************************************
-     * Inserts a character into the linked list
-     * Doesn't record this as a modification
-     * @param pos The location to insert to
-     * @param character The character to insert
-     * @throws IllegalArgumentException if pos > length() or < 0
-     ******************************************************************/
-    private void insertIn(int pos, Character character){
-        //If pos is invalid, thrown an exception
-        if (pos > length() || pos < 0)
-            throw new IllegalArgumentException();
-
-        characterList.add(pos, character);
-    }
-
-    /*******************************************************************
-     * Removes the specified character from the linked list
-     * Doesn't record this as a modification
-     * @param pos The index of the character to remove
-     * @throws IllegalArgumentException if pos >= length() or < 0
-     ******************************************************************/
-    private void removeFrom(int pos){
-        //If pos is invalid, thrown an exception
-        if (pos >= length() || pos < 0)
-            throw new IllegalArgumentException();
-
-        characterList.remove(pos);
-    }
-
-    /*******************************************************************
      * Inserts a character into the linked list representation and
      * creates an appropriate change stack entry
      * @param pos The position to insert the character into
      * @param character The character to insert
-     * @throws IllegalArgumentException if pos > length() or < 0
+     * @throws IndexOutOfBoundsException if pos > length() or < 0
+     * @throws IllegalArgumentException if character == null or
      ******************************************************************/
     public void insertCharacter(int pos, Character character){
         if (character == null) throw new IllegalArgumentException();
 
-        insertIn(pos, character);
+        if (characterList == null)
+            characterList = new LinkedList<>();
+
+        characterList.add(pos, character);
+
+        if (changeStack == null)
+            changeStack = new LinkedList<>();
 
         changeStack.add(
                 new Modification(
@@ -125,10 +85,15 @@ public class Message {
      * Removes a character from the linked list representation and
      * creates an appropriate change stack entry
      * @param pos The position to remove the character from
-     * @throws IllegalArgumentException if pos >= length() or < 0
+     * @throws IndexOutOfBoundsException if pos >= length() or < 0
+     * @throws IllegalArgumentException if characterList is null
      ******************************************************************/
     public void removeCharacter(int pos){
-        removeFrom(pos);
+        if (characterList == null)
+            //If null, the length is 0, so it's always out of bounds
+            throw new IndexOutOfBoundsException();
+
+        characterList.remove(pos);
 
         changeStack.add(
                 new Modification(ModificationType.DELETION, pos));
@@ -139,12 +104,12 @@ public class Message {
      * creates an appropriate change stack entry
      * @param pos The position to replace the character at
      * @param character The new character to replace the old one
-     * @throws IllegalArgumentException if pos > length() or < 0
+     * @throws IndexOutOfBoundsException if pos > length() or < 0
      ******************************************************************/
     public void replaceCharacter(int pos, Character character){
         //If pos is invalid, thrown an exception
         if (pos >= length() || pos < 0)
-            throw new IllegalArgumentException();
+            throw new IndexOutOfBoundsException();
 
         //Remove the previous character
         removeCharacter(pos);
@@ -158,12 +123,12 @@ public class Message {
      * creates an appropriate change stack entry
      * @param pos1 The index of the first character to reference
      * @param pos2 The index of the second character to reference
-     * @throws IllegalArgumentException if pos1/pos2 >= length() or < 0
+     * @throws IndexOutOfBoundsException if pos1/pos2 >= length() or < 0
      ******************************************************************/
     public void swapCharacters(int pos1, int pos2){
         //If a pos is invalid, throw an exception
         if (pos1 >= length() || pos1 < 0 || pos2 >= length() || pos2 < 0)
-            throw new IllegalArgumentException();
+            throw new IndexOutOfBoundsException();
 
         //Save the character from pos1
         Character temp = getCharacter(pos1);
@@ -181,12 +146,12 @@ public class Message {
      * linked list
      * @param index The index of the character to get
      * @return The character at the provided location
-     * @throws IllegalArgumentException if index >= length() or < 0
+     * @throws IndexOutOfBoundsException if index >= length() or < 0
      ******************************************************************/
     public Character getCharacter(int index){
         //If index is invalid, thrown an exception
-        if (index >= length() || index < 0)
-            throw new IllegalArgumentException();
+        if (index >= length() || index < 0 || characterList == null)
+            throw new IndexOutOfBoundsException();
 
         return characterList.get(index);
     }
@@ -196,20 +161,10 @@ public class Message {
      * @return The number of characters
      ******************************************************************/
     public int length(){
+        if (characterList == null)
+            return 0;
+
         return characterList.size();
-    }
-
-    /*******************************************************************
-     * Get a string representation of the current (modified) linked list
-     * @return The string representation of the current message
-     ******************************************************************/
-    public String getString(){
-        String out = "";
-        for (int i = 0; i < characterList.size(); i++){
-            out += characterList.get(i);
-        }
-
-        return out;
     }
 
     /*******************************************************************
@@ -218,6 +173,14 @@ public class Message {
      ******************************************************************/
     @Override
     public String toString(){
-        return getString();
+        if (characterList == null)
+            return "";
+
+        String out = "";
+        for (int i = 0; i < characterList.size(); i++){
+            out += characterList.get(i);
+        }
+
+        return out;
     }
 }
