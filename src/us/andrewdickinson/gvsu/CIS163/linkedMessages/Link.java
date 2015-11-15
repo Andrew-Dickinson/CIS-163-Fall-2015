@@ -64,4 +64,23 @@ public class Link<E> {
     public void setData(E data) {
         this.data = data;
     }
+
+    /*******************************************************************
+     * Compares this link to another object
+     * @param o The other object to compare to
+     * @return true if the other object is a link and has
+     *         identical data and next
+     ******************************************************************/
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Link<?> link = (Link<?>) o;
+
+        if (data == null || !data.equals(link.getData()))
+            return false;
+
+        return (next != null && next.equals(link.getNext()));
+    }
 }
