@@ -272,8 +272,10 @@ public class LinkedList<E> implements Cloneable {
     protected Object clone() throws CloneNotSupportedException {
         LinkedList<?> ll = (LinkedList<?>) super.clone();
         try {
-            ll.top = (Link) top.clone();
-            ll.tail = (Link) tail.clone();
+            if (top != null && tail != null){
+                ll.top = (Link) top.clone();
+                ll.tail = (Link) tail.clone();
+            }
         } catch (ClassCastException e){
             throw new CloneNotSupportedException();
         }
