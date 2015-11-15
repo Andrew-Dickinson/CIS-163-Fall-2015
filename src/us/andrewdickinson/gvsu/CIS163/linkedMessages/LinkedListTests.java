@@ -324,6 +324,63 @@ public class LinkedListTests {
         assertEquals("[5, 6, 8]", ll.toString());
     }
 
+    //Test LinkedList.equals(null)
+    @Test
+    public void testEqualsNull(){
+        LinkedList<Object> ll = new LinkedList<>();
+        assertNotEquals(ll, null);
+    }
+
+    //Test LinkedList.equals(new Object())
+    @Test
+    public void testEqualsOtherObject(){
+        LinkedList<Object> ll = new LinkedList<>();
+        assertNotEquals(ll, new Object());
+    }
+
+    //Test LinkedList.equals() for two different types of an
+    //empty linked list. They should be equal, because all
+    //empty lists are equal
+    @Test
+    public void testEqualsOtherTypeEmpty(){
+        LinkedList<String> ll = new LinkedList<>();
+        LinkedList<Integer> ll2 = new LinkedList<>();
+        assertEquals(ll, ll2);
+    }
+
+    //Test LinkedList.equals() for two different types of linked list
+    @Test
+    public void testEqualsOtherType(){
+        LinkedList<String> ll = new LinkedList<>();
+        ll.add("a");
+        LinkedList<Integer> ll2 = new LinkedList<>();
+        ll2.add(5);
+        assertNotEquals(ll, ll2);
+    }
+
+    //Test Linkedlist.equals() for two non-identical lists of the same type
+    @Test
+    public void testEqualsFalse(){
+        LinkedList<String> ll = new LinkedList<>();
+        ll.add("pie");
+        ll.add("cake");
+        LinkedList<String> ll2 = new LinkedList<>();
+        ll2.add("cake");
+        ll2.add("pie");
+        assertNotEquals(ll, ll2);
+    }
+
+    //Test LinkedList.equals() for two identical lists
+    @Test
+    public void testEqualsTrue(){
+        LinkedList<String> ll = new LinkedList<>();
+        ll.add("pie");
+        ll.add("cake");
+        LinkedList<String> ll2 = new LinkedList<>();
+        ll2.add("pie");
+        ll2.add("cake");
+        assertEquals(ll, ll2);
+    }
 
     //Test the Link.hasNext() method when it should be true
     @Test

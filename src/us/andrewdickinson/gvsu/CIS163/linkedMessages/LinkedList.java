@@ -220,6 +220,28 @@ public class LinkedList<E> {
         return out;
     }
 
+    /*******************************************************************
+     * Check if this is equal to another object
+     * @param other The object to compare to
+     * @return True if other is a LinkedList with identical data
+     ******************************************************************/
+    public boolean equals(Object other){
+        if (other == null || other.getClass() != getClass())
+            return false;
+
+        LinkedList<?> linkedList = (LinkedList<?>) other;
+
+        if (linkedList.size() != size())
+            return false;
+
+        for (int i = 0; i < size(); i++){
+            if (!linkedList.get(i).equals(get(i)))
+                return false;
+        }
+
+        return true;
+    }
+
 
     /*******************************************************************
      * Adds a new node to the beginning of the linked list
@@ -249,5 +271,4 @@ public class LinkedList<E> {
             tail = tail.getNext();
         }
     }
-
 }
