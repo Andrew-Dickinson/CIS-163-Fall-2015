@@ -5,7 +5,7 @@ package us.andrewdickinson.gvsu.CIS163.linkedMessages;
  * Has ArrayList-like syntax
  * Created by Andrew on 11/9/15
  **********************************************************************/
-public class LinkedList<E> {
+public class LinkedList<E> implements Cloneable {
     /**
      * The top of the linked list
      */
@@ -250,6 +250,25 @@ public class LinkedList<E> {
         return true;
     }
 
+    /*******************************************************************
+     * Returns a partially deep copy of the list. The Links are deep,
+     * but the data objects are shallow :(
+     * @return The created copy
+     * @throws CloneNotSupportedException Never
+     ******************************************************************/
+    @Override
+    @SuppressWarnings("unchecked")
+    protected Object clone() throws CloneNotSupportedException {
+        LinkedList<?> ll = (LinkedList<?>) super.clone();
+        try {
+            ll.top = (Link) top.clone();
+            ll.tail = (Link) tail.clone();
+        } catch (ClassCastException e){
+            throw new CloneNotSupportedException();
+        }
+
+        return ll;
+    }
 
     /*******************************************************************
      * Adds a new node to the beginning of the linked list

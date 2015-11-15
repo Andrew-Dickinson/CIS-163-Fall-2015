@@ -4,7 +4,7 @@ package us.andrewdickinson.gvsu.CIS163.linkedMessages;
  * A link to be used in a linked list
  * Created by Andrew on 11/9/15.
  **********************************************************************/
-public class Link<E> {
+public class Link<E> implements Cloneable {
     /**
      * The data represented by this link in the linked list
      */
@@ -83,4 +83,22 @@ public class Link<E> {
 
         return (next != null && next.equals(link.getNext()));
     }
+
+    /*******************************************************************
+     * Returns a shallow copy of the data in this link. But a deep copy
+     * of the next link
+     * @return The copied link
+     * @throws CloneNotSupportedException Never
+     ******************************************************************/
+    @Override
+    @SuppressWarnings("unchecked")
+    protected Object clone() throws CloneNotSupportedException {
+        Link<?> lnk = (Link<?>) super.clone();
+
+        if (next != null)
+            lnk.next = (Link) next.clone();
+
+        return lnk;
+    }
+
 }
