@@ -8,8 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /***********************************************************************
- * A dialog with a specific intended Modification on a message.
- * Modification type specified by DialogType
+ * A dialog that validates the input as the user enters it and only
+ * allows them to submit when it is valid
  * Created by Andrew on 11/15/15.
  **********************************************************************/
 public abstract class BulletProofDialog<E> {
