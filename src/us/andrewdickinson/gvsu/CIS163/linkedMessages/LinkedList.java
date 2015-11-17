@@ -102,12 +102,9 @@ public class LinkedList<E> implements Cloneable {
                     //Bypass the link, removing it from the list
                     cur.setNext(cur.getNext().getNext());
 
-                    //Properly adjust the tail pointer
-                    Link<E> newTail = cur;
-                    while (newTail.getNext() != null){
-                        newTail = newTail.getNext();
-                    }
-                    tail = newTail;
+                    //Set tail if necessary
+                    if (cur.getNext() == null)
+                        tail = cur;
 
                     //Return the data from the link we removed
                     return temp.getData();
