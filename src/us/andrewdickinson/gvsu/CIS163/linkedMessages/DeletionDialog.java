@@ -27,6 +27,9 @@ public class DeletionDialog extends BulletProofDialog<ScrambledMessage>{
      */
     private ScrambledMessage preMessage;
 
+    /**
+     * The buttons used to selected the character
+     */
     private JRadioButton[] selectionButtons;
 
     public DeletionDialog(Component parent, ScrambledMessage preMessage){
