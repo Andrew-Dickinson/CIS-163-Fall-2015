@@ -1,5 +1,7 @@
 package us.andrewdickinson.gvsu.CIS163.linkedMessages;
 
+import java.util.Random;
+
 /***********************************************************************
  * Contains a linked list representing a message and a list of all
  * of the modifications made to it
@@ -159,10 +161,74 @@ public class ScrambledMessage implements Cloneable {
      *      character (if applicable) and preforms the action.
      * A certain number of times
      * @param times The number of times to scramble
+     * @throws IllegalArgumentException if times < 1
+     * @throws UnsupportedOperationException if this.length() < 2
      ******************************************************************/
     public void randomlyScramble(int times){
-        //TODO: Implement
-        //TODO: Create tests
+        if (times < 1)
+            throw new IllegalArgumentException();
+
+        //If an exception happens on the first run, let it pass along
+        randomlyScramble();
+
+        //Do the rest of the scrambles
+        for (int i = 0; i < times - 1; i++){
+            try {
+                randomlyScramble();
+            } catch (UnsupportedOperationException e) {
+                //Do nothing. The first one went through, we just keep
+                //Scrambling
+            }
+        }
+    }
+
+    /*******************************************************************
+     * Pick a random action: insert, delete, replace, or swap; a
+     * random location in the string (if applicable); and a random
+     * character (if applicable) and preform the action. There must be
+     * at least two characters in the message
+     * @throws UnsupportedOperationException if this.length() < 2
+     ******************************************************************/
+    public void randomlyScramble(){
+        if (length() < 2)
+            throw new UnsupportedOperationException();
+
+        //The random number generator
+        Random r = new Random();
+
+        //An int from 0 to 5 that represents an action:
+        //0+1: Insert
+        //2: Delete
+        //3: Replace
+        //4: Swap
+        int action = r.nextInt(5);
+
+        //These positions are >= 0 and < length()
+        //Both (or either) are not necessarily used
+        int position1 = r.nextInt(length());
+        int position2 = r.nextInt(length());
+
+        //Generate a random character based on printable ascii
+        //characters ranging from 32 to 126
+        //Not necessarily used
+        int asciiCode = r.nextInt(95) + 32;
+        Character character = (char) asciiCode;
+
+        if (action == 0 || action == 1){
+            //This is an insert
+            //We need a position in the range of 0 to length()
+            int positionOutOfLength = r.nextInt(length() + 1);
+            insertCharacter(positionOutOfLength, character);
+        } else if (action == 2){
+            //This is a delete
+            removeCharacter(position1);
+        } else if (action == 3){
+            //This is a replace
+            replaceCharacter(position1, character);
+        } else if (action == 4){
+            //This is a swap
+            swapCharacters(position1, position2);
+        }
     }
 
     /*******************************************************************
