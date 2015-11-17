@@ -16,41 +16,44 @@ public abstract class BulletProofDialog<E> {
     /**
      * The parent JPanel for this dialog
      */
-    Component parent;
+    private Component parent;
 
     /**
      * The Ok and Cancel buttons that will respectively,
      * advance or cancel the data entry process
      */
-    JButton dialogOkButton;
-    JButton dialogCancelButton;
+    private JButton dialogOkButton;
+    private JButton dialogCancelButton;
 
     /**
      * The primary panel that will be displayed in the dialog box
      */
-    JPanel primaryDialogPanel;
+    private JPanel primaryDialogPanel;
 
     /**
      * The listener to apply to any button or radio-button that can
      * modify the validity of the data
      */
-    ChangeListener validationListener;
+    private ChangeListener validationListener;
 
     /**
      * The listener to apply to any text field that can modify the
      * validity of the data
      */
-    FieldUpdateListener fieldValidationListener;
+    private FieldUpdateListener fieldValidationListener;
 
     /*******************************************************************
      * Instantiates (but does not display) this dialog with a
      * parent component
      * @param parent The component that this dialog is the child of
      ******************************************************************/
-    public BulletProofDialog(Component parent){
+    public BulletProofDialog(Component parent, E preData){
         //Set the parent property to be queried later and provided to
         //the launched dialog
         this.parent = parent;
+
+        validationListener = new ChangeListener();
+        fieldValidationListener = new FieldUpdateListener();
 
         //Instantiate the primary panel for this dialog
         primaryDialogPanel = new JPanel();
@@ -58,10 +61,6 @@ public abstract class BulletProofDialog<E> {
 
         //Set up the ok and cancel buttons
         setUpOkCancelButtons();
-
-        //Call the sub-class setup routine
-        JPanel contentPanel = createDialogContentPanel();
-        primaryDialogPanel.add(contentPanel, BorderLayout.CENTER);
     }
 
     /*******************************************************************
@@ -96,12 +95,9 @@ public abstract class BulletProofDialog<E> {
         return pane;
     }
 
-    /*******************************************************************
-     * Called by the constructor. Sub-Classes must use this method to
-     * instantiate their GUI components and group them into a JPanel.
-     * @return the JPanel that will be displayed in this dialog
-     ******************************************************************/
-    protected abstract JPanel createDialogContentPanel();
+    protected void setDialogContentPanel(JPanel contentPanel){
+        primaryDialogPanel.add(contentPanel, BorderLayout.CENTER);
+    }
 
     /*******************************************************************
      * Create Ok an Cancel buttons and add them to the primary panel
@@ -130,15 +126,14 @@ public abstract class BulletProofDialog<E> {
 
     /*******************************************************************
      * Display this dialog
-     * @param oldData The data to start with
      * @return The resulting data or null if canceled
      ******************************************************************/
-    public E displayDialog(E oldData) {
-        setPreData(oldData);
+    public E displayDialog() {
+        updateErrorIndication();
 
         //Launch a dialog box with the options
         int status = JOptionPane.showOptionDialog(parent,
-                primaryDialogPanel, "Please enter data",
+                primaryDialogPanel, getDialogPrompt(),
                 JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
                 null, new Object[]{dialogOkButton, dialogCancelButton},
                 dialogOkButton);
@@ -153,10 +148,10 @@ public abstract class BulletProofDialog<E> {
     }
 
     /*******************************************************************
-     * Sets the original version of the data before the user modifies it
-     * @param preData The original version of the data
+     * Return the prompt for this dialog. Placed in the title
+     * @return The prompt
      ******************************************************************/
-    protected abstract void setPreData(E preData);
+    protected abstract String getDialogPrompt();
 
     /*******************************************************************
      * Gets the changed version of the data based on the user's entries
@@ -170,13 +165,7 @@ public abstract class BulletProofDialog<E> {
      * to update the state of the "Ok" button
      ******************************************************************/
     protected void updateErrorIndication(){
-        if (isValidData()){
-            //No problems. Enable the "Ok" button'
-            dialogOkButton.setEnabled(true);
-        } else {
-            //We got problems, disable the "Ok" button
-            dialogOkButton.setEnabled(false);
-        }
+        dialogOkButton.setEnabled(isValidData());
     }
 
     /*******************************************************************
