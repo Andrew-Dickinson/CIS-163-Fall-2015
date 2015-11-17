@@ -5,7 +5,7 @@ package us.andrewdickinson.gvsu.CIS163.linkedMessages;
  * of the modifications made to it
  * Created by Andrew on 11/9/15.
  **********************************************************************/
-public class ScrambledMessage {
+public class ScrambledMessage implements Cloneable {
     //TODO: File interaction
 
     /**
@@ -287,5 +287,29 @@ public class ScrambledMessage {
             //We want to be the source of this exception
             throw new IllegalArgumentException();
         }
+    }
+
+    /*******************************************************************
+     * Returns a partially deep copy of the message. The Lists are deep,
+     * but the data objects are shallow :(
+     * @return The created copy
+     * @throws CloneNotSupportedException Never
+     ******************************************************************/
+    @Override
+    @SuppressWarnings("unchecked")
+    protected Object clone() throws CloneNotSupportedException {
+        ScrambledMessage newMessage = (ScrambledMessage) super.clone();
+        try {
+            if (changeStack != null && scrambledMessage != null){
+                newMessage.changeStack =
+                        (LinkedList) changeStack.clone();
+                newMessage.scrambledMessage =
+                        (LinkedList) scrambledMessage.clone();
+            }
+        } catch (ClassCastException e){
+            throw new CloneNotSupportedException();
+        }
+
+        return newMessage;
     }
 }
