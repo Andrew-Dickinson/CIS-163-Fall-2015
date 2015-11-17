@@ -47,7 +47,22 @@ public class LinkedListTests {
         LinkedList<Integer> ll = new LinkedList<>();
         ll.add(4);
         ll.add(5);
-        ll.add(6);
+        ll.add(2, 6);
+
+        assertEquals(new Integer(4), ll.get(0));
+        assertEquals(new Integer(5), ll.get(1));
+        assertEquals(new Integer(6), ll.get(2));
+    }
+
+    //Tests the add method after the LinedList has been cloned
+    @Test
+    public void testAddToEndAfterClone() throws CloneNotSupportedException {
+        LinkedList<Integer> llOld = new LinkedList<>();
+        llOld.add(4);
+        llOld.add(5);
+
+        LinkedList<Integer> ll = (LinkedList) llOld.clone();
+        ll.add(2, 6);
 
         assertEquals(new Integer(4), ll.get(0));
         assertEquals(new Integer(5), ll.get(1));

@@ -26,7 +26,7 @@ public class LinkedList<E> implements Cloneable {
      * Inserts a new node into the linked list
      * @param pos The location to insert to
      * @param element The element to insert
-     * @throws IndexOutOfBoundsException if pos > length() or < 0
+     * @throws IndexOutOfBoundsException if pos > size() or < 0
      ******************************************************************/
     public void add(int pos, E element){
         //If pos is invalid, thrown an exception
@@ -271,7 +271,16 @@ public class LinkedList<E> implements Cloneable {
         try {
             if (top != null && tail != null){
                 ll.top = (Link) top.clone();
-                ll.tail = (Link) tail.clone();
+
+                //Manually compute the last element in ll.
+                //Tail is currently not accurate because the new tail
+                //was created by top.clone()
+                Link<?> last = ll.top;
+                while (last.getNext() != null){
+                    last = last.getNext();
+                }
+
+                ll.tail = (Link) last;
             }
         } catch (ClassCastException e){
             throw new CloneNotSupportedException();
