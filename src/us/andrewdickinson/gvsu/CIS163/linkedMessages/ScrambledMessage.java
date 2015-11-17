@@ -168,16 +168,16 @@ public class ScrambledMessage implements Cloneable {
         if (times < 1)
             throw new IllegalArgumentException();
 
-        //If an exception happens on the first run, let it pass along
-        randomlyScramble();
-
-        //Do the rest of the scrambles
-        for (int i = 0; i < times - 1; i++){
+        for (int i = 0; i < times; i++){
             try {
                 randomlyScramble();
             } catch (UnsupportedOperationException e) {
-                //Do nothing. The first one went through, we just keep
-                //Scrambling
+                if (i == 0)
+                    //Only throw the exception if it happens on the
+                    //first scramble
+                    throw e;
+                //Else: Do nothing. The first one went through,
+                // we just keep Scrambling
             }
         }
     }
