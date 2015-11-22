@@ -1,22 +1,20 @@
 package us.andrewdickinson.gvsu.CIS163.linkedMessages;
 
-import javafx.scene.control.RadioButton;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
 /***********************************************************************
  * An implementation of BulletProofDialog that allows the user to select
- * a character to delete
+ * two characters to swap
  * Created by Andrew on 11/16/15.
  **********************************************************************/
-public class DeletionDialog extends BulletProofDialog<ScrambledMessage>{
+public class SwapDialog extends BulletProofDialog<ScrambledMessage>{
     /**
      * To be returned by the getDialogPrompt() method
      */
     private static final String DIALOG_PROMPT
-            = "Select characters to delete";
+            = "Select two characters to swap";
 
     /**
      * The primary panel for objects in this implementation
@@ -33,7 +31,7 @@ public class DeletionDialog extends BulletProofDialog<ScrambledMessage>{
      */
     private JCheckBox[] selectionButtons;
 
-    public DeletionDialog(Component parent, ScrambledMessage preMessage){
+    public SwapDialog(Component parent, ScrambledMessage preMessage){
         super(parent, preMessage);
 
         if (preMessage == null)
@@ -88,7 +86,7 @@ public class DeletionDialog extends BulletProofDialog<ScrambledMessage>{
             throw new UnsupportedOperationException();
 
         //Because isValidData() is true, we know this is not -1
-        Integer[] removeChars = getSelected();
+        Integer[] swapChars = getSelected();
 
         try {
             //Clone it so we don't end up modifying the previous object
@@ -96,10 +94,8 @@ public class DeletionDialog extends BulletProofDialog<ScrambledMessage>{
                     = (ScrambledMessage) preMessage.clone();
 
             //Preform the modification
-            //Work backwards so that we don't screw up the numbering
-            for (int i = removeChars.length - 1; i >= 0; i--) {
-                postMessage.removeCharacter(removeChars[i]);
-            }
+            //We know these exist because of data validation
+            postMessage.swapCharacters(swapChars[0], swapChars[1]);
 
             //Return the result
             return postMessage;
@@ -119,7 +115,7 @@ public class DeletionDialog extends BulletProofDialog<ScrambledMessage>{
      ******************************************************************/
     @Override
     protected boolean isValidData() {
-        return getSelected().length != 0;
+        return getSelected().length == 2;
     }
 
     /*******************************************************************
