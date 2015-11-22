@@ -6,15 +6,17 @@ import java.util.ArrayList;
 
 /***********************************************************************
  * An implementation of SymmetricBulletProofDialog that allows the user to select
- * a characters to delete
+ * characters to copy
  * Created by Andrew on 11/16/15.
  **********************************************************************/
-public class DeletionDialog extends SymmetricBulletProofDialog<ScrambledMessage> {
+public class CopyDialog extends
+        BulletProofDialog<ScrambledMessage, LinkedList<Character>> {
+
     /**
      * To be returned by the getDialogPrompt() method
      */
     private static final String DIALOG_PROMPT
-            = "Select characters to delete";
+            = "Select characters to copy";
 
     /**
      * The primary panel for objects in this implementation
@@ -31,7 +33,7 @@ public class DeletionDialog extends SymmetricBulletProofDialog<ScrambledMessage>
      */
     private JCheckBox[] selectionButtons;
 
-    public DeletionDialog(Component parent, ScrambledMessage preMessage){
+    public CopyDialog(Component parent, ScrambledMessage preMessage){
         super(parent, preMessage);
 
         if (preMessage == null)
@@ -78,33 +80,24 @@ public class DeletionDialog extends SymmetricBulletProofDialog<ScrambledMessage>
      * @throws UnsupportedOperationException if isValidData() is false
      ******************************************************************/
     @Override
-    protected ScrambledMessage getFinalData() {
+    protected LinkedList<Character> getFinalData() {
         if (!isValidData())
             //This happens because getFinalData() doesn't make sense
             // right now. If isValidData() is false, then the fields
             // don't contain the correct data
             throw new UnsupportedOperationException();
 
-        //Because isValidData() is true, we know this is not -1
-        Integer[] removeChars = getSelected();
+        //Because isValidData() is true, we know this is not empty
+        Integer[] selectedChars = getSelected();
 
-        try {
-            //Clone it so we don't end up modifying the previous object
-            ScrambledMessage postMessage
-                    = (ScrambledMessage) preMessage.clone();
+        LinkedList<Character> out = new LinkedList<>();
 
-            //Preform the modification
-            //Work backwards so that we don't screw up the numbering
-            for (int i = removeChars.length - 1; i >= 0; i--) {
-                postMessage.removeCharacter(removeChars[i]);
-            }
-
-            //Return the result
-            return postMessage;
-        } catch (CloneNotSupportedException e){
-            //Will never occur. ScrambledMessage supports cloning
-            throw new IllegalArgumentException();
+        for (int i = 0; i < selectedChars.length; i++) {
+            out.add(preMessage.getCharacter(selectedChars[i]));
         }
+
+        //Return the result
+        return out;
     }
 
     /*******************************************************************

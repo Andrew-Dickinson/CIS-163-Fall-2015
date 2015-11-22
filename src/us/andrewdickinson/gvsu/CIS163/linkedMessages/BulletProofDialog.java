@@ -12,7 +12,7 @@ import java.awt.event.ActionListener;
  * allows them to submit when it is valid
  * Created by Andrew on 11/15/15.
  **********************************************************************/
-public abstract class BulletProofDialog<E> {
+public abstract class BulletProofDialog<I, O> {
     /**
      * The parent JPanel for this dialog
      */
@@ -47,7 +47,7 @@ public abstract class BulletProofDialog<E> {
      * parent component
      * @param parent The component that this dialog is the child of
      ******************************************************************/
-    public BulletProofDialog(Component parent, E preData){
+    public BulletProofDialog(Component parent, I preData){
         //Set the parent property to be queried later and provided to
         //the launched dialog
         this.parent = parent;
@@ -128,7 +128,7 @@ public abstract class BulletProofDialog<E> {
      * Display this dialog
      * @return The resulting data or null if canceled
      ******************************************************************/
-    public E displayDialog() {
+    public O displayDialog() {
         updateErrorIndication();
 
         //Launch a dialog box with the options
@@ -154,11 +154,11 @@ public abstract class BulletProofDialog<E> {
     protected abstract String getDialogPrompt();
 
     /*******************************************************************
-     * Gets the changed version of the data based on the user's entries
-     * @return The changed version of the data
+     * Gets the entered data
+     * @return The entered data
      * @throws IllegalStateException if isValidData() is false
      ******************************************************************/
-    protected abstract E getFinalData();
+    protected abstract O getFinalData();
 
     /*******************************************************************
      * Calls the sub-class's isValidData() method and uses the result

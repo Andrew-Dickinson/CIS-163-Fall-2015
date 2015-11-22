@@ -4,16 +4,16 @@ import javax.swing.*;
 import java.awt.*;
 
 /***********************************************************************
- * An implementation of SymmetricBulletProofDialog that allows the user to select
- * a location to insert a character to and to type a character
+ * An implementation of SymmetricBulletProofDialog that allows the user
+ * to select a location to paste the clipboard
  * Created by Andrew on 11/16/15.
  **********************************************************************/
-public class InsertionDialog extends SymmetricBulletProofDialog<ScrambledMessage> {
+public class PasteDialog extends SymmetricBulletProofDialog<ScrambledMessage> {
     /**
      * To be returned by the getDialogPrompt() method
      */
     private static final String DIALOG_PROMPT
-            = "Insert a new character";
+            = "Select a location to paste";
 
     /**
      * The primary panel for objects in this implementation
@@ -31,17 +31,20 @@ public class InsertionDialog extends SymmetricBulletProofDialog<ScrambledMessage
     private JRadioButton[] selectionButtons;
 
     /**
-     * The field to enter the new character into
+     * The characters to insert into the message
      */
-    private JTextField newCharacterField;
+    private LinkedList<Character> clipboard;
 
-    public InsertionDialog(Component parent, ScrambledMessage preMessage){
+    public PasteDialog(Component parent,
+                       ScrambledMessage preMessage,
+                       LinkedList<Character> clipboard){
         super(parent, preMessage);
 
         if (preMessage == null)
             preMessage = new ScrambledMessage();
 
         this.preMessage = preMessage;
+        this.clipboard = clipboard;
 
         JPanel gridPanel = new JPanel(
                 new GridLayout(1, preMessage.length() * 2 + 1)
@@ -68,23 +71,8 @@ public class InsertionDialog extends SymmetricBulletProofDialog<ScrambledMessage
         gridPanel.add(last);
         selectionButtons[preMessage.length()] = last;
 
-        newCharacterField = new JTextField();
-        newCharacterField.getDocument()
-                .addDocumentListener(getFieldValidationListener());
-
-        JPanel fieldLabelPanel = new JPanel(new BorderLayout());
-        fieldLabelPanel.setPreferredSize(new Dimension(200, 20));
-        fieldLabelPanel.add(
-                new JLabel("Character to Insert:  "), BorderLayout.WEST
-        );
-        fieldLabelPanel.add(newCharacterField, BorderLayout.CENTER);
-
         primaryPanel = new JPanel(new BorderLayout());
         primaryPanel.add(gridPanel, BorderLayout.CENTER);
-
-        JPanel housing = new JPanel();
-        housing.add(fieldLabelPanel);
-        primaryPanel.add(housing, BorderLayout.SOUTH);
 
         setDialogContentPanel(primaryPanel);
     }
@@ -114,16 +102,18 @@ public class InsertionDialog extends SymmetricBulletProofDialog<ScrambledMessage
         //Because isValidData() is true, we know this is not -1
         int replaceLoc = getSelected();
 
-        //We also know that the text is valid anyway
-        Character replaceChar = newCharacterField.getText().charAt(0);
-
         try {
             //Clone it so we don't end up modifying the previous object
             ScrambledMessage postMessage
                     = (ScrambledMessage) preMessage.clone();
 
-            //Preform the modification
-            postMessage.insertCharacter(replaceLoc, replaceChar);
+            //Insert the characters from the clipboard in the right spot
+            for (int i = 0; i < clipboard.size(); i++){
+                postMessage.insertCharacter(
+                        replaceLoc + i,
+                        clipboard.get(i)
+                );
+            }
 
             //Return the result
             return postMessage;
@@ -143,17 +133,7 @@ public class InsertionDialog extends SymmetricBulletProofDialog<ScrambledMessage
      ******************************************************************/
     @Override
     protected boolean isValidData() {
-        boolean locationValid = getSelected() != -1;
-        boolean characterValid
-                = newCharacterField.getText().length() == 1;
-
-        if (characterValid){
-            showGood(newCharacterField);
-        } else {
-            showError(newCharacterField);
-        }
-
-        return locationValid && characterValid;
+        return getSelected() != -1;
     }
 
     /*******************************************************************
