@@ -423,7 +423,7 @@ public class ScrambledMessage implements Cloneable {
      ******************************************************************/
     @Override
     @SuppressWarnings("unchecked")
-    protected Object clone() throws CloneNotSupportedException {
+    public Object clone() throws CloneNotSupportedException {
         ScrambledMessage newMessage = (ScrambledMessage) super.clone();
         try {
             if (changeStack != null && scrambledMessage != null){
