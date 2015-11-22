@@ -30,6 +30,7 @@ public class MessagePanel extends JPanel {
     /**
      * The random message action buttons
      */
+    private JButton shuffleButton;
     private JButton insertRandomCharacterButton;
     private JButton removeRandomCharacterButton;
     private JButton replaceRandomCharacterButton;
@@ -122,9 +123,13 @@ public class MessagePanel extends JPanel {
     }
 
     public JPanel setupRandomButtons(ButtonListener buttonListener){
-        JPanel randomButtons = new JPanel(new GridLayout(5, 1));
+        JPanel randomButtons = new JPanel(new GridLayout(6, 1));
 
         randomButtons.add(new JLabel("Random"));
+
+        shuffleButton = new JButton("Shuffle");
+        shuffleButton.addActionListener(buttonListener);
+        randomButtons.add(shuffleButton);
 
         insertRandomCharacterButton = new JButton("Insert a Character");
         insertRandomCharacterButton.addActionListener(buttonListener);
@@ -180,6 +185,8 @@ public class MessagePanel extends JPanel {
 
                 if (result != null)
                     message = result;
+            } else if (e.getSource() == shuffleButton){
+                message.randomlyScramble(10);
             } else if (e.getSource() == insertRandomCharacterButton){
                 message.insertRandomCharacter();
             } else if (e.getSource() == removeRandomCharacterButton){
