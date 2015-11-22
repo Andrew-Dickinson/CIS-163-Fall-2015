@@ -36,8 +36,8 @@ public class SwapDialog extends SymmetricBulletProofDialog<ScrambledMessage> {
     public SwapDialog(Component parent, ScrambledMessage preMessage){
         super(parent, preMessage);
 
-        if (preMessage == null)
-            preMessage = new ScrambledMessage();
+        if (preMessage.length() < 2)
+            throw new UnsupportedOperationException();
 
         this.preMessage = preMessage;
 

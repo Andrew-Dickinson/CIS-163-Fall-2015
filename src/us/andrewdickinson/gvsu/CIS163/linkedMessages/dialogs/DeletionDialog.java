@@ -36,8 +36,8 @@ public class DeletionDialog extends SymmetricBulletProofDialog<ScrambledMessage>
     public DeletionDialog(Component parent, ScrambledMessage preMessage){
         super(parent, preMessage);
 
-        if (preMessage == null)
-            preMessage = new ScrambledMessage();
+        if (preMessage.length() == 0)
+            throw new UnsupportedOperationException();
 
         this.preMessage = preMessage;
 

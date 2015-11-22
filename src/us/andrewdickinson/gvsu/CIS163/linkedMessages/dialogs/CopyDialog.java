@@ -39,6 +39,9 @@ public class CopyDialog extends
     public CopyDialog(Component parent, ScrambledMessage preMessage){
         super(parent, preMessage);
 
+        if (preMessage.length() == 0)
+            throw new UnsupportedOperationException();
+
         if (preMessage == null)
             preMessage = new ScrambledMessage();
 

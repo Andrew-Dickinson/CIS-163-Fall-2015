@@ -43,9 +43,6 @@ public class PasteDialog extends SymmetricBulletProofDialog<ScrambledMessage> {
                        LinkedList<Character> clipboard){
         super(parent, preMessage);
 
-        if (preMessage == null)
-            preMessage = new ScrambledMessage();
-
         this.preMessage = preMessage;
         this.clipboard = clipboard;
 

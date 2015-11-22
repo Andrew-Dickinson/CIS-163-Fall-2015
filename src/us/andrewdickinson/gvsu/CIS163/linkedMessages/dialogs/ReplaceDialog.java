@@ -40,8 +40,8 @@ public class ReplaceDialog extends SymmetricBulletProofDialog<ScrambledMessage> 
     public ReplaceDialog(Component parent, ScrambledMessage preMessage){
         super(parent, preMessage);
 
-        if (preMessage == null)
-            preMessage = new ScrambledMessage();
+        if (preMessage.length() == 0)
+            throw new UnsupportedOperationException();
 
         this.preMessage = preMessage;
 

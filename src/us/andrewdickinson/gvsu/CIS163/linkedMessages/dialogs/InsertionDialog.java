@@ -40,9 +40,6 @@ public class InsertionDialog extends SymmetricBulletProofDialog<ScrambledMessage
     public InsertionDialog(Component parent, ScrambledMessage preMessage){
         super(parent, preMessage);
 
-        if (preMessage == null)
-            preMessage = new ScrambledMessage();
-
         this.preMessage = preMessage;
 
         JPanel gridPanel = new JPanel(

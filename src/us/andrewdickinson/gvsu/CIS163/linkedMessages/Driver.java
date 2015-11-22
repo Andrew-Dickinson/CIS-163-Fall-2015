@@ -12,13 +12,13 @@ public class Driver {
         JFrame frame = new JFrame("Message Scrambler/De-scrambler");
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        JPanel panel = new MessagePanel(new ScrambledMessage("Andrew"));
+        JPanel panel = new MessagePanel(frame, new ScrambledMessage("A"));
 
         //Add the panel to the frame
         frame.getContentPane().add(panel);
 
         //Configure the frame
-        frame.setSize(450, 375);
+        frame.setSize(450, 390);
         frame.setResizable(false);
         frame.setVisible(true);
     }

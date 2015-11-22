@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 /***********************************************************************
  * Created by Andrew on 11/21/15.
@@ -56,7 +57,12 @@ public class MessagePanel extends JPanel {
     private JButton cutButton;
     private JButton pasteButton;
 
-    public MessagePanel(ScrambledMessage message){
+
+    private JMenuItem quit;
+    private JMenuItem export;
+    private JMenuItem import_chg;
+
+    public MessagePanel(JFrame frame, ScrambledMessage message){
         this.message = message;
 
         ButtonListener buttonListener = new ButtonListener();
@@ -71,6 +77,24 @@ public class MessagePanel extends JPanel {
 
         //Initialize the clipboard
         setupClipboard(buttonListener);
+
+        JMenuBar menuBar = new JMenuBar();
+        JMenu file = new JMenu("File");
+        quit = new JMenuItem("Quit");
+        quit.addActionListener(buttonListener);
+        export = new JMenuItem("Export Changes");
+        export.addActionListener(buttonListener);
+        import_chg = new JMenuItem("Import Changes");
+        import_chg.addActionListener(buttonListener);
+
+        //file.add(import_chg);
+        file.add(export);
+        file.addSeparator();
+        file.add(quit);
+
+        menuBar.add(file);
+
+        frame.setJMenuBar(menuBar);
     }
 
     /*******************************************************************
@@ -254,72 +278,100 @@ public class MessagePanel extends JPanel {
     public class ButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (e.getSource() == insertCharacterButton){
-                SymmetricBulletProofDialog<ScrambledMessage> dialog
-                        = new InsertionDialog(getParent(), message);
+            try {
+                if (e.getSource() == insertCharacterButton){
+                    SymmetricBulletProofDialog<ScrambledMessage> dialog
+                            = new InsertionDialog(getParent(), message);
 
-                ScrambledMessage result = dialog.displayDialog();
+                    ScrambledMessage result = dialog.displayDialog();
 
-                if (result != null)
-                    message = result;
-            } else if (e.getSource() == removeCharacterButton){
-                SymmetricBulletProofDialog<ScrambledMessage> dialog
-                        = new DeletionDialog(getParent(), message);
+                    if (result != null)
+                        message = result;
+                } else if (e.getSource() == removeCharacterButton){
+                    SymmetricBulletProofDialog<ScrambledMessage> dialog
+                            = new DeletionDialog(getParent(), message);
 
-                ScrambledMessage result = dialog.displayDialog();
+                    ScrambledMessage result = dialog.displayDialog();
 
-                if (result != null)
-                    message = result;
-            } else if (e.getSource() == replaceCharacterButton){
-                SymmetricBulletProofDialog<ScrambledMessage> dialog
-                        = new ReplaceDialog(getParent(), message);
+                    if (result != null)
+                        message = result;
+                } else if (e.getSource() == replaceCharacterButton){
+                    SymmetricBulletProofDialog<ScrambledMessage> dialog
+                            = new ReplaceDialog(getParent(), message);
 
-                ScrambledMessage result = dialog.displayDialog();
+                    ScrambledMessage result = dialog.displayDialog();
 
-                if (result != null)
-                    message = result;
-            } else if (e.getSource() == swapCharactersButton){
-                SymmetricBulletProofDialog<ScrambledMessage> dialog
-                        = new SwapDialog(getParent(), message);
+                    if (result != null)
+                        message = result;
+                } else if (e.getSource() == swapCharactersButton){
+                    SymmetricBulletProofDialog<ScrambledMessage> dialog
+                            = new SwapDialog(getParent(), message);
 
-                ScrambledMessage result = dialog.displayDialog();
+                    ScrambledMessage result = dialog.displayDialog();
 
-                if (result != null)
-                    message = result;
-            } else if (e.getSource() == shuffleButton){
-                message.randomlyScramble(10);
-            } else if (e.getSource() == insertRandomCharacterButton){
-                message.insertRandomCharacter();
-            } else if (e.getSource() == removeRandomCharacterButton){
-                message.removeRandomCharacter();
-            } else if (e.getSource() == replaceRandomCharacterButton){
-                message.replaceRandomCharacter();
-            } else if (e.getSource() == swapRandomCharactersButton){
-                message.swapRandomCharacters();
-            } else if (e.getSource() == copyButton){
-                CopyDialog dialog = new CopyDialog(getParent(), message);
+                    if (result != null)
+                        message = result;
+                } else if (e.getSource() == shuffleButton){
+                    message.randomlyScramble(10);
+                } else if (e.getSource() == insertRandomCharacterButton){
+                    message.insertRandomCharacter();
+                } else if (e.getSource() == removeRandomCharacterButton){
+                    message.removeRandomCharacter();
+                } else if (e.getSource() == replaceRandomCharacterButton){
+                    message.replaceRandomCharacter();
+                } else if (e.getSource() == swapRandomCharactersButton){
+                    message.swapRandomCharacters();
+                } else if (e.getSource() == copyButton){
+                    CopyDialog dialog = new CopyDialog(getParent(), message);
 
-                LinkedList<Character> result = dialog.displayDialog();
+                    LinkedList<Character> result = dialog.displayDialog();
 
-                if (result != null)
-                    clipboard = result;
-            } else if (e.getSource() == cutButton){
-                CutDialog dialog = new CutDialog(getParent(), message);
+                    if (result != null)
+                        clipboard = result;
+                } else if (e.getSource() == cutButton){
+                    CutDialog dialog = new CutDialog(getParent(), message);
 
-                ScrambledMessage result = dialog.displayDialog();
+                    ScrambledMessage result = dialog.displayDialog();
 
-                if (result != null)
-                    message = result;
-                    clipboard = dialog.getCutCharacters();
-            } else if (e.getSource() == pasteButton){
-                SymmetricBulletProofDialog<ScrambledMessage> dialog
-                    = new PasteDialog(getParent(), message, clipboard);
+                    if (result != null)
+                        message = result;
+                        clipboard = dialog.getCutCharacters();
+                } else if (e.getSource() == pasteButton){
+                    SymmetricBulletProofDialog<ScrambledMessage> dialog
+                        = new PasteDialog(getParent(), message, clipboard);
 
-                ScrambledMessage result = dialog.displayDialog();
+                    ScrambledMessage result = dialog.displayDialog();
 
-                if (result != null)
-                    message = result;
+                    if (result != null)
+                        message = result;
+                }  else if (quit == e.getSource()) {
+                    System.exit(0);
+                }else if (export == e.getSource()) {
+                    JFileChooser fileChooser = new JFileChooser();
+
+                    //Display a file choosing dialog to get the destination
+                    int status = fileChooser.showSaveDialog(getParent());
+                    if (status == JFileChooser.APPROVE_OPTION){
+                        String path =
+                            fileChooser.getSelectedFile().getAbsolutePath();
+
+                        try {
+                            message.saveChangeStackToFile(path);
+                        } catch (IOException err) {
+                            JOptionPane.showMessageDialog(getParent(),
+                                "An error occurred while writing this file",
+                                "Unknown Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                }else if (import_chg == e.getSource()) {
+
+                }
+            } catch (UnsupportedOperationException err){
+                JOptionPane.showMessageDialog(getParent(),
+                    "The message is too short to preform this operation",
+                    "Too Short", JOptionPane.WARNING_MESSAGE);
             }
+
 
             updateCharacterGridPanel(message);
             updateClipboardDisplay();
