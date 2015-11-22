@@ -2,6 +2,10 @@ package us.andrewdickinson.gvsu.CIS163.linkedMessages;
 
 import us.andrewdickinson.gvsu.CIS163.linkedMessages.linkedlist.LinkedList;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Random;
 
 /***********************************************************************
@@ -413,6 +417,26 @@ public class ScrambledMessage implements Cloneable {
             //We want to be the source of this exception
             throw new IllegalArgumentException();
         }
+    }
+
+    /*******************************************************************
+     * Saves the output of exportChangeStack() to a file
+     * @param filePath The path to save the change stack to
+     * @throws IOException if an error is encountered while
+     *                     saving the file
+     ******************************************************************/
+    public void saveChangeStackToFile(String filePath) throws IOException {
+        LinkedList<String> export = exportChangeStack();
+
+        PrintWriter out = new PrintWriter(
+                new BufferedWriter(new FileWriter(filePath))
+        );
+
+        for (int i = 0; i < export.size(); i++){
+            out.println(export.get(i));
+        }
+
+        out.close();
     }
 
     /*******************************************************************
