@@ -18,7 +18,7 @@ public class Driver {
         frame.getContentPane().add(panel);
 
         //Configure the frame
-        frame.setSize(600, 250);
+        frame.setSize(450, 285);
         frame.setResizable(false);
         frame.setVisible(true);
     }

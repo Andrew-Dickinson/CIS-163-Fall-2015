@@ -90,8 +90,20 @@ public class MessagePanel extends JPanel {
             subPanel.add(label);
         }
 
+        JPanel container = new JPanel();
+        container.add(subPanel);
+
+        JScrollPane scrollPane = new JScrollPane(
+                container,
+                JScrollPane.VERTICAL_SCROLLBAR_NEVER,
+                JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS
+        );
+
+
+
         characterGridPanel = new JPanel();
-        characterGridPanel.add(subPanel);
+        scrollPane.setPreferredSize(new Dimension(400, 90));
+        characterGridPanel.add(scrollPane);
         add(characterGridPanel, BorderLayout.CENTER);
 
         revalidate();
