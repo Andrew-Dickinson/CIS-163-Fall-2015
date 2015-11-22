@@ -1,6 +1,7 @@
-package us.andrewdickinson.gvsu.CIS163.linkedMessages;
+package us.andrewdickinson.gvsu.CIS163.linkedMessages.dialogs;
 
-import javax.swing.*;
+import us.andrewdickinson.gvsu.CIS163.linkedMessages.dialogs.BulletProofDialog;
+
 import java.awt.*;
 
 /***********************************************************************

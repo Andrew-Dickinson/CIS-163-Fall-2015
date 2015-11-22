@@ -1,4 +1,4 @@
-package us.andrewdickinson.gvsu.CIS163.linkedMessages;
+package us.andrewdickinson.gvsu.CIS163.linkedMessages.linkedlist;
 
 import org.junit.Test;
 

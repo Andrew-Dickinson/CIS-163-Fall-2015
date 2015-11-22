@@ -1,5 +1,8 @@
 package us.andrewdickinson.gvsu.CIS163.linkedMessages;
 
+import us.andrewdickinson.gvsu.CIS163.linkedMessages.dialogs.*;
+import us.andrewdickinson.gvsu.CIS163.linkedMessages.linkedlist.LinkedList;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;

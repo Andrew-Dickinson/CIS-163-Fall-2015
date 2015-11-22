@@ -1,5 +1,7 @@
 package us.andrewdickinson.gvsu.CIS163.linkedMessages;
 
+import us.andrewdickinson.gvsu.CIS163.linkedMessages.linkedlist.LinkedList;
+
 import java.util.Random;
 
 /***********************************************************************

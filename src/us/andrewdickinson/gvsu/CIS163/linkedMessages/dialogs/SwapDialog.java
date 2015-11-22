@@ -1,19 +1,22 @@
-package us.andrewdickinson.gvsu.CIS163.linkedMessages;
+package us.andrewdickinson.gvsu.CIS163.linkedMessages.dialogs;
+
+import us.andrewdickinson.gvsu.CIS163.linkedMessages.ScrambledMessage;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 /***********************************************************************
  * An implementation of SymmetricBulletProofDialog that allows the user to select
- * a character to replace and to type a character to replace it
+ * two characters to swap
  * Created by Andrew on 11/16/15.
  **********************************************************************/
-public class ReplaceDialog extends SymmetricBulletProofDialog<ScrambledMessage> {
+public class SwapDialog extends SymmetricBulletProofDialog<ScrambledMessage> {
     /**
      * To be returned by the getDialogPrompt() method
      */
     private static final String DIALOG_PROMPT
-            = "Replace a character";
+            = "Select two characters to swap";
 
     /**
      * The primary panel for objects in this implementation
@@ -28,14 +31,9 @@ public class ReplaceDialog extends SymmetricBulletProofDialog<ScrambledMessage> 
     /**
      * The buttons used to selected the character
      */
-    private JRadioButton[] selectionButtons;
+    private JCheckBox[] selectionButtons;
 
-    /**
-     * The field to enter the new character into
-     */
-    private JTextField newCharacterField;
-
-    public ReplaceDialog(Component parent, ScrambledMessage preMessage){
+    public SwapDialog(Component parent, ScrambledMessage preMessage){
         super(parent, preMessage);
 
         if (preMessage == null)
@@ -47,14 +45,11 @@ public class ReplaceDialog extends SymmetricBulletProofDialog<ScrambledMessage> 
                 new GridLayout(2, preMessage.length())
         );
 
-
-        ButtonGroup selectionGroup = new ButtonGroup();
-        selectionButtons = new JRadioButton[preMessage.length()];
+        selectionButtons = new JCheckBox[preMessage.length()];
 
         for (int i = 0; i < preMessage.length(); i++){
-            selectionButtons[i] = new JRadioButton();
+            selectionButtons[i] = new JCheckBox();
             selectionButtons[i].addActionListener(getValidationListener());
-            selectionGroup.add(selectionButtons[i]);
             gridPanel.add(selectionButtons[i]);
         }
 
@@ -64,17 +59,8 @@ public class ReplaceDialog extends SymmetricBulletProofDialog<ScrambledMessage> 
             );
         }
 
-        newCharacterField = new JTextField();
-        newCharacterField.getDocument()
-                .addDocumentListener(getFieldValidationListener());
-
-        JPanel fieldLabelPanel = new JPanel(new GridLayout(1, 2));
-        fieldLabelPanel.add(new JLabel("Replacement Character:"));
-        fieldLabelPanel.add(newCharacterField);
-
-        primaryPanel = new JPanel(new BorderLayout());
-        primaryPanel.add(gridPanel, BorderLayout.CENTER);
-        primaryPanel.add(fieldLabelPanel, BorderLayout.SOUTH);
+        primaryPanel = new JPanel();
+        primaryPanel.add(gridPanel);
 
         setDialogContentPanel(primaryPanel);
     }
@@ -102,10 +88,7 @@ public class ReplaceDialog extends SymmetricBulletProofDialog<ScrambledMessage> 
             throw new UnsupportedOperationException();
 
         //Because isValidData() is true, we know this is not -1
-        int replaceLoc = getSelected();
-
-        //We also know that the text is valid anyway
-        Character replaceChar = newCharacterField.getText().charAt(0);
+        Integer[] swapChars = getSelected();
 
         try {
             //Clone it so we don't end up modifying the previous object
@@ -113,7 +96,8 @@ public class ReplaceDialog extends SymmetricBulletProofDialog<ScrambledMessage> 
                     = (ScrambledMessage) preMessage.clone();
 
             //Preform the modification
-            postMessage.replaceCharacter(replaceLoc, replaceChar);
+            //We know these exist because of data validation
+            postMessage.swapCharacters(swapChars[0], swapChars[1]);
 
             //Return the result
             return postMessage;
@@ -133,31 +117,21 @@ public class ReplaceDialog extends SymmetricBulletProofDialog<ScrambledMessage> 
      ******************************************************************/
     @Override
     protected boolean isValidData() {
-        boolean locationValid = getSelected() != -1;
-        boolean characterValid
-                = newCharacterField.getText().length() == 1;
-
-        if (characterValid){
-            showGood(newCharacterField);
-        } else {
-            showError(newCharacterField);
-        }
-
-        return locationValid && characterValid;
+        return getSelected().length == 2;
     }
 
     /*******************************************************************
-     * Gets the index of the currently selected character or -1 if none
-     * are selected
-     * @return The index of the character
+     * Gets the indices of the currently selected characters or [] if
+     * none are selected
+     * @return The indices of the characters
      ******************************************************************/
-    private int getSelected(){
+    private Integer[] getSelected(){
+        ArrayList<Integer> selected = new ArrayList<>();
         for (int i = 0; i < selectionButtons.length; i++){
             if (selectionButtons[i].isSelected())
-                return i;
+                selected.add(i);
         }
 
-        //We didn't find it
-        return -1;
+        return selected.toArray(new Integer[selected.size()]);
     }
 }

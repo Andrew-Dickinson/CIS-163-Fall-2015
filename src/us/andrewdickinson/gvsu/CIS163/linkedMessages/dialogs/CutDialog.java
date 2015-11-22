@@ -1,4 +1,7 @@
-package us.andrewdickinson.gvsu.CIS163.linkedMessages;
+package us.andrewdickinson.gvsu.CIS163.linkedMessages.dialogs;
+
+import us.andrewdickinson.gvsu.CIS163.linkedMessages.linkedlist.LinkedList;
+import us.andrewdickinson.gvsu.CIS163.linkedMessages.ScrambledMessage;
 
 import javax.swing.*;
 import java.awt.*;

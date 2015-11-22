@@ -1,4 +1,4 @@
-package us.andrewdickinson.gvsu.CIS163.linkedMessages;
+package us.andrewdickinson.gvsu.CIS163.linkedMessages.linkedlist;
 
 /***********************************************************************
  * Contains a linked list representing a list of elements
@@ -266,7 +266,7 @@ public class LinkedList<E> implements Cloneable {
      ******************************************************************/
     @Override
     @SuppressWarnings("unchecked")
-    protected Object clone() throws CloneNotSupportedException {
+    public Object clone() throws CloneNotSupportedException {
         LinkedList<?> ll = (LinkedList<?>) super.clone();
         try {
             if (top != null && tail != null){

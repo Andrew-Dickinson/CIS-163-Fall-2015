@@ -1,20 +1,21 @@
-package us.andrewdickinson.gvsu.CIS163.linkedMessages;
+package us.andrewdickinson.gvsu.CIS163.linkedMessages.dialogs;
+
+import us.andrewdickinson.gvsu.CIS163.linkedMessages.ScrambledMessage;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 
 /***********************************************************************
  * An implementation of SymmetricBulletProofDialog that allows the user to select
- * a characters to delete
+ * a character to replace and to type a character to replace it
  * Created by Andrew on 11/16/15.
  **********************************************************************/
-public class DeletionDialog extends SymmetricBulletProofDialog<ScrambledMessage> {
+public class ReplaceDialog extends SymmetricBulletProofDialog<ScrambledMessage> {
     /**
      * To be returned by the getDialogPrompt() method
      */
     private static final String DIALOG_PROMPT
-            = "Select characters to delete";
+            = "Replace a character";
 
     /**
      * The primary panel for objects in this implementation
@@ -27,11 +28,16 @@ public class DeletionDialog extends SymmetricBulletProofDialog<ScrambledMessage>
     private ScrambledMessage preMessage;
 
     /**
-     * The buttons used to select the characters
+     * The buttons used to selected the character
      */
-    private JCheckBox[] selectionButtons;
+    private JRadioButton[] selectionButtons;
 
-    public DeletionDialog(Component parent, ScrambledMessage preMessage){
+    /**
+     * The field to enter the new character into
+     */
+    private JTextField newCharacterField;
+
+    public ReplaceDialog(Component parent, ScrambledMessage preMessage){
         super(parent, preMessage);
 
         if (preMessage == null)
@@ -43,11 +49,14 @@ public class DeletionDialog extends SymmetricBulletProofDialog<ScrambledMessage>
                 new GridLayout(2, preMessage.length())
         );
 
-        selectionButtons = new JCheckBox[preMessage.length()];
+
+        ButtonGroup selectionGroup = new ButtonGroup();
+        selectionButtons = new JRadioButton[preMessage.length()];
 
         for (int i = 0; i < preMessage.length(); i++){
-            selectionButtons[i] = new JCheckBox();
+            selectionButtons[i] = new JRadioButton();
             selectionButtons[i].addActionListener(getValidationListener());
+            selectionGroup.add(selectionButtons[i]);
             gridPanel.add(selectionButtons[i]);
         }
 
@@ -57,8 +66,17 @@ public class DeletionDialog extends SymmetricBulletProofDialog<ScrambledMessage>
             );
         }
 
-        primaryPanel = new JPanel();
-        primaryPanel.add(gridPanel);
+        newCharacterField = new JTextField();
+        newCharacterField.getDocument()
+                .addDocumentListener(getFieldValidationListener());
+
+        JPanel fieldLabelPanel = new JPanel(new GridLayout(1, 2));
+        fieldLabelPanel.add(new JLabel("Replacement Character:"));
+        fieldLabelPanel.add(newCharacterField);
+
+        primaryPanel = new JPanel(new BorderLayout());
+        primaryPanel.add(gridPanel, BorderLayout.CENTER);
+        primaryPanel.add(fieldLabelPanel, BorderLayout.SOUTH);
 
         setDialogContentPanel(primaryPanel);
     }
@@ -86,7 +104,10 @@ public class DeletionDialog extends SymmetricBulletProofDialog<ScrambledMessage>
             throw new UnsupportedOperationException();
 
         //Because isValidData() is true, we know this is not -1
-        Integer[] removeChars = getSelected();
+        int replaceLoc = getSelected();
+
+        //We also know that the text is valid anyway
+        Character replaceChar = newCharacterField.getText().charAt(0);
 
         try {
             //Clone it so we don't end up modifying the previous object
@@ -94,10 +115,7 @@ public class DeletionDialog extends SymmetricBulletProofDialog<ScrambledMessage>
                     = (ScrambledMessage) preMessage.clone();
 
             //Preform the modification
-            //Work backwards so that we don't screw up the numbering
-            for (int i = removeChars.length - 1; i >= 0; i--) {
-                postMessage.removeCharacter(removeChars[i]);
-            }
+            postMessage.replaceCharacter(replaceLoc, replaceChar);
 
             //Return the result
             return postMessage;
@@ -117,21 +135,31 @@ public class DeletionDialog extends SymmetricBulletProofDialog<ScrambledMessage>
      ******************************************************************/
     @Override
     protected boolean isValidData() {
-        return getSelected().length != 0;
+        boolean locationValid = getSelected() != -1;
+        boolean characterValid
+                = newCharacterField.getText().length() == 1;
+
+        if (characterValid){
+            showGood(newCharacterField);
+        } else {
+            showError(newCharacterField);
+        }
+
+        return locationValid && characterValid;
     }
 
     /*******************************************************************
-     * Gets the indices of the currently selected characters or [] if
-     * none are selected
-     * @return The indices of the characters
+     * Gets the index of the currently selected character or -1 if none
+     * are selected
+     * @return The index of the character
      ******************************************************************/
-    private Integer[] getSelected(){
-        ArrayList<Integer> selected = new ArrayList<>();
+    private int getSelected(){
         for (int i = 0; i < selectionButtons.length; i++){
             if (selectionButtons[i].isSelected())
-                selected.add(i);
+                return i;
         }
 
-        return selected.toArray(new Integer[selected.size()]);
+        //We didn't find it
+        return -1;
     }
 }

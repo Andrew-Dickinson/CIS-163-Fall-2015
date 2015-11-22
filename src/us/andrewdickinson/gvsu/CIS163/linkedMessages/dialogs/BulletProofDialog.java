@@ -1,4 +1,4 @@
-package us.andrewdickinson.gvsu.CIS163.linkedMessages;
+package us.andrewdickinson.gvsu.CIS163.linkedMessages.dialogs;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;

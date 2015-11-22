@@ -1,6 +1,7 @@
 package us.andrewdickinson.gvsu.CIS163.linkedMessages;
 
 import org.junit.Test;
+import us.andrewdickinson.gvsu.CIS163.linkedMessages.linkedlist.LinkedList;
 
 import static org.junit.Assert.*;
 

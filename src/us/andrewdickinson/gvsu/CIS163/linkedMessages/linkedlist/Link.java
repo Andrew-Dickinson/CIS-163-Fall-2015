@@ -1,4 +1,4 @@
-package us.andrewdickinson.gvsu.CIS163.linkedMessages;
+package us.andrewdickinson.gvsu.CIS163.linkedMessages.linkedlist;
 
 /***********************************************************************
  * A link to be used in a linked list

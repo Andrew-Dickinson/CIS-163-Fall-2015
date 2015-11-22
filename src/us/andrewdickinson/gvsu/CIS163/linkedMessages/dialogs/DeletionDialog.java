@@ -1,19 +1,22 @@
-package us.andrewdickinson.gvsu.CIS163.linkedMessages;
+package us.andrewdickinson.gvsu.CIS163.linkedMessages.dialogs;
+
+import us.andrewdickinson.gvsu.CIS163.linkedMessages.ScrambledMessage;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 /***********************************************************************
  * An implementation of SymmetricBulletProofDialog that allows the user to select
- * a location to insert a character to and to type a character
+ * a characters to delete
  * Created by Andrew on 11/16/15.
  **********************************************************************/
-public class InsertionDialog extends SymmetricBulletProofDialog<ScrambledMessage> {
+public class DeletionDialog extends SymmetricBulletProofDialog<ScrambledMessage> {
     /**
      * To be returned by the getDialogPrompt() method
      */
     private static final String DIALOG_PROMPT
-            = "Insert a new character";
+            = "Select characters to delete";
 
     /**
      * The primary panel for objects in this implementation
@@ -26,16 +29,11 @@ public class InsertionDialog extends SymmetricBulletProofDialog<ScrambledMessage
     private ScrambledMessage preMessage;
 
     /**
-     * The buttons used to selected the character
+     * The buttons used to select the characters
      */
-    private JRadioButton[] selectionButtons;
+    private JCheckBox[] selectionButtons;
 
-    /**
-     * The field to enter the new character into
-     */
-    private JTextField newCharacterField;
-
-    public InsertionDialog(Component parent, ScrambledMessage preMessage){
+    public DeletionDialog(Component parent, ScrambledMessage preMessage){
         super(parent, preMessage);
 
         if (preMessage == null)
@@ -44,47 +42,25 @@ public class InsertionDialog extends SymmetricBulletProofDialog<ScrambledMessage
         this.preMessage = preMessage;
 
         JPanel gridPanel = new JPanel(
-                new GridLayout(1, preMessage.length() * 2 + 1)
+                new GridLayout(2, preMessage.length())
         );
 
-        ButtonGroup selectionGroup = new ButtonGroup();
-        selectionButtons = new JRadioButton[preMessage.length() + 1];
+        selectionButtons = new JCheckBox[preMessage.length()];
 
-        //Add the characters and their corresponding radio buttons
         for (int i = 0; i < preMessage.length(); i++){
-            selectionButtons[i] = new JRadioButton();
+            selectionButtons[i] = new JCheckBox();
             selectionButtons[i].addActionListener(getValidationListener());
-            selectionGroup.add(selectionButtons[i]);
             gridPanel.add(selectionButtons[i]);
+        }
+
+        for (int i = 0; i < preMessage.length(); i++){
             gridPanel.add(
                     new JLabel(preMessage.getCharacter(i).toString())
             );
         }
 
-        //Add the last radio button
-        JRadioButton last = new JRadioButton();
-        last.addActionListener(getValidationListener());
-        selectionGroup.add(last);
-        gridPanel.add(last);
-        selectionButtons[preMessage.length()] = last;
-
-        newCharacterField = new JTextField();
-        newCharacterField.getDocument()
-                .addDocumentListener(getFieldValidationListener());
-
-        JPanel fieldLabelPanel = new JPanel(new BorderLayout());
-        fieldLabelPanel.setPreferredSize(new Dimension(200, 20));
-        fieldLabelPanel.add(
-                new JLabel("Character to Insert:  "), BorderLayout.WEST
-        );
-        fieldLabelPanel.add(newCharacterField, BorderLayout.CENTER);
-
-        primaryPanel = new JPanel(new BorderLayout());
-        primaryPanel.add(gridPanel, BorderLayout.CENTER);
-
-        JPanel housing = new JPanel();
-        housing.add(fieldLabelPanel);
-        primaryPanel.add(housing, BorderLayout.SOUTH);
+        primaryPanel = new JPanel();
+        primaryPanel.add(gridPanel);
 
         setDialogContentPanel(primaryPanel);
     }
@@ -112,10 +88,7 @@ public class InsertionDialog extends SymmetricBulletProofDialog<ScrambledMessage
             throw new UnsupportedOperationException();
 
         //Because isValidData() is true, we know this is not -1
-        int replaceLoc = getSelected();
-
-        //We also know that the text is valid anyway
-        Character replaceChar = newCharacterField.getText().charAt(0);
+        Integer[] removeChars = getSelected();
 
         try {
             //Clone it so we don't end up modifying the previous object
@@ -123,7 +96,10 @@ public class InsertionDialog extends SymmetricBulletProofDialog<ScrambledMessage
                     = (ScrambledMessage) preMessage.clone();
 
             //Preform the modification
-            postMessage.insertCharacter(replaceLoc, replaceChar);
+            //Work backwards so that we don't screw up the numbering
+            for (int i = removeChars.length - 1; i >= 0; i--) {
+                postMessage.removeCharacter(removeChars[i]);
+            }
 
             //Return the result
             return postMessage;
@@ -143,31 +119,21 @@ public class InsertionDialog extends SymmetricBulletProofDialog<ScrambledMessage
      ******************************************************************/
     @Override
     protected boolean isValidData() {
-        boolean locationValid = getSelected() != -1;
-        boolean characterValid
-                = newCharacterField.getText().length() == 1;
-
-        if (characterValid){
-            showGood(newCharacterField);
-        } else {
-            showError(newCharacterField);
-        }
-
-        return locationValid && characterValid;
+        return getSelected().length != 0;
     }
 
     /*******************************************************************
-     * Gets the index of the currently selected character or -1 if none
-     * are selected
-     * @return The index of the character
+     * Gets the indices of the currently selected characters or [] if
+     * none are selected
+     * @return The indices of the characters
      ******************************************************************/
-    private int getSelected(){
+    private Integer[] getSelected(){
+        ArrayList<Integer> selected = new ArrayList<>();
         for (int i = 0; i < selectionButtons.length; i++){
             if (selectionButtons[i].isSelected())
-                return i;
+                selected.add(i);
         }
 
-        //We didn't find it
-        return -1;
+        return selected.toArray(new Integer[selected.size()]);
     }
 }
