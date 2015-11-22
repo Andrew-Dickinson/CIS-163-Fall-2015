@@ -203,32 +203,90 @@ public class ScrambledMessage implements Cloneable {
         //4: Swap
         int action = r.nextInt(5);
 
-        //These positions are >= 0 and < length()
-        //Both (or either) are not necessarily used
-        int position1 = r.nextInt(length());
-        int position2 = r.nextInt(length());
+        if (action == 0 || action == 1){
+            insertRandomCharacter();
+        } else if (action == 2){
+            removeRandomCharacter();
+        } else if (action == 3){
+            replaceRandomCharacter();
+        } else if (action == 4){
+            swapRandomCharacters();
+        }
+    }
+
+    /*******************************************************************
+     * Insert a random character at a random location in this message
+     ******************************************************************/
+    public void insertRandomCharacter(){
+        //The random number generator
+        Random r = new Random();
+
+        //This position is between 0 and length() (inclusive)
+        int position = r.nextInt(length() + 1);
 
         //Generate a random character based on printable ascii
         //characters ranging from 32 to 126
-        //Not necessarily used
         int asciiCode = r.nextInt(95) + 32;
         Character character = (char) asciiCode;
 
-        if (action == 0 || action == 1){
-            //This is an insert
-            //We need a position in the range of 0 to length()
-            int positionOutOfLength = r.nextInt(length() + 1);
-            insertCharacter(positionOutOfLength, character);
-        } else if (action == 2){
-            //This is a delete
-            removeCharacter(position1);
-        } else if (action == 3){
-            //This is a replace
-            replaceCharacter(position1, character);
-        } else if (action == 4){
-            //This is a swap
-            swapCharacters(position1, position2);
-        }
+        insertCharacter(position, character);
+    }
+
+    /*******************************************************************
+     * Remove a random character from this message
+     * @throws UnsupportedOperationException if length() == 0
+     ******************************************************************/
+    public void removeRandomCharacter(){
+        if (length() == 0)
+            throw new UnsupportedOperationException();
+
+        //The random number generator
+        Random r = new Random();
+
+        //This position is between 0 and length() - 1 (inclusive)
+        int position = r.nextInt(length());
+
+        removeCharacter(position);
+    }
+
+    /*******************************************************************
+     * Replace a random character in this message
+     * @throws UnsupportedOperationException if length() == 0
+     ******************************************************************/
+    public void replaceRandomCharacter(){
+        if (length() == 0)
+            throw new UnsupportedOperationException();
+
+        //The random number generator
+        Random r = new Random();
+
+        //This position is between 0 and length() - 1 (inclusive)
+        int position = r.nextInt(length());
+
+        //Generate a random character based on printable ascii
+        //characters ranging from 32 to 126
+        int asciiCode = r.nextInt(95) + 32;
+        Character character = (char) asciiCode;
+
+        replaceCharacter(position, character);
+    }
+
+    /*******************************************************************
+     * Swap two random characters in this message
+     * @throws UnsupportedOperationException if length() < 2
+     ******************************************************************/
+    public void swapRandomCharacters(){
+        if (length() < 2)
+            throw new UnsupportedOperationException();
+
+        //The random number generator
+        Random r = new Random();
+
+        //This position is between 0 and length() - 1 (inclusive)
+        int position1 = r.nextInt(length());
+        int position2 = r.nextInt(length());
+
+        swapCharacters(position1, position2);
     }
 
     /*******************************************************************
