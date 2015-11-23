@@ -2,7 +2,7 @@ package us.andrewdickinson.gvsu.CIS163.linkedMessages;
 
 /***********************************************************************
  * Represents a modification to a LinkedList<Character>
- * with a specific type, location and optional character
+ * with a specific type, location, and optional character
  * Created by Andrew on 11/9/15.
  **********************************************************************/
 public class Modification {

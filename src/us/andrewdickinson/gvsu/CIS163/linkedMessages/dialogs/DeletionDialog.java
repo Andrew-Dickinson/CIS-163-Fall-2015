@@ -7,8 +7,8 @@ import java.awt.*;
 import java.util.ArrayList;
 
 /***********************************************************************
- * An implementation of SymmetricBulletProofDialog that allows the user to select
- * a characters to delete
+ * An implementation of SymmetricBulletProofDialog that allows the
+ * user to select characters to delete
  * Created by Andrew on 11/16/15.
  **********************************************************************/
 public class DeletionDialog extends SymmetricBulletProofDialog<ScrambledMessage> {

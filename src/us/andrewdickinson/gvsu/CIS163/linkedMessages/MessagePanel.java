@@ -14,6 +14,9 @@ import java.io.IOException;
 import java.net.URL;
 
 /***********************************************************************
+ * Displays a scrambled message and allows the user to make various
+ * random and manual modifications including copy, cut, and paste. Also
+ * allows the user to export and decode messages.
  * Created by Andrew on 11/21/15.
  **********************************************************************/
 public class MessagePanel extends JPanel {

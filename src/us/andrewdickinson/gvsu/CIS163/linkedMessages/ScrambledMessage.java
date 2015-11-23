@@ -7,7 +7,7 @@ import java.util.Random;
 import java.util.Scanner;
 
 /***********************************************************************
- * Contains a linked list representing a message and a list of all
+ * Contains a linked list representing a message + a linked list of all
  * of the modifications made to it
  * Created by Andrew on 11/9/15.
  **********************************************************************/

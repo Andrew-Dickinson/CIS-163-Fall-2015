@@ -6,8 +6,9 @@ import javax.swing.*;
 import java.awt.*;
 
 /***********************************************************************
- * An implementation of SymmetricBulletProofDialog that allows the user to select
- * a character to replace and to type a character to replace it
+ * An implementation of SymmetricBulletProofDialog that allows the user
+ * to select a character to replace and to type the character to
+ * replace it
  * Created by Andrew on 11/16/15.
  **********************************************************************/
 public class ReplaceDialog extends SymmetricBulletProofDialog<ScrambledMessage> {

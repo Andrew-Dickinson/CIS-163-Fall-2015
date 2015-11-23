@@ -7,11 +7,12 @@ import java.util.prefs.Preferences;
 
 /***********************************************************************
  * Used to work around a linux clipboard bug
+ * Saves/Recalls the clip board using the preferences api
  * Created by Andrew on 11/23/15.
  **********************************************************************/
 public class ClipBoard {
     /*******************************************************************
-     * Saves the current clipboard to a prefrences file
+     * Saves the current clipboard to a preferences file
      ******************************************************************/
     public static void saveClipBoard(){
         Clipboard clipBoard = Toolkit.getDefaultToolkit()

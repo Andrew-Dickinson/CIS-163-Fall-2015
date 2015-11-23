@@ -6,8 +6,9 @@ import javax.swing.*;
 import java.awt.*;
 
 /***********************************************************************
- * An implementation of SymmetricBulletProofDialog that allows the user to select
- * a location to insert a character to and to type a character
+ * An implementation of SymmetricBulletProofDialog that allows the user
+ * to select a location to insert a character to and to type a character
+ * to insert
  * Created by Andrew on 11/16/15.
  **********************************************************************/
 public class InsertionDialog extends SymmetricBulletProofDialog<ScrambledMessage> {

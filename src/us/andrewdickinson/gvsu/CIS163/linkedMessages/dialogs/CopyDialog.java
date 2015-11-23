@@ -8,8 +8,8 @@ import java.awt.*;
 import java.util.ArrayList;
 
 /***********************************************************************
- * An implementation of SymmetricBulletProofDialog that allows the user to select
- * characters to copy
+ * An implementation of SymmetricBulletProofDialog that allows the user
+ * to select characters to copy
  * Created by Andrew on 11/16/15.
  **********************************************************************/
 public class CopyDialog extends
