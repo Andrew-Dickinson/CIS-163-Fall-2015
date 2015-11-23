@@ -1,5 +1,6 @@
 package us.andrewdickinson.gvsu.CIS163.linkedMessages;
 
+import us.andrewdickinson.gvsu.CIS163.linkedMessages.clipboardInteraction.ClipBoard;
 import us.andrewdickinson.gvsu.CIS163.linkedMessages.dialogs.StartupDialog;
 
 import javax.swing.*;
@@ -11,6 +12,8 @@ import java.awt.*;
  **********************************************************************/
 public class Driver {
     public static void main(String[] args){
+        ClipBoard.retreiveClipBoard();
+
         //Create the frame and add a menu bar
         JFrame frame = new JFrame("Message Scrambler/De-scrambler");
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);

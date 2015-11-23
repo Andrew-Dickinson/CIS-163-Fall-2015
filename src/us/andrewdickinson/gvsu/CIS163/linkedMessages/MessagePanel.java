@@ -1,5 +1,6 @@
 package us.andrewdickinson.gvsu.CIS163.linkedMessages;
 
+import us.andrewdickinson.gvsu.CIS163.linkedMessages.clipboardInteraction.ClipBoard;
 import us.andrewdickinson.gvsu.CIS163.linkedMessages.dialogs.*;
 import us.andrewdickinson.gvsu.CIS163.linkedMessages.linkedlist.LinkedList;
 
@@ -567,12 +568,16 @@ public class MessagePanel extends JPanel {
                     StringSelection data
                         = new StringSelection(message.getDeScrambled());
                     clipBoard.setContents(data, data);
+
+                    ClipBoard.saveClipBoard();
                 } else if (scrambledCopyButton == e.getSource()){
                     Clipboard clipBoard = Toolkit.getDefaultToolkit()
                             .getSystemClipboard();
                     StringSelection data
                         = new StringSelection(message.toString());
                     clipBoard.setContents(data, data);
+
+                    ClipBoard.saveClipBoard();
                 }
             } catch (UnsupportedOperationException err){
                 JOptionPane.showMessageDialog(getParent(),
