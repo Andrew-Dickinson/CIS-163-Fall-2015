@@ -5,6 +5,8 @@ import us.andrewdickinson.gvsu.CIS163.linkedMessages.linkedlist.LinkedList;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -88,6 +90,12 @@ public class MessagePanel extends JPanel {
      */
     private JButton exportShortcut;
     private JButton newMessageShortcut;
+
+    /**
+     * The copy buttons in each of the dialogs
+     */
+    private JButton scrambledCopyButton;
+    private JButton deScrambledCopyButton;
 
     public MessagePanel(JFrame frame, ScrambledMessage message){
         this.message = message;
@@ -358,6 +366,11 @@ public class MessagePanel extends JPanel {
         JPanel panel = new JPanel(new BorderLayout(0, 5));
         panel.add(new JLabel("The De-Scrambled message is:"), BorderLayout.NORTH);
 
+        String copyIcon = "/toolbarButtonGraphics/general/Copy16.gif";
+        deScrambledCopyButton = new JButton(getIconFromUrl(copyIcon));
+        deScrambledCopyButton.addActionListener(new ButtonListener());
+        deScrambledCopyButton.setMargin(new java.awt.Insets(1, 2, 1, 2));
+
         JTextField uneditable = new JTextField(
                 message.getDeScrambled(),
                 message.getDeScrambled().length() + 3
@@ -368,7 +381,11 @@ public class MessagePanel extends JPanel {
         JPanel uneditableContainer = new JPanel();
         uneditableContainer.add(uneditable);
 
-        panel.add(uneditableContainer, BorderLayout.CENTER);
+        JPanel uneditableAndCopyButton = new JPanel();
+        uneditableAndCopyButton.add(uneditableContainer);
+        uneditableAndCopyButton.add(deScrambledCopyButton);
+
+        panel.add(uneditableAndCopyButton, BorderLayout.CENTER);
         JOptionPane.showMessageDialog(getParent(), panel,
             "De-Scrambled Message", JOptionPane.PLAIN_MESSAGE);
     }
@@ -380,6 +397,11 @@ public class MessagePanel extends JPanel {
         JPanel panel = new JPanel(new BorderLayout(0, 5));
         panel.add(new JLabel("The Scrambled message is:"), BorderLayout.NORTH);
 
+        String copyIcon = "/toolbarButtonGraphics/general/Copy16.gif";
+        scrambledCopyButton = new JButton(getIconFromUrl(copyIcon));
+        scrambledCopyButton.addActionListener(new ButtonListener());
+        scrambledCopyButton.setMargin(new java.awt.Insets(1, 2, 1, 2));
+
         JTextField uneditable = new JTextField(
                 message.toString(),
                 message.toString().length() + 3
@@ -390,7 +412,11 @@ public class MessagePanel extends JPanel {
         JPanel uneditableContainer = new JPanel();
         uneditableContainer.add(uneditable);
 
-        panel.add(uneditableContainer, BorderLayout.CENTER);
+        JPanel uneditableAndCopyButton = new JPanel();
+        uneditableAndCopyButton.add(uneditableContainer);
+        uneditableAndCopyButton.add(scrambledCopyButton);
+
+        panel.add(uneditableAndCopyButton, BorderLayout.CENTER);
         JOptionPane.showMessageDialog(getParent(), panel,
                 "Scrambled Message", JOptionPane.PLAIN_MESSAGE);;
     }
@@ -535,6 +561,18 @@ public class MessagePanel extends JPanel {
                         || showScrambledMessageDialogButton
                         == e.getSource()){
                     showScrambled();
+                } else if (deScrambledCopyButton == e.getSource()){
+                    Clipboard clipBoard = Toolkit.getDefaultToolkit()
+                                                  .getSystemClipboard();
+                    StringSelection data
+                        = new StringSelection(message.getDeScrambled());
+                    clipBoard.setContents(data, data);
+                } else if (scrambledCopyButton == e.getSource()){
+                    Clipboard clipBoard = Toolkit.getDefaultToolkit()
+                            .getSystemClipboard();
+                    StringSelection data
+                        = new StringSelection(message.toString());
+                    clipBoard.setContents(data, data);
                 }
             } catch (UnsupportedOperationException err){
                 JOptionPane.showMessageDialog(getParent(),
