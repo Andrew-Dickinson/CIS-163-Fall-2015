@@ -1,5 +1,6 @@
 package us.andrewdickinson.gvsu.CIS163.linkedMessages;
 
+import oracle.jrockit.jfr.JFR;
 import us.andrewdickinson.gvsu.CIS163.linkedMessages.dialogs.*;
 import us.andrewdickinson.gvsu.CIS163.linkedMessages.linkedlist.LinkedList;
 
@@ -14,9 +15,19 @@ import java.io.IOException;
  **********************************************************************/
 public class MessagePanel extends JPanel {
     /**
+     * The parent frame for this panel
+     */
+    private JFrame frame;
+
+    /**
      * The GridPanel that displays the characters
      */
     private JPanel characterGridPanel;
+
+    /**
+     * The Jpanel that stores the clipboard and action buttons
+     */
+    private  JPanel clipAndActionPanel;
 
     /**
      * The message displayed by this panel
@@ -51,32 +62,54 @@ public class MessagePanel extends JPanel {
     private JButton swapRandomCharactersButton;
 
     /**
+     * The buttons to popup with a dialog with a the message in it
+     */
+    private JButton showScrambledMessageDialogButton;
+    private JButton showDeScrambledMessageDialogButton;
+
+    /**
      * The clipboard buttons
      */
     private JButton copyButton;
     private JButton cutButton;
     private JButton pasteButton;
 
-
+    /**
+     * The menu buttons
+     */
     private JMenuItem quit;
     private JMenuItem export;
-    private JMenuItem import_chg;
+    private JMenuItem newMessage;
+    private JMenuItem showScrambled;
+    private JMenuItem showDeScrambled;
 
     public MessagePanel(JFrame frame, ScrambledMessage message){
         this.message = message;
+        this.frame = frame;
 
         ButtonListener buttonListener = new ButtonListener();
 
         this.setLayout(new BorderLayout());
 
+        showScrambledMessageDialogButton = new JButton("^");
+        showScrambledMessageDialogButton
+                .setMargin(new java.awt.Insets(1, 2, 1, 2));
+        showScrambledMessageDialogButton.addActionListener(buttonListener);
+        showDeScrambledMessageDialogButton = new JButton("*^");
+        showDeScrambledMessageDialogButton
+                .setMargin(new java.awt.Insets(1, 2, 1, 2));
+        showDeScrambledMessageDialogButton.addActionListener(buttonListener);
+
+        JPanel dialogButtons = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        dialogButtons.add(showScrambledMessageDialogButton);
+        dialogButtons.add(showDeScrambledMessageDialogButton);
+
+        add(dialogButtons, BorderLayout.NORTH);
+
         //Initialize and fill the characterGridPanel
         updateCharacterGridPanel(message);
 
-        //Initialize the primary buttons
-        setupActionButtons(buttonListener);
-
-        //Initialize the clipboard
-        setupClipboard(buttonListener);
+        setupClipBoardAndActionButtons(buttonListener);
 
         JMenuBar menuBar = new JMenuBar();
         JMenu file = new JMenu("File");
@@ -84,11 +117,18 @@ public class MessagePanel extends JPanel {
         quit.addActionListener(buttonListener);
         export = new JMenuItem("Export Changes");
         export.addActionListener(buttonListener);
-        import_chg = new JMenuItem("Import Changes");
-        import_chg.addActionListener(buttonListener);
+        newMessage = new JMenuItem("New Message");
+        newMessage.addActionListener(buttonListener);
+        showDeScrambled = new JMenuItem("Get DeScrambled");
+        showDeScrambled.addActionListener(buttonListener);
+        showScrambled = new JMenuItem("Get Scrambled");
+        showScrambled.addActionListener(buttonListener);
 
-        //file.add(import_chg);
+        file.add(newMessage);
         file.add(export);
+        file.addSeparator();
+        file.add(showScrambled);
+        file.add(showDeScrambled);
         file.addSeparator();
         file.add(quit);
 
@@ -135,7 +175,7 @@ public class MessagePanel extends JPanel {
         characterGridPanel = new JPanel();
         scrollPane.setPreferredSize(new Dimension(400, 90));
         characterGridPanel.add(scrollPane);
-        add(characterGridPanel, BorderLayout.NORTH);
+        add(characterGridPanel, BorderLayout.CENTER);
 
         revalidate();
         repaint();
@@ -159,7 +199,7 @@ public class MessagePanel extends JPanel {
 
         JPanel container = new JPanel();
         container.add(actionsPanel);
-        add(container, BorderLayout.CENTER);
+        clipAndActionPanel.add(container, BorderLayout.CENTER);
     }
 
     private JPanel setupSimpleButtons(ButtonListener buttonListener){
@@ -244,7 +284,16 @@ public class MessagePanel extends JPanel {
 
         clipboardPanel.add(clipboardLabel, BorderLayout.CENTER);
 
-        add(clipboardPanel, BorderLayout.SOUTH);
+        clipAndActionPanel.add(clipboardPanel, BorderLayout.SOUTH);
+    }
+
+    private void setupClipBoardAndActionButtons(ButtonListener bl){
+        clipAndActionPanel = new JPanel(new BorderLayout(0, 20));
+
+        setupClipboard(bl);
+        setupActionButtons(bl);
+
+        add(clipAndActionPanel, BorderLayout.SOUTH);
     }
 
     /*******************************************************************
@@ -273,6 +322,61 @@ public class MessagePanel extends JPanel {
 
             pasteButton.setEnabled(true);
         }
+    }
+
+    /*******************************************************************
+     * Displays a dialog with the De-Scrambled message in it
+     ******************************************************************/
+    public void showDeScrambled(){
+        JPanel panel = new JPanel(new BorderLayout(0, 5));
+        panel.add(new JLabel("The De-Scrambled message is:"), BorderLayout.NORTH);
+
+        JTextField uneditable = new JTextField(
+                message.getDeScrambled(),
+                message.getDeScrambled().length() + 3
+        );
+        uneditable.setEditable(false);
+        uneditable.setHorizontalAlignment(SwingConstants.CENTER);
+
+        JPanel uneditableContainer = new JPanel();
+        uneditableContainer.add(uneditable);
+
+        panel.add(uneditableContainer, BorderLayout.CENTER);
+        JOptionPane.showMessageDialog(getParent(), panel,
+            "De-Scrambled Message", JOptionPane.PLAIN_MESSAGE);
+    }
+
+    /*******************************************************************
+     * Displays a dialog with the Scrambled message in it
+     ******************************************************************/
+    public void showScrambled(){
+        JPanel panel = new JPanel(new BorderLayout(0, 5));
+        panel.add(new JLabel("The Scrambled message is:"), BorderLayout.NORTH);
+
+        JTextField uneditable = new JTextField(
+                message.toString(),
+                message.toString().length() + 3
+        );
+        uneditable.setEditable(false);
+        uneditable.setHorizontalAlignment(SwingConstants.CENTER);
+
+        JPanel uneditableContainer = new JPanel();
+        uneditableContainer.add(uneditable);
+
+        panel.add(uneditableContainer, BorderLayout.CENTER);
+        JOptionPane.showMessageDialog(getParent(), panel,
+                "Scrambled Message", JOptionPane.PLAIN_MESSAGE);;
+    }
+
+    private void replaceThisPanel(ScrambledMessage message){
+        MessagePanel panel
+                = new MessagePanel(frame, message);
+
+        //Add the panel to the frame
+        frame.getContentPane().remove(this);
+        frame.getContentPane().add(panel);
+        frame.revalidate();
+        frame.repaint();
     }
 
     public class ButtonListener implements ActionListener {
@@ -363,8 +467,23 @@ public class MessagePanel extends JPanel {
                                 "Unknown Error", JOptionPane.ERROR_MESSAGE);
                         }
                     }
-                }else if (import_chg == e.getSource()) {
+                } else if (newMessage == e.getSource()) {
+                    StartupDialog dia = new StartupDialog(getParent());
+                    ScrambledMessage result = dia.displayDialog();
 
+                    //If result is null it was canceled, so do nothing
+                    if (result != null){
+                        //If it wasn't, replace this panel with a new one
+                        replaceThisPanel(result);
+                    }
+                } else if (showDeScrambled == e.getSource()
+                        || showDeScrambledMessageDialogButton
+                            == e.getSource()){
+                    showDeScrambled();
+                } else if (showScrambled == e.getSource()
+                        || showScrambledMessageDialogButton
+                        == e.getSource()){
+                    showScrambled();
                 }
             } catch (UnsupportedOperationException err){
                 JOptionPane.showMessageDialog(getParent(),

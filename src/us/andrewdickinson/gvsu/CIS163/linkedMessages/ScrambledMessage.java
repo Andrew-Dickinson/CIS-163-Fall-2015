@@ -2,11 +2,9 @@ package us.andrewdickinson.gvsu.CIS163.linkedMessages;
 
 import us.andrewdickinson.gvsu.CIS163.linkedMessages.linkedlist.LinkedList;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.Random;
+import java.util.Scanner;
 
 /***********************************************************************
  * Contains a linked list representing a message and a list of all
@@ -14,8 +12,6 @@ import java.util.Random;
  * Created by Andrew on 11/9/15.
  **********************************************************************/
 public class ScrambledMessage implements Cloneable {
-    //TODO: File interaction
-
     /**
      * The linked list that stores the scrambled message
      */
@@ -37,6 +33,13 @@ public class ScrambledMessage implements Cloneable {
         for (int i = 0; i < plainMessage.length(); i++){
             scrambledMessage.add(plainMessage.charAt(i));
         }
+    }
+
+    public ScrambledMessage(String scrambled, String changeStackFile)
+                                                    throws IOException {
+        this(scrambled);
+
+        importChangeStackFromFile(changeStackFile);
     }
 
     public ScrambledMessage(LinkedList<Character> scrambledMessage,
@@ -424,8 +427,13 @@ public class ScrambledMessage implements Cloneable {
      * @param filePath The path to save the change stack to
      * @throws IOException if an error is encountered while
      *                     saving the file
+     * @throws UnsupportedOperationException if changeStack.size() == 0
      ******************************************************************/
     public void saveChangeStackToFile(String filePath) throws IOException {
+        //If there are no changes, exporting to a file is silly
+        if (changeStack.size() == 0)
+            throw new UnsupportedOperationException();
+
         LinkedList<String> export = exportChangeStack();
 
         PrintWriter out = new PrintWriter(
@@ -437,6 +445,46 @@ public class ScrambledMessage implements Cloneable {
         }
 
         out.close();
+    }
+
+    /*******************************************************************
+     * Loads the change stack from the output of saveChangeStackToFile()
+     * @param filePath The path to load the change stack from
+     * @throws IOException if an error is encountered while
+     *                     loading the file
+     * @throws IllegalArgumentException if the encountered changes don't
+     *                      make sense for the current scrambled
+     *                      message text or are invalidly formatted
+     ******************************************************************/
+    public void importChangeStackFromFile(String filePath) throws IOException {
+        //Clear out the old changestack
+        changeStack = new LinkedList<>();
+
+        //fileReader is a resource of the try block
+        //See Java SE7 docs try-with-resource
+        try (Scanner fileReader = new Scanner(new File(filePath))) {
+            while (fileReader.hasNextLine()){
+                String line = fileReader.nextLine();
+                Modification mod = new Modification(line);
+                changeStack.add(mod);
+            }
+
+            //A file with no changes is invalid
+            if (changeStack.size() == 0)
+                throw new IllegalArgumentException();
+        } catch (IllegalArgumentException e) {
+            //A modification string was improperly formatted
+            //We want to be the source of the exception
+            throw new IllegalArgumentException();
+        }
+
+        try {
+            getDeScrambled();
+        } catch (IllegalArgumentException e){
+            //The changes don't make sense for this message
+            //We want to be the source of the exception
+            throw new IllegalArgumentException();
+        }
     }
 
     /*******************************************************************
