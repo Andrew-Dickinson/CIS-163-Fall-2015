@@ -489,6 +489,13 @@ public class MessagePanel extends JPanel {
                     System.exit(0);
                 }else if (export == e.getSource()
                         || exportShortcut == e.getSource()) {
+                    if (message.exportChangeStack().size() == 0) {
+                        JOptionPane.showMessageDialog(getParent(),
+                            "You need to make some changes first",
+                            "No Changes", JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
+
                     JFileChooser fileChooser = new JFileChooser();
 
                     //Display a file choosing dialog to get the destination
@@ -505,6 +512,7 @@ public class MessagePanel extends JPanel {
                                 "Unknown Error", JOptionPane.ERROR_MESSAGE);
                         }
                     }
+
                 } else if (newMessage == e.getSource()
                         || newMessageShortcut == e.getSource()) {
                     StartupDialog dia = new StartupDialog(getParent());
