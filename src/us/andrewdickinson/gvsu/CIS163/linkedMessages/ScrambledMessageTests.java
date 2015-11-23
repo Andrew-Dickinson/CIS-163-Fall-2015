@@ -449,34 +449,55 @@ public class ScrambledMessageTests {
     //ScrambledMessage.characterList and ScrambledMessage.changeStack are both null
     @Test
     public void testToStringLengthAndExportChangesWithNullInstanceVars(){
-        ScrambledMessage m = new ScrambledMessage(null, null);
+        ScrambledMessage m = new ScrambledMessage(new LinkedList<>(), null);
 
         assertEquals("", m.toString());
         assertEquals(0, m.length());
         assertEquals(new LinkedList<String>(), m.exportChangeStack());
+
+        ScrambledMessage m2 = new ScrambledMessage(null, new LinkedList<>());
+
+        assertEquals("", m2.toString());
+        assertEquals(0, m2.length());
+        assertEquals(new LinkedList<String>(), m2.exportChangeStack());
     }
 
     //Test the remove() method when
     //ScrambledMessage.characterList and ScrambledMessage.changeStack are both null
     @Test(expected=IndexOutOfBoundsException.class)
-    public void testRemoveWithNullInstanceVars(){
-        ScrambledMessage m = new ScrambledMessage(null, null);
+    public void testRemoveWithNullInstanceVars1(){
+        ScrambledMessage m = new ScrambledMessage(new LinkedList<>(), null);
+        m.removeCharacter(0);
+    }
+    @Test(expected=IndexOutOfBoundsException.class)
+    public void testRemoveWithNullInstanceVars2(){
+        ScrambledMessage m = new ScrambledMessage(null, new LinkedList<>());
         m.removeCharacter(0);
     }
 
     //Test the getCharacter() method when
     //ScrambledMessage.characterList and ScrambledMessage.changeStack are both null
     @Test(expected=IndexOutOfBoundsException.class)
-    public void testGetCharacterWithNullInstanceVars(){
-        ScrambledMessage m = new ScrambledMessage(null, null);
+    public void testGetCharacterWithNullInstanceVars1(){
+        ScrambledMessage m = new ScrambledMessage(new LinkedList<>(), null);
+        m.getCharacter(0);
+    }
+    @Test(expected=IndexOutOfBoundsException.class)
+    public void testGetCharacterWithNullInstanceVars2(){
+        ScrambledMessage m = new ScrambledMessage(null, new LinkedList<>());
         m.getCharacter(0);
     }
 
     //Test the swapCharacters() method when
     //ScrambledMessage.characterList and ScrambledMessage.changeStack are both null
     @Test(expected=IndexOutOfBoundsException.class)
-    public void testSwapCharactersWithNullInstanceVars(){
-        ScrambledMessage m = new ScrambledMessage(null, null);
+    public void testSwapCharactersWithNullInstanceVars1(){
+        ScrambledMessage m = new ScrambledMessage(new LinkedList<>(), null);
+        m.swapCharacters(0, 1);
+    }
+    @Test(expected=IndexOutOfBoundsException.class)
+    public void testSwapCharactersWithNullInstanceVars2(){
+        ScrambledMessage m = new ScrambledMessage(null, new LinkedList<>());
         m.swapCharacters(0, 1);
     }
 
@@ -484,15 +505,20 @@ public class ScrambledMessageTests {
     //ScrambledMessage.characterList and ScrambledMessage.changeStack are both null
     @Test
     public void testInsertCharacterWithNullInstanceVars(){
-        ScrambledMessage m = new ScrambledMessage(null, null);
+        ScrambledMessage m = new ScrambledMessage(new LinkedList<>(), null);
         m.insertCharacter(0, 'a');
     }
 
     //Test the replaceCharacter() method when
     //ScrambledMessage.characterList and ScrambledMessage.changeStack are both null
     @Test(expected=IndexOutOfBoundsException.class)
-    public void testReplaceCharacterWithNullInstanceVars(){
-        ScrambledMessage m = new ScrambledMessage(null, null);
+    public void testReplaceCharacterWithNullInstanceVars1(){
+        ScrambledMessage m = new ScrambledMessage(new LinkedList<>(), null);
+        m.replaceCharacter(0, 'a');
+    }
+    @Test(expected=IndexOutOfBoundsException.class)
+    public void testReplaceCharacterWithNullInstanceVars2(){
+        ScrambledMessage m = new ScrambledMessage(null, new LinkedList<>());
         m.replaceCharacter(0, 'a');
     }
 
