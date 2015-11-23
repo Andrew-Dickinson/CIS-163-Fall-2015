@@ -156,7 +156,7 @@ public class MessagePanel extends JPanel {
                 .setMargin(new java.awt.Insets(1, 2, 1, 2));
         showDeScrambledMessageDialogButton.addActionListener(buttonListener);
 
-        JPanel topButtons = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JPanel topButtons = new JPanel(new FlowLayout(FlowLayout.CENTER));
         topButtons.add(newMessageShortcut);
         topButtons.add(exportShortcut);
         topButtons.add(showScrambledMessageDialogButton);
