@@ -1,6 +1,5 @@
 package us.andrewdickinson.gvsu.CIS163.linkedMessages;
 
-import oracle.jrockit.jfr.JFR;
 import us.andrewdickinson.gvsu.CIS163.linkedMessages.dialogs.*;
 import us.andrewdickinson.gvsu.CIS163.linkedMessages.linkedlist.LinkedList;
 
