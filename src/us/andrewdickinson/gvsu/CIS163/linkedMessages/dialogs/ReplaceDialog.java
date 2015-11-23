@@ -69,14 +69,30 @@ public class ReplaceDialog extends SymmetricBulletProofDialog<ScrambledMessage> 
         newCharacterField = new JTextField();
         newCharacterField.getDocument()
                 .addDocumentListener(getFieldValidationListener());
+        newCharacterField.setColumns(5);
 
-        JPanel fieldLabelPanel = new JPanel(new GridLayout(1, 2));
-        fieldLabelPanel.add(new JLabel("Replacement Character:"));
-        fieldLabelPanel.add(newCharacterField);
+        JPanel fieldLabelPanel = new JPanel(new BorderLayout());
+        fieldLabelPanel.setPreferredSize(new Dimension(250, 30));
+        JLabel textJLabel = new JLabel("Replacement Character: ");
+        textJLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        fieldLabelPanel.add(textJLabel, BorderLayout.CENTER);
+
+        JPanel newCharacterFieldContainer = new JPanel();
+        newCharacterFieldContainer.add(newCharacterField);
+
+        fieldLabelPanel.add(newCharacterFieldContainer, BorderLayout.EAST);
 
         primaryPanel = new JPanel(new BorderLayout());
-        primaryPanel.add(gridPanel, BorderLayout.CENTER);
-        primaryPanel.add(fieldLabelPanel, BorderLayout.SOUTH);
+
+        JPanel gridPanelContainer = new JPanel();
+        gridPanelContainer.add(gridPanel);
+
+        primaryPanel.add(gridPanelContainer, BorderLayout.CENTER);
+
+        JPanel fieldPanelContainer = new JPanel();
+        fieldPanelContainer.add(fieldLabelPanel);
+
+        primaryPanel.add(fieldPanelContainer, BorderLayout.SOUTH);
 
         setDialogContentPanel(primaryPanel);
     }
