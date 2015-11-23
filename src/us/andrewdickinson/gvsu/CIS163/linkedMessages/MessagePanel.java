@@ -414,6 +414,10 @@ public class MessagePanel extends JPanel {
         frame.getContentPane().add(panel);
         frame.revalidate();
         frame.repaint();
+
+        //Show the imported message if applicable
+        if (message.exportChangeStack().size() != 0)
+            panel.showDeScrambled();
     }
 
     public class ButtonListener implements ActionListener {
