@@ -9,6 +9,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.net.URL;
 
 /***********************************************************************
  * Created by Andrew on 11/21/15.
@@ -83,6 +84,12 @@ public class MessagePanel extends JPanel {
     private JMenuItem showScrambled;
     private JMenuItem showDeScrambled;
 
+    /**
+     * Shortcut buttons for some of the menu items
+     */
+    private JButton exportShortcut;
+    private JButton newMessageShortcut;
+
     public MessagePanel(JFrame frame, ScrambledMessage message){
         this.message = message;
         this.frame = frame;
@@ -91,20 +98,7 @@ public class MessagePanel extends JPanel {
 
         this.setLayout(new BorderLayout());
 
-        showScrambledMessageDialogButton = new JButton("^");
-        showScrambledMessageDialogButton
-                .setMargin(new java.awt.Insets(1, 2, 1, 2));
-        showScrambledMessageDialogButton.addActionListener(buttonListener);
-        showDeScrambledMessageDialogButton = new JButton("*^");
-        showDeScrambledMessageDialogButton
-                .setMargin(new java.awt.Insets(1, 2, 1, 2));
-        showDeScrambledMessageDialogButton.addActionListener(buttonListener);
-
-        JPanel dialogButtons = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        dialogButtons.add(showScrambledMessageDialogButton);
-        dialogButtons.add(showDeScrambledMessageDialogButton);
-
-        add(dialogButtons, BorderLayout.NORTH);
+        setupTopButtons(buttonListener);
 
         //Initialize and fill the characterGridPanel
         updateCharacterGridPanel(message);
@@ -135,6 +129,40 @@ public class MessagePanel extends JPanel {
         menuBar.add(file);
 
         frame.setJMenuBar(menuBar);
+    }
+
+    private void setupTopButtons(ButtonListener buttonListener){
+        String exportIcon = "/toolbarButtonGraphics/general/Save16.gif";
+        exportShortcut = new JButton(getIconFromUrl(exportIcon));
+        exportShortcut.setMargin(new java.awt.Insets(1, 2, 1, 2));
+        exportShortcut.addActionListener(buttonListener);
+
+        String newIcon = "/toolbarButtonGraphics/general/New16.gif";
+        newMessageShortcut = new JButton(getIconFromUrl(newIcon));
+        newMessageShortcut.setMargin(new java.awt.Insets(1, 2, 1, 2));
+        newMessageShortcut.addActionListener(buttonListener);
+
+        String scrambledIcon = "/toolbarButtonGraphics/general/Find16.gif";
+        showScrambledMessageDialogButton
+                           = new JButton(getIconFromUrl(scrambledIcon));
+        showScrambledMessageDialogButton
+                .setMargin(new java.awt.Insets(1, 2, 1, 2));
+        showScrambledMessageDialogButton.addActionListener(buttonListener);
+
+        String deScrambledIcon = "/toolbarButtonGraphics/general/Replace16.gif";
+        showDeScrambledMessageDialogButton
+                         = new JButton(getIconFromUrl(deScrambledIcon));
+        showDeScrambledMessageDialogButton
+                .setMargin(new java.awt.Insets(1, 2, 1, 2));
+        showDeScrambledMessageDialogButton.addActionListener(buttonListener);
+
+        JPanel topButtons = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        topButtons.add(newMessageShortcut);
+        topButtons.add(exportShortcut);
+        topButtons.add(showScrambledMessageDialogButton);
+        topButtons.add(showDeScrambledMessageDialogButton);
+
+        add(topButtons, BorderLayout.NORTH);
     }
 
     /*******************************************************************
@@ -368,6 +396,16 @@ public class MessagePanel extends JPanel {
                 "Scrambled Message", JOptionPane.PLAIN_MESSAGE);;
     }
 
+    /*******************************************************************
+     * Get an icon from the Java Look and Feel Repository
+     * @param urlString url of the icon
+     * @return The icon
+     ******************************************************************/
+    private ImageIcon getIconFromUrl(String urlString) {
+        URL url = this.getClass().getResource(urlString);
+        return new ImageIcon(url);
+    }
+
     private void replaceThisPanel(ScrambledMessage message){
         MessagePanel panel
                 = new MessagePanel(frame, message);
@@ -450,7 +488,8 @@ public class MessagePanel extends JPanel {
                         message = result;
                 }  else if (quit == e.getSource()) {
                     System.exit(0);
-                }else if (export == e.getSource()) {
+                }else if (export == e.getSource()
+                        || exportShortcut == e.getSource()) {
                     JFileChooser fileChooser = new JFileChooser();
 
                     //Display a file choosing dialog to get the destination
@@ -467,7 +506,8 @@ public class MessagePanel extends JPanel {
                                 "Unknown Error", JOptionPane.ERROR_MESSAGE);
                         }
                     }
-                } else if (newMessage == e.getSource()) {
+                } else if (newMessage == e.getSource()
+                        || newMessageShortcut == e.getSource()) {
                     StartupDialog dia = new StartupDialog(getParent());
                     ScrambledMessage result = dia.displayDialog();
 
