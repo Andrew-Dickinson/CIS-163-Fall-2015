@@ -428,11 +428,16 @@ public class ScrambledMessage implements Cloneable {
      * @throws IOException if an error is encountered while
      *                     saving the file
      * @throws UnsupportedOperationException if changeStack.size() == 0
+     * @throws IllegalArgumentException if scrambledMessage.size() == 0
      ******************************************************************/
     public void saveChangeStackToFile(String filePath) throws IOException {
         //If there are no changes, exporting to a file is silly
         if (changeStack.size() == 0)
             throw new UnsupportedOperationException();
+
+        //Blank resultant messages can't be imported
+        if (scrambledMessage.size() == 0)
+            throw new IllegalArgumentException();
 
         LinkedList<String> export = exportChangeStack();
 
