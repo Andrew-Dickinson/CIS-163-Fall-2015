@@ -119,8 +119,17 @@ public class Modification {
         }
 
         Character character = null;
-        if (data.length == 3) {
-            String incomingCharacter = data[2];
+        if (type != ModificationType.INSERTION) {
+            String incomingCharacter;
+
+            //Spaces get erased by the split command
+            if (data.length == 2) {
+                incomingCharacter = " ";
+            } else {
+                //If it's not a space, parse the actual character
+                incomingCharacter = data[2];
+            }
+
             if (incomingCharacter.length() != 1)
                 throw new IllegalArgumentException();
 
