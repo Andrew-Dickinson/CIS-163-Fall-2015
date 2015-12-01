@@ -10,7 +10,7 @@ import java.awt.*;
  * Run the program for user interaction
  * Created by Andrew on 11/9/15.
  **********************************************************************/
-public class Driver {
+public class GUIDriver {
     public static void main(String[] args){
         ClipBoard.retreiveClipBoard();
 
