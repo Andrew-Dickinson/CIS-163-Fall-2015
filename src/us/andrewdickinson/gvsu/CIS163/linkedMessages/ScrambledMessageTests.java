@@ -3,6 +3,9 @@ package us.andrewdickinson.gvsu.CIS163.linkedMessages;
 import org.junit.Test;
 import us.andrewdickinson.gvsu.CIS163.linkedMessages.linkedlist.LinkedList;
 
+import java.io.IOException;
+import java.util.Random;
+
 import static org.junit.Assert.*;
 
 /***********************************************************************
@@ -626,5 +629,50 @@ public class ScrambledMessageTests {
         assertEquals(ModificationType.DELETION, newM.getType());
         assertEquals(11, newM.getLocation());
         assertEquals(new Character('^'), newM.getCharacter());
+    }
+
+    //Uses the scramble method with 500 randomly generated strings of
+    //length 10 and confirms that they are properly unscrambled
+    //Basically a test of the correct functioning of the whole class
+    @Test
+    public void testRandomDeCodingWithLoop() {
+        for (int i = 0; i < 500; i++){
+            String msg = "";
+
+            //The random number generator
+            Random r = new Random();
+
+            //Generate 10 random characters based on printable ascii
+            //characters ranging from 32 to 126 and build msg with them
+            for (int j = 0; j < 10; j++){
+                int asciiCode = r.nextInt(95) + 32;
+                Character character = (char) asciiCode;
+                msg += character.toString();
+            }
+
+
+            ScrambledMessage pre = new ScrambledMessage(msg);
+
+            //Scramble 20 times
+            pre.randomlyScramble(20);
+
+            String scramb = pre.toString();
+
+
+            try {
+                //Save off the changes
+                String file = "JUNIT_ChangeStack.txt";
+                pre.saveChangeStackToFile(file);
+
+                //De-Scramble with a new ScrambledMessage
+                ScrambledMessage post = new ScrambledMessage(scramb, file);
+
+                assertEquals(msg, post.getDeScrambled());
+            } catch (IOException e){
+                //Fail the test if we get an IOException
+                assertTrue(false);
+            }
+
+        }
     }
 }
