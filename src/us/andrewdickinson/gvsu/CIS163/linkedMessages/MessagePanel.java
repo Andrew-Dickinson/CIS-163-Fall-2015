@@ -530,6 +530,13 @@ public class MessagePanel extends JPanel {
                         return;
                     }
 
+                    if (message.toString().length() == 0) {
+                        JOptionPane.showMessageDialog(getParent(),
+                            "You can't export an empty scrambled message",
+                            "Blank Message", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
                     JFileChooser fileChooser = new JFileChooser();
 
                     //Display a file choosing dialog to get the destination
