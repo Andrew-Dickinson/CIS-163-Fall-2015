@@ -55,7 +55,9 @@ public class CopyDialog extends
 
         for (int i = 0; i < preMessage.length(); i++){
             selectionButtons[i] = new JCheckBox();
-            selectionButtons[i].addActionListener(getValidationListener());
+            selectionButtons[i].addActionListener(
+                    getValidationListener()
+            );
             gridPanel.add(selectionButtons[i]);
         }
 

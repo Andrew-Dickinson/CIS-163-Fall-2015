@@ -11,7 +11,8 @@ import java.awt.*;
  * replace it
  * Created by Andrew on 11/16/15.
  **********************************************************************/
-public class ReplaceDialog extends SymmetricBulletProofDialog<ScrambledMessage> {
+public class ReplaceDialog extends
+                          SymmetricBulletProofDialog<ScrambledMessage> {
     /**
      * To be returned by the getDialogPrompt() method
      */
@@ -56,7 +57,9 @@ public class ReplaceDialog extends SymmetricBulletProofDialog<ScrambledMessage> 
 
         for (int i = 0; i < preMessage.length(); i++){
             selectionButtons[i] = new JRadioButton();
-            selectionButtons[i].addActionListener(getValidationListener());
+            selectionButtons[i].addActionListener(
+                    getValidationListener()
+            );
             selectionGroup.add(selectionButtons[i]);
             gridPanel.add(selectionButtons[i]);
         }
@@ -81,7 +84,8 @@ public class ReplaceDialog extends SymmetricBulletProofDialog<ScrambledMessage> 
         JPanel newCharacterFieldContainer = new JPanel();
         newCharacterFieldContainer.add(newCharacterField);
 
-        fieldLabelPanel.add(newCharacterFieldContainer, BorderLayout.EAST);
+        fieldLabelPanel.add(newCharacterFieldContainer,
+                            BorderLayout.EAST);
 
         primaryPanel = new JPanel(new BorderLayout());
 

@@ -11,7 +11,8 @@ import java.util.ArrayList;
  * user to select characters to delete
  * Created by Andrew on 11/16/15.
  **********************************************************************/
-public class DeletionDialog extends SymmetricBulletProofDialog<ScrambledMessage> {
+public class DeletionDialog extends
+                          SymmetricBulletProofDialog<ScrambledMessage> {
     /**
      * To be returned by the getDialogPrompt() method
      */
@@ -49,7 +50,9 @@ public class DeletionDialog extends SymmetricBulletProofDialog<ScrambledMessage>
 
         for (int i = 0; i < preMessage.length(); i++){
             selectionButtons[i] = new JCheckBox();
-            selectionButtons[i].addActionListener(getValidationListener());
+            selectionButtons[i].addActionListener(
+                    getValidationListener()
+            );
             gridPanel.add(selectionButtons[i]);
         }
 

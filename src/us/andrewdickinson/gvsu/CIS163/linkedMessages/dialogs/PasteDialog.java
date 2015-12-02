@@ -11,7 +11,8 @@ import java.awt.*;
  * to select a location to paste the clipboard
  * Created by Andrew on 11/16/15.
  **********************************************************************/
-public class PasteDialog extends SymmetricBulletProofDialog<ScrambledMessage> {
+public class PasteDialog extends
+                          SymmetricBulletProofDialog<ScrambledMessage> {
     /**
      * To be returned by the getDialogPrompt() method
      */
@@ -56,7 +57,9 @@ public class PasteDialog extends SymmetricBulletProofDialog<ScrambledMessage> {
         //Add the characters and their corresponding radio buttons
         for (int i = 0; i < preMessage.length(); i++){
             selectionButtons[i] = new JRadioButton();
-            selectionButtons[i].addActionListener(getValidationListener());
+            selectionButtons[i].addActionListener(
+                    getValidationListener()
+            );
             selectionGroup.add(selectionButtons[i]);
             gridPanel.add(selectionButtons[i]);
             gridPanel.add(

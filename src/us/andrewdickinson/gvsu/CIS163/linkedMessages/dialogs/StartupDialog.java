@@ -86,7 +86,9 @@ public class StartupDialog
         importLabels = new LinkedList<>();
 
         ButtonGroup selectionGroup = new ButtonGroup();
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 80, 5));
+        JPanel buttonPanel = new JPanel(
+                new FlowLayout(FlowLayout.CENTER, 80, 5)
+        );
         createNewRadioButton = new JRadioButton("Create new message");
         selectionGroup.add(createNewRadioButton);
         buttonPanel.add(createNewRadioButton);
@@ -96,13 +98,17 @@ public class StartupDialog
                        = new JRadioButton("De-Scramble an old message");
         selectionGroup.add(deScrambleOldRadioButton);
         buttonPanel.add(deScrambleOldRadioButton);
-        deScrambleOldRadioButton.addActionListener(getValidationListener());
+        deScrambleOldRadioButton.addActionListener(
+                getValidationListener()
+        );
 
         primaryPanel.add(buttonPanel, BorderLayout.CENTER);
 
         JPanel bottomPanel = new JPanel(new BorderLayout(20, 0));
 
-        JPanel createNewPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 10));
+        JPanel createNewPanel = new JPanel(new FlowLayout(
+                FlowLayout.CENTER, 0, 10)
+        );
         createNewPanel.setPreferredSize(new Dimension(320, 20));
 
         JLabel newMessageTextLabel = new JLabel("New Message Text: ");
@@ -115,7 +121,9 @@ public class StartupDialog
 
         createNewPanel.add(newMessageField);
 
-        JPanel importPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 10));
+        JPanel importPanel = new JPanel(new FlowLayout(
+                FlowLayout.CENTER, 0, 10)
+        );
         importPanel.setPreferredSize(new Dimension(275, 90));
 
         JLabel scrambledMessageLabel = new JLabel("Scrambled Text: ");

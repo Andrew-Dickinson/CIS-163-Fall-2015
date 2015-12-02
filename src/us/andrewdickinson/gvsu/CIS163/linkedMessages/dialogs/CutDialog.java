@@ -12,7 +12,8 @@ import java.util.ArrayList;
  * to select a characters to delete to the clipboard
  * Created by Andrew on 11/16/15.
  **********************************************************************/
-public class CutDialog extends SymmetricBulletProofDialog<ScrambledMessage> {
+public class CutDialog extends
+                          SymmetricBulletProofDialog<ScrambledMessage> {
     /**
      * To be returned by the getDialogPrompt() method
      */
@@ -55,7 +56,9 @@ public class CutDialog extends SymmetricBulletProofDialog<ScrambledMessage> {
 
         for (int i = 0; i < preMessage.length(); i++){
             selectionButtons[i] = new JCheckBox();
-            selectionButtons[i].addActionListener(getValidationListener());
+            selectionButtons[i].addActionListener(
+                    getValidationListener()
+            );
             gridPanel.add(selectionButtons[i]);
         }
 

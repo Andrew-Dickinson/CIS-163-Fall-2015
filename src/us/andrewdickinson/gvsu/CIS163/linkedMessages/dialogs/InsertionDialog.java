@@ -11,7 +11,8 @@ import java.awt.*;
  * to insert
  * Created by Andrew on 11/16/15.
  **********************************************************************/
-public class InsertionDialog extends SymmetricBulletProofDialog<ScrambledMessage> {
+public class InsertionDialog extends
+                          SymmetricBulletProofDialog<ScrambledMessage> {
     /**
      * To be returned by the getDialogPrompt() method
      */
@@ -53,7 +54,9 @@ public class InsertionDialog extends SymmetricBulletProofDialog<ScrambledMessage
         //Add the characters and their corresponding radio buttons
         for (int i = 0; i < preMessage.length(); i++){
             selectionButtons[i] = new JRadioButton();
-            selectionButtons[i].addActionListener(getValidationListener());
+            selectionButtons[i].addActionListener(
+                    getValidationListener()
+            );
             selectionGroup.add(selectionButtons[i]);
             gridPanel.add(selectionButtons[i]);
             gridPanel.add(

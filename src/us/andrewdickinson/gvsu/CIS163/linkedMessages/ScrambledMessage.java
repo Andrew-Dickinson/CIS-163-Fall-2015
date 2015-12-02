@@ -430,7 +430,8 @@ public class ScrambledMessage implements Cloneable {
      * @throws UnsupportedOperationException if changeStack.size() == 0
      * @throws IllegalArgumentException if scrambledMessage.size() == 0
      ******************************************************************/
-    public void saveChangeStackToFile(String filePath) throws IOException {
+    public void saveChangeStackToFile(String filePath)
+                                                    throws IOException {
         //If there are no changes, exporting to a file is silly
         if (changeStack.size() == 0)
             throw new UnsupportedOperationException();
@@ -461,7 +462,8 @@ public class ScrambledMessage implements Cloneable {
      *                      make sense for the current scrambled
      *                      message text or are invalidly formatted
      ******************************************************************/
-    public void importChangeStackFromFile(String filePath) throws IOException {
+    public void importChangeStackFromFile(String filePath)
+                                                    throws IOException {
         //Clear out the old changestack
         changeStack = new LinkedList<>();
 

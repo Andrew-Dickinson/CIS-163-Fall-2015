@@ -414,7 +414,8 @@ public class LinkedListTests {
         assertNotEquals(ll, ll2);
     }
 
-    //Test Linkedlist.equals() for two non-identical lists of the same type
+    //Test Linkedlist.equals() for two non-identical lists of the same
+    //type
     @Test
     public void testEqualsFalse(){
         LinkedList<String> ll = new LinkedList<>();

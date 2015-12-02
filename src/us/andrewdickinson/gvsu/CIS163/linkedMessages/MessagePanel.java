@@ -153,21 +153,26 @@ public class MessagePanel extends JPanel {
         newMessageShortcut.setMargin(new java.awt.Insets(1, 2, 1, 2));
         newMessageShortcut.addActionListener(buttonListener);
 
-        String scrambledIcon = "/toolbarButtonGraphics/general/Find16.gif";
+        String scrambledIcon =
+                "/toolbarButtonGraphics/general/Find16.gif";
         showScrambledMessageDialogButton
                            = new JButton(getIconFromUrl(scrambledIcon));
         showScrambledMessageDialogButton
                 .setMargin(new java.awt.Insets(1, 2, 1, 2));
-        showScrambledMessageDialogButton.addActionListener(buttonListener);
+        showScrambledMessageDialogButton
+                .addActionListener(buttonListener);
 
-        String deScrambledIcon = "/toolbarButtonGraphics/general/Replace16.gif";
+        String deScrambledIcon =
+                "/toolbarButtonGraphics/general/Replace16.gif";
         showDeScrambledMessageDialogButton
                          = new JButton(getIconFromUrl(deScrambledIcon));
         showDeScrambledMessageDialogButton
                 .setMargin(new java.awt.Insets(1, 2, 1, 2));
-        showDeScrambledMessageDialogButton.addActionListener(buttonListener);
+        showDeScrambledMessageDialogButton
+                .addActionListener(buttonListener);
 
-        JPanel topButtons = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel topButtons =
+                new JPanel(new FlowLayout(FlowLayout.CENTER));
         topButtons.add(newMessageShortcut);
         topButtons.add(exportShortcut);
         topButtons.add(showScrambledMessageDialogButton);
@@ -195,7 +200,8 @@ public class MessagePanel extends JPanel {
         }
 
         for (int i = 0; i < message.length(); i++){
-            JLabel label = new JLabel(message.getCharacter(i).toString());
+            JLabel label =
+                    new JLabel(message.getCharacter(i).toString());
             label.setFont(new Font("Arial", Font.PLAIN, 20));
             subPanel.add(label);
         }
@@ -282,7 +288,8 @@ public class MessagePanel extends JPanel {
         removeRandomCharacterButton.addActionListener(buttonListener);
         randomButtons.add(removeRandomCharacterButton);
 
-        replaceRandomCharacterButton = new JButton("Replace a Character");
+        replaceRandomCharacterButton =
+                new JButton("Replace a Character");
         replaceRandomCharacterButton.addActionListener(buttonListener);
         randomButtons.add(replaceRandomCharacterButton);
 
@@ -368,7 +375,8 @@ public class MessagePanel extends JPanel {
      ******************************************************************/
     public void showDeScrambled(){
         JPanel panel = new JPanel(new BorderLayout(0, 5));
-        panel.add(new JLabel("The De-Scrambled message is:"), BorderLayout.NORTH);
+        panel.add(new JLabel("The De-Scrambled message is:"),
+                  BorderLayout.NORTH);
 
         String copyIcon = "/toolbarButtonGraphics/general/Copy16.gif";
         deScrambledCopyButton = new JButton(getIconFromUrl(copyIcon));
@@ -399,7 +407,8 @@ public class MessagePanel extends JPanel {
      ******************************************************************/
     public void showScrambled(){
         JPanel panel = new JPanel(new BorderLayout(0, 5));
-        panel.add(new JLabel("The Scrambled message is:"), BorderLayout.NORTH);
+        panel.add(new JLabel("The Scrambled message is:"),
+                  BorderLayout.NORTH);
 
         String copyIcon = "/toolbarButtonGraphics/general/Copy16.gif";
         scrambledCopyButton = new JButton(getIconFromUrl(copyIcon));
@@ -497,14 +506,16 @@ public class MessagePanel extends JPanel {
                 } else if (e.getSource() == swapRandomCharactersButton){
                     message.swapRandomCharacters();
                 } else if (e.getSource() == copyButton){
-                    CopyDialog dialog = new CopyDialog(getParent(), message);
+                    CopyDialog dialog = new CopyDialog(getParent(),
+                                                       message);
 
                     LinkedList<Character> result = dialog.displayDialog();
 
                     if (result != null)
                         clipboard = result;
                 } else if (e.getSource() == cutButton){
-                    CutDialog dialog = new CutDialog(getParent(), message);
+                    CutDialog dialog = new CutDialog(getParent(),
+                                                     message);
 
                     ScrambledMessage result = dialog.displayDialog();
 
@@ -513,7 +524,8 @@ public class MessagePanel extends JPanel {
                         clipboard = dialog.getCutCharacters();
                 } else if (e.getSource() == pasteButton){
                     SymmetricBulletProofDialog<ScrambledMessage> dialog
-                        = new PasteDialog(getParent(), message, clipboard);
+                        = new PasteDialog(getParent(), message,
+                                          clipboard);
 
                     ScrambledMessage result = dialog.displayDialog();
 
@@ -532,25 +544,27 @@ public class MessagePanel extends JPanel {
 
                     if (message.toString().length() == 0) {
                         JOptionPane.showMessageDialog(getParent(),
-                            "You can't export an empty scrambled message",
-                            "Blank Message", JOptionPane.ERROR_MESSAGE);
+                          "You can't export an empty scrambled message",
+                          "Blank Message", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
 
                     JFileChooser fileChooser = new JFileChooser();
 
-                    //Display a file choosing dialog to get the destination
+                    //Display a file choosing dialog to get
+                    //the destination
                     int status = fileChooser.showSaveDialog(getParent());
                     if (status == JFileChooser.APPROVE_OPTION){
                         String path =
-                            fileChooser.getSelectedFile().getAbsolutePath();
+                            fileChooser.getSelectedFile()
+                                    .getAbsolutePath();
 
                         try {
                             message.saveChangeStackToFile(path);
                         } catch (IOException err) {
                             JOptionPane.showMessageDialog(getParent(),
-                                "An error occurred while writing this file",
-                                "Unknown Error", JOptionPane.ERROR_MESSAGE);
+                             "An error occurred while writing this file",
+                             "Unknown Error", JOptionPane.ERROR_MESSAGE);
                         }
                     }
 
