@@ -1,9 +1,7 @@
 package us.andrewdickinson.gvsu.CIS163.linkedMessages;
 
-import us.andrewdickinson.gvsu.CIS163.linkedMessages.dialogs.SymmetricBulletProofDialog;
 import us.andrewdickinson.gvsu.CIS163.linkedMessages.linkedlist.LinkedList;
 
-import java.io.Console;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -41,6 +39,18 @@ public class MessageConsole {
 
         message = getMessageFromSource();
 
+        clipboard = new LinkedList<>();
+
+        writeLine("Type 'h' or 'help' for a list of commands");
+    }
+
+    public MessageConsole(ScrambledMessage message){
+        input = new Scanner(System.in);
+
+        this.message = message;
+
+        clipboard = new LinkedList<>();
+
         writeLine("Type 'h' or 'help' for a list of commands");
     }
 
@@ -58,6 +68,18 @@ public class MessageConsole {
         }
 
         String in = readDataLine(overViewString, "Enter a command");
+
+        parseCommand(in);
+    }
+
+    /*******************************************************************
+     * Parse the given command and preform it's specified action
+     * @param in The command to parse
+     * @throws IllegalArgumentException if in.length() == 0 or in == " "
+     ******************************************************************/
+    public void parseCommand(String in){
+        if (in.length() == 0 || in.equals(" "))
+            throw new IllegalArgumentException();
 
         //We know that in was at least one character long and not " "
         //Therefore split[0] is at least one character long and not null
@@ -86,7 +108,7 @@ public class MessageConsole {
                 if (args == null) break;
                 if (!assertIndex(args[2], message.length())) break;
                 message.insertCharacter(Integer.parseInt(args[2]),
-                                        args[1].charAt(0));
+                        args[1].charAt(0));
                 lastCommandExitGood = true;
                 break;
             case "a":
@@ -95,7 +117,7 @@ public class MessageConsole {
                 args = parseArguments(in, 2);
                 if (args == null) break;
                 message.insertCharacter(message.length(),
-                                        args[1].charAt(0));
+                        args[1].charAt(0));
                 lastCommandExitGood = true;
                 break;
             case "r":
@@ -134,10 +156,10 @@ public class MessageConsole {
                     writeError("Error writing file");
                 } catch (UnsupportedOperationException e){
                     writeError("You must make at least one " +
-                               "change before you save");
+                            "change before you save");
                 } catch (IllegalArgumentException e){
                     writeError("There must be at least one " +
-                               "character in order to save");
+                            "character in order to save");
                 }
                 break;
             case "x":
@@ -165,7 +187,7 @@ public class MessageConsole {
                 if (!assertIndex(args[1], message.length())) break;
                 for (int i = 0; i < clipboard.size(); i++){
                     message.insertCharacter(Integer.parseInt(args[1])+i,
-                                            clipboard.get(i));
+                            clipboard.get(i));
                 }
                 lastCommandExitGood = true;
                 break;
@@ -470,7 +492,7 @@ public class MessageConsole {
                 "message");
         writeLine("rb, randinsert \t\t \"rb\" inserts a single " +
                 "random character in a random location");
-        writeLine("rs, randreplace \t \"rs\" replaces a single random " +
+        writeLine("rs, randreplace \t \"rs\" replaces a single random "+
                 "character in a random location");
         writeLine("rr, randremove \t\t \"rr\" removes a single " +
                 "random character");
