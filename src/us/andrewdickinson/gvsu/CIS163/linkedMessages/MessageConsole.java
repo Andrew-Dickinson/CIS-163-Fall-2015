@@ -40,6 +40,8 @@ public class MessageConsole {
         input = new Scanner(System.in);
 
         message = getMessageFromSource();
+
+        writeLine("Type 'h' or 'help' for a list of commands");
     }
 
     /*******************************************************************
@@ -68,6 +70,7 @@ public class MessageConsole {
         switch (base_cmd){
             case "Q":
             case "quit":
+            case "exit":
                 //Quit. Accepts no arguments
                 //Print the scrambled form of the message
                 writeLine("Final scrambled message: ");
@@ -161,7 +164,7 @@ public class MessageConsole {
                 if (args == null) break;
                 if (!assertIndex(args[1], message.length())) break;
                 for (int i = 0; i < clipboard.size(); i++){
-                    message.insertCharacter(Integer.parseInt(args[1]),
+                    message.insertCharacter(Integer.parseInt(args[1])+i,
                                             clipboard.get(i));
                 }
                 lastCommandExitGood = true;
@@ -178,10 +181,15 @@ public class MessageConsole {
                 if (i1 > i2) { writeError("Invalid Index"); break; }
                 clipboard = new LinkedList<>();
                 for (int i = 0; i <= (i2 - i1); i++){
-                    clipboard.add(message.getCharacter(i1));
+                    clipboard.add(message.getCharacter(i1 + i));
                 }
                 lastCommandExitGood = true;
                 break;
+            case "d":
+            case "decode":
+                //De-Scramble. Takes to arguments
+                writeLine("Original Message was: ");
+                writeLine(message.getDeScrambled());
             case "rb":
             case "randinsert":
                 //Random Insert. Takes no arguments
@@ -206,11 +214,15 @@ public class MessageConsole {
                 message.swapRandomCharacters();
                 lastCommandExitGood = true;
                 break;
-            case "h":
+            case "u":
             case "shuffle":
                 //Shuffle. Takes no arguments
-                message.randomlyScramble();
+                message.randomlyScramble(10);
                 lastCommandExitGood = true;
+                break;
+            case "h":
+            case "help":
+                displayHelp();
                 break;
             default:
                 writeError("Command not recognised");
@@ -385,7 +397,7 @@ public class MessageConsole {
             }
         }
 
-        if (raw_split.length == expected){
+        if (raw_split.length == expected && !raw_split[1].equals("")){
             //The number of arguments is already correct
             return raw_split;
         } else if (raw_split.length == expected + 1){
@@ -431,5 +443,41 @@ public class MessageConsole {
             writeError("Invalid Index");
             return false;
         }
+    }
+
+    private void displayHelp(){
+        writeLine("The following are valid commands for scrambling " +
+                "messages with this program:");
+        writeLine("b, i, insert \t\t \"b c #\" means insert char 'c' " +
+                "before position #");
+        writeLine("a, append \t\t\t \"a c\" means insert char 'c' at " +
+                "the end of the message");
+        writeLine("r, remove \t\t\t \"r #\" means remove the char in " +
+                "position #");
+        writeLine("w, swap \t\t\t \"& #\" means switch the character " +
+                "at position & with #");
+        writeLine("s, save \t\t\t \"s fileName\" will save off the " +
+                "current changes to file");
+        writeLine("Q, quit, exit \t\t \"Q\" exits the program, " +
+                "printing the de-scrambled message before closing");
+        writeLine("x, cut \t\t\t\t \"x & #\" means cut to clipboard, " +
+                "starting at & to # (inclusive)");
+        writeLine("c, copy \t\t\t \"c & #\" means copy to clipboard, " +
+                "starting at & to # (inclusive)");
+        writeLine("p, paste \t\t\t \"c & #\" means paste from " +
+                "clipboard, insert at #");
+        writeLine("d, decode \t\t\t \"d\" prints the de-scrambled " +
+                "message");
+        writeLine("rb, randinsert \t\t \"rb\" inserts a single " +
+                "random character in a random location");
+        writeLine("rs, randreplace \t \"rs\" replaces a single random " +
+                "character in a random location");
+        writeLine("rr, randremove \t\t \"rr\" removes a single " +
+                "random character");
+        writeLine("rw, randswap \t\t \"rw\" swaps two random " +
+                "characters");
+        writeLine("u, shuffle \t\t\t \"u\" runs 10 randomly selected " +
+                "'random actions'");
+        writeLine("h, help \t\t\t \"h\" Lists this help screen");
     }
 }
