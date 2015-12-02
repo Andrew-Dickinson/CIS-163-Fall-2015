@@ -240,12 +240,6 @@ public class LinkedListTests {
         ll.set(-1, 55);
     }
 
-    @Test
-    public void testSwap() {
-        //TODO: Create these tests
-    }
-
-
     //Tests the set method at the end of the list
     @Test(expected=IndexOutOfBoundsException.class)
     public void testGetOnEmptyList() {
